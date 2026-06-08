@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jerome Bustarga — Designer & Developer</title>
+  <meta name="description" content="Portfolio of Jerome Bustarga — a designer and developer crafting digital products that look sharp and work flawlessly." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Jerome Bustarga — Designer & Developer" />
+  <meta property="og:description" content="Crafting digital products that look sharp and work flawlessly." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Custom cursor -->
+  <div class="cursor" data-cursor></div>
+  <div class="cursor-dot" data-cursor-dot></div>
+
+  <!-- Scroll progress bar -->
+  <div class="progress" data-progress></div>
+
+  <!-- Noise overlay -->
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Nav -->
+  <header class="nav" data-nav>
+    <a href="#top" class="nav__logo">JB<span>.</span></a>
+    <nav class="nav__links">
+      <a href="#work" data-link>Work</a>
+      <a href="#about" data-link>About</a>
+      <a href="#services" data-link>Services</a>
+      <a href="#contact" data-link>Contact</a>
+    </nav>
+    <a href="#contact" class="nav__cta" data-magnetic>Let's talk</a>
+    <button class="nav__burger" data-burger aria-label="Open menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" data-mobile-menu>
+    <a href="#work" data-link>Work</a>
+    <a href="#about" data-link>About</a>
+    <a href="#services" data-link>Services</a>
+    <a href="#contact" data-link>Contact</a>
+  </div>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__inner">
+        <p class="hero__eyebrow reveal">Designer · Developer · Available 2026</p>
+        <h1 class="hero__title">
+          <span class="line"><span class="line__inner">I design &amp;</span></span>
+          <span class="line"><span class="line__inner">build digital</span></span>
+          <span class="line"><span class="line__inner"><em>experiences.</em></span></span>
+        </h1>
+        <div class="hero__meta reveal">
+          <p>Half designer, half engineer — I take products from blank canvas to shipped, pixel-perfect and fast.</p>
+          <a href="#work" class="btn" data-magnetic>
+            <span>View work</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="hero__scroll reveal">
+        <span>Scroll</span>
+        <div class="hero__scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track" data-marquee>
+        <span>UI/UX Design</span><span>✦</span><span>Web Development</span><span>✦</span><span>Brand Identity</span><span>✦</span><span>Frontend Engineering</span><span>✦</span>
+        <span>UI/UX Design</span><span>✦</span><span>Web Development</span><span>✦</span><span>Brand Identity</span><span>✦</span><span>Frontend Engineering</span><span>✦</span>
+      </div>
+    </section>
+
+    <!-- Work -->
+    <section class="work" id="work">
+      <div class="section-head">
+        <p class="section-head__label reveal">Selected Work</p>
+        <h2 class="section-head__title reveal">Things I've made<br />that I'm proud of.</h2>
+      </div>
+
+      <div class="projects">
+        <article class="project reveal" data-tilt>
+          <div class="project__media" style="--c1:#6d5bff;--c2:#00d4ff;">
+            <span class="project__index">01</span>
+          </div>
+          <div class="project__info">
+            <h3>Nimbus — SaaS Dashboard</h3>
+            <p class="project__tags">Product Design · React · TypeScript</p>
+          </div>
+        </article>
+
+        <article class="project reveal" data-tilt>
+          <div class="project__media" style="--c1:#ff7a59;--c2:#ffd166;">
+            <span class="project__index">02</span>
+          </div>
+          <div class="project__info">
+            <h3>Atlas — Brand &amp; Site</h3>
+            <p class="project__tags">Brand Identity · Webflow · Motion</p>
+          </div>
+        </article>
+
+        <article class="project reveal" data-tilt>
+          <div class="project__media" style="--c1:#06d6a0;--c2:#118ab2;">
+            <span class="project__index">03</span>
+          </div>
+          <div class="project__info">
+            <h3>Pulse — Mobile App</h3>
+            <p class="project__tags">UI/UX · Prototyping · Design System</p>
+          </div>
+        </article>
+
+        <article class="project reveal" data-tilt>
+          <div class="project__media" style="--c1:#ef476f;--c2:#9b5de5;">
+            <span class="project__index">04</span>
+          </div>
+          <div class="project__info">
+            <h3>Forge — Dev Tooling</h3>
+            <p class="project__tags">Full-stack · Node · API Design</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+      <div class="about__grid">
+        <div class="about__sticky">
+          <p class="section-head__label reveal">About</p>
+        </div>
+        <div class="about__body">
+          <p class="about__lead reveal">I'm Jerome — a designer and developer who lives in the overlap between aesthetics and engineering.</p>
+          <p class="reveal">For years I've helped startups and teams turn rough ideas into polished, usable products. I care about the small details: the easing on a hover, the rhythm of typography, the millisecond shaved off a load time.</p>
+          <p class="reveal">Whether it's a brand identity, a marketing site, or a full web app, I bring both the eye and the code.</p>
+
+          <div class="stats">
+            <div class="stat reveal"><strong data-count="60">0</strong><span>Projects shipped</span></div>
+            <div class="stat reveal"><strong data-count="8">0</strong><span>Years experience</span></div>
+            <div class="stat reveal"><strong data-count="20">0</strong><span>Happy clients</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services" id="services">
+      <div class="section-head">
+        <p class="section-head__label reveal">Services</p>
+        <h2 class="section-head__title reveal">What I can do<br />for you.</h2>
+      </div>
+
+      <div class="services__list">
+        <div class="service reveal">
+          <span class="service__num">01</span>
+          <h3>Product &amp; UI/UX Design</h3>
+          <p>User flows, wireframes, high-fidelity interfaces and design systems built for real products.</p>
+        </div>
+        <div class="service reveal">
+          <span class="service__num">02</span>
+          <h3>Web Development</h3>
+          <p>Fast, accessible, responsive front-ends — from landing pages to complex web apps.</p>
+        </div>
+        <div class="service reveal">
+          <span class="service__num">03</span>
+          <h3>Brand Identity</h3>
+          <p>Logos, visual systems and guidelines that make a brand feel coherent and memorable.</p>
+        </div>
+        <div class="service reveal">
+          <span class="service__num">04</span>
+          <h3>Motion &amp; Interaction</h3>
+          <p>Micro-interactions and animations that make interfaces feel alive and intentional.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <div class="contact__inner">
+        <p class="section-head__label reveal">Contact</p>
+        <h2 class="contact__title">
+          <span class="line"><span class="line__inner">Have a project</span></span>
+          <span class="line"><span class="line__inner">in mind?</span></span>
+        </h2>
+        <a href="mailto:jeromehadebustarga@gmail.com" class="contact__email reveal" data-magnetic>jeromehadebustarga@gmail.com</a>
+        <div class="contact__socials reveal">
+          <a href="#" data-link>GitHub</a>
+          <a href="#" data-link>LinkedIn</a>
+          <a href="#" data-link>Dribbble</a>
+          <a href="#" data-link>Twitter / X</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span data-year></span> Jerome Bustarga</p>
+    <p>Designed &amp; built with care.</p>
+    <a href="#top" class="footer__top" data-magnetic>Back to top ↑</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
