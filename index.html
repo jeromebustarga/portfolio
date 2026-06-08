@@ -1,182 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jerome Bustarga — Designer & Developer</title>
-  <meta name="description" content="Hi! I'm Jerome — a designer & developer who builds playful, colorful digital experiences." />
-  <meta property="og:title" content="Jerome Bustarga — Designer & Developer" />
-  <meta property="og:description" content="Playful, colorful digital experiences." />
-  <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+<title>Jerome Bustarga — Developer & Designer</title>
+<meta name="description" content="It's Jerome's World — developer and designer crafting digital experiences that blend functionality with refined aesthetics." />
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-<body class="is-loading">
-  <!-- Scroll progress -->
-  <div class="progress" data-progress aria-hidden="true"></div>
+<body class="loading">
 
-  <!-- Preloader -->
-  <div class="loader" data-loader>
-    <div class="loader__dots"><span></span><span></span><span></span></div>
-    <p class="loader__text">loading the fun…</p>
+<!-- Preloader -->
+<div class="preloader" id="preloader">
+  <i class="fa-solid fa-lightbulb preloader__bulb"></i>
+  <div class="preloader__count" id="preCount">0</div>
+  <div class="preloader__bar"><i id="preBar"></i></div>
+</div>
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Background FX -->
+<div class="bg-gradient">
+  <div class="gradient-orb gradient-orb-1"></div>
+  <div class="gradient-orb gradient-orb-2"></div>
+  <div class="gradient-orb gradient-orb-3"></div>
+  <div class="floating-shapes">
+    <div class="shape shape-1" data-float="0.4"></div>
+    <div class="shape shape-2" data-float="-0.3"></div>
+    <div class="shape shape-3" data-float="0.25"></div>
+    <div class="shape shape-4" data-float="-0.5"></div>
+    <div class="shape shape-5" data-float="0.35"></div>
+    <div class="shape shape-6" data-float="-0.2"></div>
   </div>
+</div>
+<div class="bg-grid"></div>
 
-  <!-- Floating background blobs -->
-  <div class="blobs" aria-hidden="true">
-    <span class="blob blob--1" data-float="0.04"></span>
-    <span class="blob blob--2" data-float="-0.06"></span>
-    <span class="blob blob--3" data-float="0.03"></span>
-    <span class="blob blob--4" data-float="-0.05"></span>
+<nav id="nav">
+  <a href="#mainContent" class="logo" id="logoNav">
+    <div class="logo-icon">
+      <img src="images/logo.png" alt="Jerome Bustarga Logo" data-fallback-icon="fa-lightbulb">
+    </div>
+    <span class="logo-text-wrapper">
+      <span class="logo-text">Jerome Bustarga</span>
+      <span class="logo-text-alt">It's Jerome's World</span>
+    </span>
+  </a>
+  <div class="nav-right">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="icon-dropdown">
+      <button class="icon-dropdown-btn" id="iconDropdownBtn" aria-label="Navigation menu"><i class="fa-solid fa-grip"></i></button>
+      <div class="icon-menu" id="iconMenu">
+        <a href="index.html" title="Home" aria-label="Home"><i class="fa-solid fa-house"></i></a>
+        <a href="about.html" title="About Me" aria-label="About Me"><i class="fa-solid fa-user"></i></a>
+        <a href="warpzone.html" title="Warp Zone" aria-label="Warp Zone"><i class="fa-solid fa-rocket"></i></a>
+      </div>
+    </div>
   </div>
+</nav>
 
-  <header class="nav" data-nav>
-    <a href="#top" class="nav__logo">Jerome<span>*</span></a>
-    <nav class="nav__links">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a href="#contact" class="btn btn--sm" data-magnetic>Say hi 👋</a>
-    <button class="nav__burger" data-burger aria-label="Menu"><span></span><span></span></button>
-  </header>
-
-  <div class="mobile-menu" data-mobile-menu>
-    <a href="#work">Work</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
-  </div>
-
-  <main id="top">
-    <!-- HERO -->
-    <section class="hero">
-      <span class="sticker sticker--star" data-speed="-0.25" aria-hidden="true">✦</span>
-      <span class="sticker sticker--blob" data-speed="0.35" aria-hidden="true"></span>
-      <span class="sticker sticker--squiggle" data-speed="-0.18" aria-hidden="true">
-        <svg viewBox="0 0 100 30" fill="none"><path d="M2 15 Q 14 2, 26 15 T 50 15 T 74 15 T 98 15" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
-      </span>
-
-      <p class="hero__hi reveal">Hi there! I'm Jerome 👋</p>
-      <h1 class="hero__title">
-        <span class="reveal">I design &amp; build</span>
-        <span class="reveal"><mark class="hl hl--coral">playful</mark> digital</span>
-        <span class="reveal"><mark class="hl hl--blue">experiences</mark> ✨</span>
-      </h1>
-      <p class="hero__sub reveal">Part designer, part developer, full-time maker of colorful things that are actually fun to use.</p>
-      <div class="hero__actions reveal">
-        <a href="#work" class="btn btn--coral" data-magnetic>See my work →</a>
-        <a href="#contact" class="btn btn--ghost" data-magnetic data-confetti>Let's talk 🎉</a>
-      </div>
-
-      <div class="hero__badge" aria-hidden="true">
-        <svg viewBox="0 0 120 120"><defs><path id="bp" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
-          <text><textPath href="#bp" startOffset="0">★ OPEN FOR WORK ★ 2026 ★ OPEN FOR WORK ★ 2026 </textPath></text>
-        </svg>
-        <span>🚀</span>
-      </div>
-    </section>
-
-    <!-- Marquee of pills -->
-    <section class="marquee" aria-hidden="true">
-      <div class="marquee__track" data-marquee>
-        <span class="pill pill--yellow">Web Design</span><span class="pill pill--blue">Development</span><span class="pill pill--green">Branding</span><span class="pill pill--purple">Animation</span><span class="pill pill--coral">UI / UX</span><span class="pill pill--pink">Illustration</span>
-        <span class="pill pill--yellow">Web Design</span><span class="pill pill--blue">Development</span><span class="pill pill--green">Branding</span><span class="pill pill--purple">Animation</span><span class="pill pill--coral">UI / UX</span><span class="pill pill--pink">Illustration</span>
-      </div>
-    </section>
-
-    <!-- WORK -->
-    <section class="work" id="work">
-      <div class="head">
-        <h2 class="head__title reveal">Stuff I've made <span>🎨</span></h2>
-        <p class="head__sub reveal">A few projects I had a blast working on.</p>
-      </div>
-      <div class="cards">
-        <article class="card card--yellow reveal" data-tilt>
-          <div class="card__img"><img src="https://picsum.photos/seed/nimbus/800/600" alt="Nimbus" loading="lazy" /></div>
-          <div class="card__body">
-            <h3>Nimbus Dashboard</h3>
-            <div class="tags"><span>Product</span><span>React</span></div>
-          </div>
-        </article>
-        <article class="card card--blue reveal" data-tilt>
-          <div class="card__img"><img src="https://picsum.photos/seed/atlas/800/600" alt="Atlas" loading="lazy" /></div>
-          <div class="card__body">
-            <h3>Atlas Brand &amp; Site</h3>
-            <div class="tags"><span>Brand</span><span>Webflow</span></div>
-          </div>
-        </article>
-        <article class="card card--coral reveal" data-tilt>
-          <div class="card__img"><img src="https://picsum.photos/seed/pulse/800/600" alt="Pulse" loading="lazy" /></div>
-          <div class="card__body">
-            <h3>Pulse Mobile App</h3>
-            <div class="tags"><span>UI/UX</span><span>Figma</span></div>
-          </div>
-        </article>
-        <article class="card card--green reveal" data-tilt>
-          <div class="card__img"><img src="https://picsum.photos/seed/forge/800/600" alt="Forge" loading="lazy" /></div>
-          <div class="card__body">
-            <h3>Forge Dev Tools</h3>
-            <div class="tags"><span>Full-stack</span><span>Node</span></div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- PINNED HORIZONTAL GALLERY -->
-    <section class="pin" data-pin>
-      <div class="pin__sticky">
-        <div class="pin__track" data-pin-track>
-          <div class="pin__intro">
-            <h2>Scroll<br />sideways<br /><mark class="hl hl--coral">→</mark></h2>
-            <p>A peek into the playground.</p>
-          </div>
-          <figure class="snap snap--yellow"><img src="https://picsum.photos/seed/snap1/700/520" alt="" loading="lazy" /><figcaption>Concepts</figcaption></figure>
-          <figure class="snap snap--blue"><img src="https://picsum.photos/seed/snap2/700/520" alt="" loading="lazy" /><figcaption>Motion</figcaption></figure>
-          <figure class="snap snap--green"><img src="https://picsum.photos/seed/snap3/700/520" alt="" loading="lazy" /><figcaption>Brand</figcaption></figure>
-          <figure class="snap snap--purple"><img src="https://picsum.photos/seed/snap4/700/520" alt="" loading="lazy" /><figcaption>Type</figcaption></figure>
-          <figure class="snap snap--pink"><img src="https://picsum.photos/seed/snap5/700/520" alt="" loading="lazy" /><figcaption>Play</figcaption></figure>
+<main id="mainContent">
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-inner" id="heroInner">
+      <div class="lightbulb-container">
+        <div class="radial-light"></div>
+        <div class="light-rays">
+          <div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div>
+          <div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div>
+        </div>
+        <div class="lightbulb">
+          <img src="images/logo.png" alt="Jerome Bustarga" class="bulb-on" data-fallback-icon="fa-lightbulb">
         </div>
       </div>
-    </section>
 
-    <!-- ABOUT -->
-    <section class="about" id="about">
-      <div class="about__photo reveal">
-        <img src="https://picsum.photos/seed/jbavatar/700/800" alt="Jerome" data-speed="0.05" loading="lazy" />
-        <span class="about__tape">that's me! 📸</span>
-      </div>
-      <div class="about__text">
-        <h2 class="reveal">A little about me 🙂</h2>
-        <p class="reveal">I'm Jerome — a designer and developer who genuinely loves making things on the internet. For me the best work happens where good design meets clean code.</p>
-        <p class="reveal">I've helped startups and brands turn fuzzy ideas into colorful, friendly products people actually enjoy using.</p>
-        <div class="stats">
-          <div class="stat stat--yellow reveal"><strong data-count="60">0</strong><span>projects</span></div>
-          <div class="stat stat--blue reveal"><strong data-count="8">0</strong><span>years</span></div>
-          <div class="stat stat--coral reveal"><strong data-count="20">0</strong><span>happy clients</span></div>
+      <div class="hero-badge reveal"><i class="fa-solid fa-circle"></i> Open to work & Projects</div>
+      <div class="hero-content">
+        <h1>
+          <span class="mask" style="--i:0"><span>It's <span class="highlight">Jerome's World</span></span></span>
+          <span class="mask" style="--i:1"><span>and you're just living in it</span></span>
+        </h1>
+        <p class="reveal" style="--i:3">Developer and designer crafting digital experiences that blend functionality with refined aesthetics. Focused on creating products that are both beautiful and purposeful.</p>
+        <div class="hero-cta reveal" style="--i:4">
+          <a href="#work" class="btn btn-primary" data-magnetic>View Work <i class="fa-solid fa-arrow-down"></i></a>
+          <a href="#contact" class="btn btn-secondary" data-magnetic>Get In Touch</a>
         </div>
       </div>
-    </section>
+    </div>
+    <div class="scroll-indicator"><span>Scroll</span><div class="line"></div></div>
+  </section>
 
-    <!-- CONTACT -->
-    <section class="contact" id="contact">
-      <div class="contact__card reveal">
-        <h2>Let's make something<br /><mark class="hl hl--yellow">fun</mark> together! 🎉</h2>
-        <p>Got a project, an idea, or just want to say hello? My inbox is always open.</p>
-        <a href="mailto:jeromehadebustarga@gmail.com" class="btn btn--big btn--coral" data-magnetic data-confetti>jeromehadebustarga@gmail.com</a>
-        <div class="contact__socials">
-          <a href="#" class="pill pill--blue">GitHub</a><a href="#" class="pill pill--green">LinkedIn</a><a href="#" class="pill pill--purple">Dribbble</a><a href="#" class="pill pill--pink">Twitter</a>
-        </div>
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track" id="marquee">
+      <span class="marquee__item">Development <span class="dot">●</span> Design <span class="dot">●</span> <em>It's Jerome's World</em> <span class="dot">●</span> Branding <span class="dot">●</span> Motion <span class="dot">●</span></span>
+      <span class="marquee__item">Development <span class="dot">●</span> Design <span class="dot">●</span> <em>It's Jerome's World</em> <span class="dot">●</span> Branding <span class="dot">●</span> Motion <span class="dot">●</span></span>
+    </div>
+  </div>
+
+  <!-- ABOUT + STATS -->
+  <section id="about" class="about-section">
+    <div class="about-grid">
+      <div class="about-text">
+        <h2 class="mask"><span>A designer who codes,<br>a developer who <em>designs.</em></span></h2>
+        <p class="reveal">I'm Jerome — a multidisciplinary creative based in Omaha, NE. I work across the full spectrum, from brand identity and illustration to full-stack web development, turning ideas into experiences that are both beautiful and purposeful.</p>
+        <p class="reveal" style="--i:1">Whether it's a logo, a motion piece, or a Django app, I care about the craft and the details that make something feel considered.</p>
       </div>
-    </section>
-  </main>
+      <div class="stats">
+        <div class="stat reveal" style="--i:0"><strong data-count="50">0</strong><span>Projects</span></div>
+        <div class="stat reveal" style="--i:1"><strong data-count="6">0</strong><span>Years</span></div>
+        <div class="stat reveal" style="--i:2"><strong data-count="8">0</strong><span>Disciplines</span></div>
+      </div>
+    </div>
+  </section>
 
-  <footer class="footer">
-    <p>© <span data-year></span> Jerome Bustarga — made with lots of ☕ &amp; color</p>
-    <a href="#top" data-magnetic>Back to top ↑</a>
+  <div class="section-divider"></div>
+
+  <!-- WORK -->
+  <section id="work" class="work-section">
+    <div class="section-header">
+      <span class="section-label reveal">Portfolio</span>
+      <h2 class="mask"><span>Featured Work</span></h2>
+      <p class="reveal" style="--i:1">A selection of recent projects and creative explorations</p>
+    </div>
+
+    <div class="projects-grid">
+      <article class="project-card reveal" data-tilt>
+        <div class="project-visual">
+          <img src="images/illustrations.png" alt="Illustrations Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Illustrations">
+        </div>
+        <div class="project-content">
+          <div class="project-number">01</div>
+          <h3>Illustrations</h3>
+          <p>Creating vibrant digital and hand-drawn illustrations that bring stories to life. From character design to editorial work, combining artistic vision with technical skill.</p>
+          <div class="project-tags"><span class="tag">Adobe Illustrator</span><span class="tag">Character Design</span><span class="tag">Digital Art</span></div>
+          <a href="illustrations.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </article>
+
+      <article class="project-card reveal" data-tilt>
+        <div class="project-visual">
+          <img src="images/logobranding.png" alt="Logo & Branding Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Logo & Branding">
+        </div>
+        <div class="project-content">
+          <div class="project-number">02</div>
+          <h3>Logo & Branding</h3>
+          <p>Creating distinctive visual identities that capture brand essence. Crafting memorable logos and comprehensive brand systems that resonate with audiences.</p>
+          <div class="project-tags"><span class="tag">Brand Strategy</span><span class="tag">Identity Design</span><span class="tag">Typography</span></div>
+          <a href="logobranding.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </article>
+
+      <article class="project-card reveal" data-tilt>
+        <div class="project-visual">
+          <img src="images/webdesign.png" alt="Web Design Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Web Design">
+        </div>
+        <div class="project-content">
+          <div class="project-number">03</div>
+          <h3>Web Design</h3>
+          <p>Designing beautiful, user-centered digital experiences with intuitive interfaces. Crafting responsive layouts that balance aesthetics with usability.</p>
+          <div class="project-tags"><span class="tag">UI/UX Design</span><span class="tag">Figma</span><span class="tag">Prototyping</span></div>
+          <a href="webdesign.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </article>
+
+      <article class="project-card reveal" data-tilt>
+        <div class="project-visual">
+          <img src="images/research.png" alt="Research Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Research">
+        </div>
+        <div class="project-content">
+          <div class="project-number">04</div>
+          <h3>Research</h3>
+          <p>Exploring emerging technologies through systematic investigation. Conducting user studies, prototyping concepts, and documenting findings for future development.</p>
+          <div class="project-tags"><span class="tag">UX Research</span><span class="tag">Data Analysis</span><span class="tag">User Testing</span></div>
+          <a href="research.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- WARPZONE CTA -->
+  <section class="warpzone-cta-section">
+    <div class="warpzone-cta-container reveal">
+      <div class="warpzone-cta-content">
+        <div class="warpzone-icon"><i class="fa-solid fa-rocket"></i></div>
+        <h2>Enter the Warpzone</h2>
+        <p>Explore more projects, experiments, and creative explorations in an interactive experience.</p>
+        <a href="warpzone.html" class="btn btn-primary" data-magnetic>Launch Warpzone <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="warpzone-cta-visual">
+        <div class="warp-ring ring-1"></div>
+        <div class="warp-ring ring-2"></div>
+        <div class="warp-ring ring-3"></div>
+        <div class="warp-core"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- SKILLS -->
+  <section id="skills" class="skills-section">
+    <div class="section-header">
+      <span class="section-label reveal">Capabilities</span>
+      <h2 class="mask"><span>Expertise</span></h2>
+      <p class="reveal" style="--i:1">Core competencies and technical skills</p>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-card reveal" style="--i:0"><div class="skill-icon"><i class="fa-solid fa-code"></i></div><h3>Web Development</h3><p>Full-stack applications with Django, Python, and scalable architecture.</p></div>
+      <div class="skill-card reveal" style="--i:1"><div class="skill-icon"><i class="fa-solid fa-palette"></i></div><h3>Graphic Design</h3><p>Visual content with Adobe Creative Suite for impactful brand communication.</p></div>
+      <div class="skill-card reveal" style="--i:2"><div class="skill-icon"><i class="fa-solid fa-film"></i></div><h3>Video Production</h3><p>Cinematic content with Premiere Pro, After Effects, and professional techniques.</p></div>
+      <div class="skill-card reveal" style="--i:3"><div class="skill-icon"><i class="fa-solid fa-camera"></i></div><h3>Photography</h3><p>Compelling visuals with professional editing and visual storytelling.</p></div>
+      <div class="skill-card reveal" style="--i:0"><div class="skill-icon"><i class="fa-solid fa-pen-nib"></i></div><h3>Brand Identity</h3><p>Comprehensive identities with logo design and cohesive design systems.</p></div>
+      <div class="skill-card reveal" style="--i:1"><div class="skill-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h3>Motion Graphics</h3><p>Dynamic visuals with After Effects for engaging motion design.</p></div>
+      <div class="skill-card reveal" style="--i:2"><div class="skill-icon"><i class="fa-solid fa-chart-line"></i></div><h3>Data Analytics</h3><p>Analyzing and visualizing data to drive informed decision making.</p></div>
+      <div class="skill-card reveal" style="--i:3"><div class="skill-icon"><i class="fa-solid fa-book-open"></i></div><h3>Digital Humanities</h3><p>Computational methods bridging technology and liberal arts inquiry.</p></div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <div class="contact-content">
+      <h2 class="mask"><span>Let's <em>Connect</em></span></h2>
+      <p class="reveal">Open to discussing new projects, creative collaborations, or opportunities to bring your ideas to life.</p>
+      <div class="hero-cta reveal" style="--i:1">
+        <a href="mailto:jeromehadebustarga@gmail.com" class="btn btn-primary" data-magnetic><i class="fa-solid fa-envelope"></i> Send Message</a>
+      </div>
+      <div class="social-links reveal" style="--i:2">
+        <a href="https://github.com/jhb09808" target="_blank" rel="noopener" class="social-link" aria-label="GitHub" data-magnetic><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/jeromebustarga0321/" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn" data-magnetic><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://behance.net/jeromebustarga" target="_blank" rel="noopener" class="social-link" aria-label="Behance" data-magnetic><i class="fa-brands fa-behance"></i></a>
+        <a href="https://www.instagram.com/jeromeq.21?igsh=bzFsdzJzOHZtMWx2&utm_source=qr" target="_blank" rel="noopener" class="social-link" aria-label="Instagram" data-magnetic><i class="fa-brands fa-instagram"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">© 2025 Jerome Bustarga. Thoughtfully designed & built.</div>
+      <div class="footer-right">Omaha, NE</div>
+    </div>
   </footer>
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

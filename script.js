@@ -1,78 +1,101 @@
-/* ============================================
-   Jerome Bustarga — Playful portfolio
-   ============================================ */
+/* ============================================================
+   Jerome Bustarga — It's Jerome's World
+   ============================================================ */
 (function () {
   "use strict";
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  const isMobile = window.matchMedia("(max-width: 760px)").matches;
+  const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
 
-  /* ---------- Year ---------- */
-  const yearEl = document.querySelector("[data-year]");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  /* ---------- Image fallbacks (until real assets are added) ---------- */
+  function handleFallback(img) {
+    if (img.dataset.fallbackHandled) return;
+    img.dataset.fallbackHandled = "1";
+    if (img.dataset.fallbackIcon) {
+      const i = document.createElement("i");
+      i.className = "fa-solid " + img.dataset.fallbackIcon + (img.classList.contains("bulb-on") ? " bulb-icon" : "");
+      img.replaceWith(i);
+    } else if (img.dataset.fallbackLabel) {
+      const wrap = img.closest(".project-visual");
+      if (wrap) { wrap.classList.add("img-fallback"); wrap.setAttribute("data-label", img.dataset.fallbackLabel); }
+      img.remove();
+    } else {
+      img.style.display = "none";
+    }
+  }
+  document.querySelectorAll("img[data-fallback-icon], img[data-fallback-label]").forEach((img) => {
+    img.addEventListener("error", () => handleFallback(img));
+    if (img.complete && img.naturalWidth === 0) handleFallback(img);
+  });
 
   /* ---------- Preloader ---------- */
-  const loader = document.querySelector("[data-loader]");
+  const preloader = document.getElementById("preloader");
+  const preCount = document.getElementById("preCount");
+  const preBar = document.getElementById("preBar");
   function finishLoad() {
-    document.body.classList.remove("is-loading");
-    if (loader) loader.classList.add("is-done");
+    document.body.classList.remove("loading");
+    if (preloader) preloader.classList.add("done");
+    startReveals();
   }
-  window.addEventListener("load", () => setTimeout(finishLoad, 700));
-  setTimeout(finishLoad, 2500); // safety
-
-  /* ---------- Mobile menu ---------- */
-  const nav = document.querySelector("[data-nav]");
-  const burger = document.querySelector("[data-burger]");
-  const mobileMenu = document.querySelector("[data-mobile-menu]");
-  const toggleMenu = (open) => {
-    nav.classList.toggle("is-open", open);
-    mobileMenu.classList.toggle("is-open", open);
-    document.body.style.overflow = open ? "hidden" : "";
-  };
-  if (burger) burger.addEventListener("click", () => toggleMenu(!nav.classList.contains("is-open")));
-  mobileMenu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => toggleMenu(false)));
-
-  /* ---------- Reveal on scroll (bouncy) ---------- */
-  const reveals = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && !prefersReduced) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) { entry.target.classList.add("in"); io.unobserve(entry.target); }
-      });
-    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
-    reveals.forEach((el, i) => {
-      el.style.transitionDelay = (i % 5) * 0.07 + "s";
-      io.observe(el);
-    });
+  if (prefersReduced) {
+    if (preCount) preCount.textContent = "100";
+    if (preBar) preBar.style.width = "100%";
+    setTimeout(finishLoad, 200);
   } else {
-    reveals.forEach((el) => el.classList.add("in"));
+    let n = 0;
+    const dur = 1100, t0 = performance.now();
+    const step = (now) => {
+      const p = Math.min((now - t0) / dur, 1);
+      n = Math.round((1 - Math.pow(1 - p, 2)) * 100);
+      if (preCount) preCount.textContent = n;
+      if (preBar) preBar.style.width = n + "%";
+      if (p < 1) requestAnimationFrame(step);
+      else setTimeout(finishLoad, 250);
+    };
+    requestAnimationFrame(step);
   }
+  setTimeout(finishLoad, 4000); // safety
 
-  /* ---------- Magnetic buttons (bouncy) ---------- */
-  if (fine && !prefersReduced) {
-    document.querySelectorAll("[data-magnetic]").forEach((el) => {
-      el.addEventListener("mousemove", (e) => {
-        const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left - r.width / 2) * 0.3;
-        const y = (e.clientY - r.top - r.height / 2) * 0.3;
-        el.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
-      });
-      el.addEventListener("mouseleave", () => { el.style.transform = ""; });
+  /* ---------- Hamburger menu ---------- */
+  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  const navLinks = document.getElementById("navLinks");
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      hamburgerBtn.classList.toggle("active");
+      navLinks.classList.toggle("active");
+    });
+    navLinks.querySelectorAll("a").forEach((link) =>
+      link.addEventListener("click", () => { hamburgerBtn.classList.remove("active"); navLinks.classList.remove("active"); })
+    );
+    window.addEventListener("click", (e) => {
+      if (!e.target.closest("nav")) { hamburgerBtn.classList.remove("active"); navLinks.classList.remove("active"); }
     });
   }
 
-  /* ---------- Card tilt (playful) ---------- */
-  if (fine && !prefersReduced) {
-    document.querySelectorAll("[data-tilt]").forEach((card) => {
-      card.addEventListener("mousemove", (e) => {
-        const r = card.getBoundingClientRect();
-        const rx = ((e.clientY - r.top) / r.height - 0.5) * -8;
-        const ry = ((e.clientX - r.left) / r.width - 0.5) * 8;
-        card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px) scale(1.02)`;
+  /* ---------- Icon dropdown ---------- */
+  const iconDropdownBtn = document.getElementById("iconDropdownBtn");
+  const iconMenu = document.getElementById("iconMenu");
+  if (iconDropdownBtn) {
+    iconDropdownBtn.addEventListener("click", (e) => { e.stopPropagation(); iconMenu.classList.toggle("show"); });
+    window.addEventListener("click", (e) => { if (!e.target.closest(".icon-dropdown")) iconMenu.classList.remove("show"); });
+  }
+
+  /* ---------- Reveal on scroll ---------- */
+  const revealEls = document.querySelectorAll(".reveal, .mask");
+  let revealIO = null;
+  function startReveals() {
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      revealEls.forEach((el) => el.classList.add("in"));
+      return;
+    }
+    revealIO = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add("in"); revealIO.unobserve(entry.target); }
       });
-      card.addEventListener("mouseleave", () => { card.style.transform = ""; });
-    });
+    }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+    revealEls.forEach((el) => revealIO.observe(el));
   }
 
   /* ---------- Animated counters ---------- */
@@ -82,11 +105,12 @@
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         const el = entry.target, target = parseInt(el.dataset.count, 10);
-        if (prefersReduced) { el.textContent = target + "+"; cio.unobserve(el); return; }
-        const dur = 1500, start = performance.now();
+        if (prefersReduced) { el.innerHTML = target + '<span class="plus">+</span>'; cio.unobserve(el); return; }
+        const dur = 1600, start = performance.now();
         const tick = (now) => {
           const p = Math.min((now - start) / dur, 1);
-          el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + "+";
+          const val = Math.round(target * (1 - Math.pow(1 - p, 3)));
+          el.innerHTML = val + '<span class="plus">+</span>';
           if (p < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
@@ -96,41 +120,53 @@
     counters.forEach((c) => cio.observe(c));
   }
 
-  /* ---------- Confetti 🎉 ---------- */
-  const colors = ["#ff6b6b", "#ffd23f", "#4d96ff", "#43c59e", "#b983ff", "#ff8fab"];
-  function burst(x, y) {
-    if (prefersReduced) return;
-    const n = 28;
-    for (let i = 0; i < n; i++) {
-      const c = document.createElement("div");
-      c.className = "confetti";
-      c.style.background = colors[(Math.random() * colors.length) | 0];
-      c.style.left = x + "px";
-      c.style.top = y + "px";
-      if (Math.random() > 0.5) c.style.borderRadius = "50%";
-      document.body.appendChild(c);
-      const angle = Math.random() * Math.PI * 2;
-      const vel = 60 + Math.random() * 160;
-      const dx = Math.cos(angle) * vel;
-      const dy = Math.sin(angle) * vel - 120;
-      const rot = (Math.random() * 720 - 360) + "deg";
-      c.animate([
-        { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
-        { transform: `translate(${dx}px, ${dy + 260}px) rotate(${rot})`, opacity: 0 }
-      ], { duration: 1100 + Math.random() * 600, easing: "cubic-bezier(0.2, 0.6, 0.3, 1)" })
-        .onfinish = () => c.remove();
-    }
-  }
-  document.querySelectorAll("[data-confetti]").forEach((el) => {
-    el.addEventListener("click", (e) => {
-      const r = el.getBoundingClientRect();
-      burst(r.left + r.width / 2, r.top + r.height / 2);
+  /* ---------- Magnetic buttons ---------- */
+  if (fine && !prefersReduced) {
+    document.querySelectorAll("[data-magnetic]").forEach((el) => {
+      const strength = el.classList.contains("social-link") ? 0.4 : 0.25;
+      el.addEventListener("mousemove", (e) => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) * strength;
+        const y = (e.clientY - r.top - r.height / 2) * strength;
+        el.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      el.addEventListener("mouseleave", () => { el.style.transform = ""; });
     });
-  });
+  }
+
+  /* ---------- Project card spotlight + tilt ---------- */
+  if (fine && !prefersReduced) {
+    document.querySelectorAll("[data-tilt]").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", ((e.clientX - r.left) / r.width) * 100 + "%");
+        card.style.setProperty("--my", ((e.clientY - r.top) / r.height) * 100 + "%");
+        const rx = ((e.clientY - r.top) / r.height - 0.5) * -3;
+        const ry = ((e.clientX - r.left) / r.width - 0.5) * 3;
+        card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      card.addEventListener("mouseleave", () => { card.style.transform = ""; });
+    });
+  }
+
+  /* ---------- Nav: logo swap + solid + hide on scroll ---------- */
+  const nav = document.getElementById("nav");
+  const logoNav = document.getElementById("logoNav");
+  let lastY = window.scrollY, navHidden = false;
+  function updateNav(y) {
+    if (logoNav) logoNav.classList.toggle("scrolled", y > 100);
+    if (nav) {
+      nav.classList.toggle("solid", y > 40);
+      const goingDown = y > lastY && y > 400;
+      if (goingDown && !navHidden) { nav.classList.add("hidden"); navHidden = true; }
+      else if (!goingDown && navHidden) { nav.classList.remove("hidden"); navHidden = false; }
+    }
+    lastY = y;
+  }
 
   /* ---------- Smooth scroll (Lenis) ---------- */
   let lenis = null;
-  if (typeof Lenis !== "undefined" && !prefersReduced && !isMobile) {
+  if (typeof Lenis !== "undefined" && !prefersReduced && !isTouch) {
     lenis = new Lenis({ lerp: 0.1 });
     const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
@@ -142,32 +178,17 @@
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      if (lenis) lenis.scrollTo(target, { offset: -90 });
-      else target.scrollIntoView({ behavior: "smooth" });
+      if (lenis) lenis.scrollTo(target, { offset: -80 });
+      else target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
-  /* ============================================
-     Unified scroll-driven engine
-     ============================================ */
-  const progressBar = document.querySelector("[data-progress]");
-  const parallaxEls = Array.from(document.querySelectorAll("[data-speed]"));
-  const blobEls = Array.from(document.querySelectorAll("[data-float]"));
-  const marquee = document.querySelector("[data-marquee]");
-  const pinSection = document.querySelector("[data-pin]");
-  const pinTrack = document.querySelector("[data-pin-track]");
+  /* ---------- Unified scroll-driven engine ---------- */
+  const progress = document.getElementById("scrollProgress");
+  const marquee = document.getElementById("marquee");
+  const shapes = document.querySelector(".floating-shapes");
+  const heroInner = document.getElementById("heroInner");
 
-  // layout-based absolute top (ignores transforms — avoids feedback loop)
-  const absTop = (el) => { let t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
-  let bases = new WeakMap();
-  const measure = () => {
-    parallaxEls.forEach((el) => bases.set(el, absTop(el) + el.offsetHeight / 2));
-  };
-  measure();
-  window.addEventListener("resize", measure);
-  window.addEventListener("load", measure);
-
-  // mouse state (for blobs)
   let mx = 0, my = 0, cx = 0, cy = 0;
   if (fine && !prefersReduced) {
     window.addEventListener("mousemove", (e) => {
@@ -176,60 +197,94 @@
     });
   }
 
-  // scroll state (for marquee velocity)
-  let lastScroll = window.scrollY, marqueeX = 0, velocity = 0;
-
+  let marqueeX = 0, prevScroll = window.scrollY;
   if (!prefersReduced) {
-    const vh = () => window.innerHeight;
-
     const tick = () => {
       const y = window.scrollY;
-      velocity = y - lastScroll;
-      lastScroll = y;
+      const vel = y - prevScroll;
+      prevScroll = y;
 
-      // 1) Progress bar
-      if (progressBar) {
-        const max = document.documentElement.scrollHeight - vh();
-        const p = max > 0 ? Math.min(y / max, 1) : 0;
-        progressBar.style.transform = `scaleX(${p})`;
+      updateNav(y);
+
+      // Progress bar
+      if (progress) {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
       }
 
-      // 2) Parallax elements (move relative to viewport center, no feedback)
-      parallaxEls.forEach((el) => {
-        const base = bases.get(el) || 0;
-        const center = base - y - vh() / 2;
-        const speed = parseFloat(el.dataset.speed) || 0;
-        el.style.transform = `translate3d(0, ${(center * speed).toFixed(1)}px, 0)`;
-      });
+      // Smooth mouse
+      cx += (mx - cx) * 0.06; cy += (my - cy) * 0.06;
 
-      // 3) Blobs: smooth mouse follow + gentle scroll drift
-      cx += (mx - cx) * 0.05; cy += (my - cy) * 0.05;
-      blobEls.forEach((el) => {
-        const s = parseFloat(el.dataset.float) * 100;
-        const drift = y * parseFloat(el.dataset.float) * 0.6;
-        el.style.transform = `translate3d(${cx * s}px, ${cy * s + drift}px, 0)`;
-      });
+      // Floating shapes: gentle scroll + mouse parallax on container
+      if (shapes) shapes.style.transform = `translate3d(${cx * 20}px, ${y * -0.06 + cy * 20}px, 0)`;
 
-      // 4) Marquee: constant drift + scroll-velocity boost, seamless loop
+      // Hero parallax (drift up + fade as you scroll)
+      if (heroInner) {
+        const f = Math.max(1 - y / 700, 0);
+        heroInner.style.transform = `translate3d(0, ${y * 0.18}px, 0)`;
+        heroInner.style.opacity = f;
+      }
+
+      // Marquee: drift + scroll-velocity boost
       if (marquee) {
-        marqueeX -= 0.6 + Math.min(Math.abs(velocity) * 0.4, 8) * Math.sign(velocity || 1);
+        marqueeX -= 0.5 + Math.min(Math.abs(vel) * 0.35, 7) * Math.sign(vel || 1);
         const half = marquee.scrollWidth / 2;
-        if (half > 0) { marqueeX = ((marqueeX % half) + half) % half - half; }
+        if (half > 0) marqueeX = ((marqueeX % half) + half) % half - half;
         marquee.style.transform = `translate3d(${marqueeX}px, 0, 0)`;
-      }
-
-      // 5) Pinned horizontal gallery
-      if (pinSection && pinTrack && !isMobile) {
-        const r = pinSection.getBoundingClientRect();
-        const total = pinSection.offsetHeight - vh();
-        const scrolled = Math.min(Math.max(-r.top, 0), total);
-        const p = total > 0 ? scrolled / total : 0;
-        const dist = pinTrack.scrollWidth - window.innerWidth;
-        pinTrack.style.transform = `translate3d(${-(p * dist).toFixed(1)}px, 0, 0)`;
       }
 
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
+  } else {
+    window.addEventListener("scroll", () => updateNav(window.scrollY), { passive: true });
+  }
+
+  /* ---------- Signature p5 cursor trail (desktop only) ---------- */
+  if (!isTouch && !prefersReduced && typeof p5 !== "undefined") {
+    new p5((p) => {
+      let trails = [], particles = [];
+      p.setup = () => {
+        const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
+        canvas.position(0, 0);
+        canvas.style("pointer-events", "none");
+        canvas.style("z-index", "9998");
+        canvas.style("position", "fixed");
+        canvas.style("top", "0");
+        canvas.style("left", "0");
+        p.clear(); p.noStroke();
+      };
+      p.draw = () => {
+        p.clear();
+        for (let i = trails.length - 1; i >= 0; i--) {
+          const pt = trails[i];
+          p.fill(244, 121, 33, pt.alpha * 0.12); p.ellipse(pt.x, pt.y, pt.size * 4);
+          p.fill(244, 121, 33, pt.alpha * 0.2); p.ellipse(pt.x, pt.y, pt.size * 2);
+          p.fill(255, 255, 255, pt.alpha * 0.6); p.ellipse(pt.x, pt.y, pt.size);
+          pt.alpha -= 3; pt.size *= 0.97;
+          if (pt.alpha <= 0) trails.splice(i, 1);
+        }
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const part = particles[i];
+          p.fill(244, 121, 33, part.alpha); p.ellipse(part.x, part.y, part.size);
+          part.x += part.vx; part.y += part.vy; part.alpha -= 4; part.size *= 0.95;
+          if (part.alpha <= 0) particles.splice(i, 1);
+        }
+        const d = p.dist(p.mouseX, p.mouseY, p.pmouseX, p.pmouseY);
+        if (d > 0.5) {
+          const steps = p.max(1, d * 0.5);
+          for (let i = 0; i <= steps; i++) {
+            const t = i / steps;
+            trails.push({ x: p.lerp(p.pmouseX, p.mouseX, t), y: p.lerp(p.pmouseY, p.mouseY, t), size: p.random(5, 9), alpha: p.random(120, 160) });
+          }
+          if (p.random() > 0.7) {
+            for (let j = 0; j < 2; j++) particles.push({ x: p.mouseX, y: p.mouseY, vx: p.random(-2, 2), vy: p.random(-2, 2), size: p.random(2, 4), alpha: p.random(80, 120) });
+          }
+        }
+        if (trails.length > 500) trails.splice(0, trails.length - 500);
+        if (particles.length > 100) particles.splice(0, particles.length - 100);
+      };
+      p.windowResized = () => p.resizeCanvas(p.windowWidth, p.windowHeight);
+    });
   }
 })();
