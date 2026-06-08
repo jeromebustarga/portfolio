@@ -6,6 +6,7 @@
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const isMobile = window.matchMedia("(max-width: 720px)").matches;
 
   /* ---------- Year ---------- */
   const yearEl = document.querySelector("[data-year]");
@@ -21,30 +22,20 @@
       dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
     });
     const render = () => {
-      cx += (mx - cx) * 0.18;
-      cy += (my - cy) * 0.18;
+      cx += (mx - cx) * 0.18; cy += (my - cy) * 0.18;
       cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
       requestAnimationFrame(render);
     };
     render();
-
     document.querySelectorAll("a, button, [data-magnetic], [data-tilt]").forEach((el) => {
       el.addEventListener("mouseenter", () => cursor.classList.add("is-hover"));
       el.addEventListener("mouseleave", () => cursor.classList.remove("is-hover"));
     });
   }
 
-  /* ---------- Scroll progress ---------- */
-  const progress = document.querySelector("[data-progress]");
-  const onScroll = () => {
-    const h = document.documentElement;
-    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
-    if (progress) progress.style.width = (scrolled * 100) + "%";
-    nav.classList.toggle("is-scrolled", h.scrollTop > 40);
-  };
-
-  /* ---------- Nav scroll state + mobile menu ---------- */
+  /* ---------- Nav state + progress + mobile menu ---------- */
   const nav = document.querySelector("[data-nav]");
+  const progress = document.querySelector("[data-progress]");
   const burger = document.querySelector("[data-burger]");
   const mobileMenu = document.querySelector("[data-mobile-menu]");
   const toggleMenu = (open) => {
@@ -55,46 +46,29 @@
   if (burger) burger.addEventListener("click", () => toggleMenu(!nav.classList.contains("is-open")));
   mobileMenu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => toggleMenu(false)));
 
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
-
   /* ---------- Reveal on scroll ---------- */
-  const reveals = document.querySelectorAll(".reveal");
+  const reveals = document.querySelectorAll(".reveal, .reveal-img");
   if ("IntersectionObserver" in window && !prefersReduced) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-in");
-          io.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) { entry.target.classList.add("is-in"); io.unobserve(entry.target); }
       });
-    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
     reveals.forEach((el, i) => {
-      el.style.transitionDelay = (i % 4) * 0.06 + "s";
+      if (el.classList.contains("reveal")) el.style.transitionDelay = (i % 4) * 0.06 + "s";
       io.observe(el);
     });
   } else {
     reveals.forEach((el) => el.classList.add("is-in"));
   }
 
-  /* ---------- Animated section line reveals (Space Grotesk titles) ---------- */
-  if ("IntersectionObserver" in window && !prefersReduced) {
-    const lineIO = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add("is-in"); lineIO.unobserve(e.target); }
-      });
-    }, { threshold: 0.4 });
-    document.querySelectorAll(".contact__title").forEach((t) => lineIO.observe(t));
-  }
-
   /* ---------- Magnetic buttons ---------- */
   if (fine && !prefersReduced) {
     document.querySelectorAll("[data-magnetic]").forEach((el) => {
-      const strength = 0.35;
       el.addEventListener("mousemove", (e) => {
         const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left - r.width / 2) * strength;
-        const y = (e.clientY - r.top - r.height / 2) * strength;
+        const x = (e.clientX - r.left - r.width / 2) * 0.35;
+        const y = (e.clientY - r.top - r.height / 2) * 0.35;
         el.style.transform = `translate(${x}px, ${y}px)`;
       });
       el.addEventListener("mouseleave", () => { el.style.transform = ""; });
@@ -105,11 +79,12 @@
   if (fine && !prefersReduced) {
     document.querySelectorAll("[data-tilt]").forEach((card) => {
       const media = card.querySelector(".project__media");
+      if (!media) return;
       card.addEventListener("mousemove", (e) => {
         const r = card.getBoundingClientRect();
-        const rx = ((e.clientY - r.top) / r.height - 0.5) * -8;
-        const ry = ((e.clientX - r.left) / r.width - 0.5) * 8;
-        media.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+        const rx = ((e.clientY - r.top) / r.height - 0.5) * -6;
+        const ry = ((e.clientX - r.left) / r.width - 0.5) * 6;
+        media.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
       });
       card.addEventListener("mouseleave", () => { media.style.transform = ""; });
     });
@@ -124,11 +99,10 @@
         const el = entry.target;
         const target = parseInt(el.dataset.count, 10);
         if (prefersReduced) { el.textContent = target + "+"; cio.unobserve(el); return; }
-        const dur = 1600; const start = performance.now();
+        const dur = 1600, start = performance.now();
         const tick = (now) => {
           const p = Math.min((now - start) / dur, 1);
-          const eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.round(target * eased) + "+";
+          el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + "+";
           if (p < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
@@ -137,4 +111,53 @@
     }, { threshold: 0.6 });
     counters.forEach((c) => cio.observe(c));
   }
+
+  /* ============================================
+     SCROLL ENGINE — parallax + pinned horizontal
+     ============================================ */
+  const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]"));
+  const hscroll = document.querySelector("[data-hscroll]");
+  const htrack = document.querySelector("[data-hscroll-track]");
+
+  let ticking = false;
+  const vh = () => window.innerHeight;
+
+  function update() {
+    ticking = false;
+    const scrollY = window.scrollY;
+
+    // Nav + progress
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    if (progress) progress.style.width = (docH > 0 ? (scrollY / docH) * 100 : 0) + "%";
+    if (nav) nav.classList.toggle("is-scrolled", scrollY > 40);
+
+    if (prefersReduced) return;
+
+    // Parallax: move each element relative to its position in the viewport
+    for (const el of parallaxEls) {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh() + 200) continue; // off-screen, skip
+      const speed = parseFloat(el.dataset.speed || "0.1");
+      const center = r.top + r.height / 2 - vh() / 2;
+      el.style.transform = `translate3d(0, ${(-center * speed).toFixed(2)}px, 0)`;
+    }
+
+    // Pinned horizontal scroll
+    if (hscroll && htrack && !isMobile) {
+      const top = hscroll.offsetTop;
+      const total = hscroll.offsetHeight - vh();
+      const p = Math.min(Math.max((scrollY - top) / total, 0), 1);
+      const distance = htrack.scrollWidth - window.innerWidth;
+      htrack.style.transform = `translate3d(${(-p * distance).toFixed(2)}px, 0, 0)`;
+    }
+  }
+
+  function onScroll() {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", update);
+  window.addEventListener("load", update);
+  update();
 })();

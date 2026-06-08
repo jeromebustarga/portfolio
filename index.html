@@ -6,7 +6,6 @@
   <title>Jerome Bustarga — Designer & Developer</title>
   <meta name="description" content="Portfolio of Jerome Bustarga — a designer and developer crafting digital products that look sharp and work flawlessly." />
 
-  <!-- Open Graph -->
   <meta property="og:title" content="Jerome Bustarga — Designer & Developer" />
   <meta property="og:description" content="Crafting digital products that look sharp and work flawlessly." />
   <meta property="og:type" content="website" />
@@ -17,23 +16,17 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Custom cursor -->
   <div class="cursor" data-cursor></div>
   <div class="cursor-dot" data-cursor-dot></div>
-
-  <!-- Scroll progress bar -->
   <div class="progress" data-progress></div>
-
-  <!-- Noise overlay -->
   <div class="noise" aria-hidden="true"></div>
 
-  <!-- Nav -->
   <header class="nav" data-nav>
     <a href="#top" class="nav__logo">JB<span>.</span></a>
     <nav class="nav__links">
       <a href="#work" data-link>Work</a>
+      <a href="#gallery" data-link>Gallery</a>
       <a href="#about" data-link>About</a>
-      <a href="#services" data-link>Services</a>
       <a href="#contact" data-link>Contact</a>
     </nav>
     <a href="#contact" class="nav__cta" data-magnetic>Let's talk</a>
@@ -42,17 +35,19 @@
     </button>
   </header>
 
-  <!-- Mobile menu -->
   <div class="mobile-menu" data-mobile-menu>
     <a href="#work" data-link>Work</a>
+    <a href="#gallery" data-link>Gallery</a>
     <a href="#about" data-link>About</a>
-    <a href="#services" data-link>Services</a>
     <a href="#contact" data-link>Contact</a>
   </div>
 
   <main id="top">
-    <!-- Hero -->
+    <!-- Hero with parallax layers -->
     <section class="hero">
+      <div class="hero__bg" data-parallax data-speed="-0.18">
+        <img src="https://picsum.photos/seed/jbhero/1600/1200" alt="" loading="eager" />
+      </div>
       <div class="hero__inner">
         <p class="hero__eyebrow reveal">Designer · Developer · Available 2026</p>
         <h1 class="hero__title">
@@ -74,7 +69,6 @@
       </div>
     </section>
 
-    <!-- Marquee -->
     <section class="marquee" aria-hidden="true">
       <div class="marquee__track" data-marquee>
         <span>UI/UX Design</span><span>✦</span><span>Web Development</span><span>✦</span><span>Brand Identity</span><span>✦</span><span>Frontend Engineering</span><span>✦</span>
@@ -82,7 +76,7 @@
       </div>
     </section>
 
-    <!-- Work -->
+    <!-- Work — parallax image cards -->
     <section class="work" id="work">
       <div class="section-head">
         <p class="section-head__label reveal">Selected Work</p>
@@ -91,7 +85,8 @@
 
       <div class="projects">
         <article class="project reveal" data-tilt>
-          <div class="project__media" style="--c1:#6d5bff;--c2:#00d4ff;">
+          <div class="project__media reveal-img" data-link>
+            <img src="https://picsum.photos/seed/nimbus/900/1200" alt="Nimbus dashboard" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">01</span>
           </div>
           <div class="project__info">
@@ -100,8 +95,9 @@
           </div>
         </article>
 
-        <article class="project reveal" data-tilt>
-          <div class="project__media" style="--c1:#ff7a59;--c2:#ffd166;">
+        <article class="project reveal project--offset" data-tilt>
+          <div class="project__media reveal-img" data-link>
+            <img src="https://picsum.photos/seed/atlas/900/1200" alt="Atlas brand" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">02</span>
           </div>
           <div class="project__info">
@@ -111,7 +107,8 @@
         </article>
 
         <article class="project reveal" data-tilt>
-          <div class="project__media" style="--c1:#06d6a0;--c2:#118ab2;">
+          <div class="project__media reveal-img" data-link>
+            <img src="https://picsum.photos/seed/pulseapp/900/1200" alt="Pulse app" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">03</span>
           </div>
           <div class="project__info">
@@ -120,8 +117,9 @@
           </div>
         </article>
 
-        <article class="project reveal" data-tilt>
-          <div class="project__media" style="--c1:#ef476f;--c2:#9b5de5;">
+        <article class="project reveal project--offset" data-tilt>
+          <div class="project__media reveal-img" data-link>
+            <img src="https://picsum.photos/seed/forge/900/1200" alt="Forge tooling" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">04</span>
           </div>
           <div class="project__info">
@@ -132,11 +130,31 @@
       </div>
     </section>
 
-    <!-- About -->
+    <!-- Pinned horizontal-scroll gallery -->
+    <section class="hscroll" id="gallery" data-hscroll>
+      <div class="hscroll__sticky">
+        <div class="hscroll__head">
+          <p class="section-head__label">Gallery</p>
+          <h2>Scroll →</h2>
+        </div>
+        <div class="hscroll__track" data-hscroll-track>
+          <figure class="hslide"><img src="https://picsum.photos/seed/g1/1000/1300" alt="" loading="lazy" /><figcaption>01 — Visual exploration</figcaption></figure>
+          <figure class="hslide hslide--wide"><img src="https://picsum.photos/seed/g2/1600/1000" alt="" loading="lazy" /><figcaption>02 — Interface system</figcaption></figure>
+          <figure class="hslide"><img src="https://picsum.photos/seed/g3/1000/1300" alt="" loading="lazy" /><figcaption>03 — Motion study</figcaption></figure>
+          <figure class="hslide hslide--wide"><img src="https://picsum.photos/seed/g4/1600/1000" alt="" loading="lazy" /><figcaption>04 — Brand world</figcaption></figure>
+          <figure class="hslide"><img src="https://picsum.photos/seed/g5/1000/1300" alt="" loading="lazy" /><figcaption>05 — Product shot</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- About with parallax accent image -->
     <section class="about" id="about">
       <div class="about__grid">
         <div class="about__sticky">
           <p class="section-head__label reveal">About</p>
+          <div class="about__photo reveal-img">
+            <img src="https://picsum.photos/seed/jbabout/800/1000" alt="Jerome" loading="lazy" data-parallax data-speed="0.1" />
+          </div>
         </div>
         <div class="about__body">
           <p class="about__lead reveal">I'm Jerome — a designer and developer who lives in the overlap between aesthetics and engineering.</p>
@@ -148,37 +166,6 @@
             <div class="stat reveal"><strong data-count="8">0</strong><span>Years experience</span></div>
             <div class="stat reveal"><strong data-count="20">0</strong><span>Happy clients</span></div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Services -->
-    <section class="services" id="services">
-      <div class="section-head">
-        <p class="section-head__label reveal">Services</p>
-        <h2 class="section-head__title reveal">What I can do<br />for you.</h2>
-      </div>
-
-      <div class="services__list">
-        <div class="service reveal">
-          <span class="service__num">01</span>
-          <h3>Product &amp; UI/UX Design</h3>
-          <p>User flows, wireframes, high-fidelity interfaces and design systems built for real products.</p>
-        </div>
-        <div class="service reveal">
-          <span class="service__num">02</span>
-          <h3>Web Development</h3>
-          <p>Fast, accessible, responsive front-ends — from landing pages to complex web apps.</p>
-        </div>
-        <div class="service reveal">
-          <span class="service__num">03</span>
-          <h3>Brand Identity</h3>
-          <p>Logos, visual systems and guidelines that make a brand feel coherent and memorable.</p>
-        </div>
-        <div class="service reveal">
-          <span class="service__num">04</span>
-          <h3>Motion &amp; Interaction</h3>
-          <p>Micro-interactions and animations that make interfaces feel alive and intentional.</p>
         </div>
       </div>
     </section>
