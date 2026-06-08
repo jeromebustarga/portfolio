@@ -241,12 +241,21 @@
   const skewEls = Array.from(document.querySelectorAll("[data-skew]"));
   const hscroll = document.querySelector("[data-hscroll]");
   const htrack = document.querySelector("[data-hscroll-track]");
-  const marquee = document.querySelector("[data-marquee]");
+  const hprog = document.querySelector("[data-hscroll-progress]");
+  const marquees = Array.from(document.querySelectorAll("[data-marquee]")).map((el) => ({
+    el, x: 0, dir: parseFloat(el.dataset.dir || "-1")
+  }));
 
   let lastScroll = window.scrollY;
   let velSmooth = 0;
-  let mq = 0;
   const vh = () => window.innerHeight;
+
+  /* Live local clock */
+  const clock = document.querySelector("[data-clock]");
+  if (clock) {
+    const upd = () => { clock.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }); };
+    upd(); setInterval(upd, 1000);
+  }
 
   function frame() {
     const scrollY = window.scrollY;
@@ -277,24 +286,24 @@
         el.style.transform = `skewY(${skew.toFixed(2)}deg)`;
       }
 
-      // Pinned horizontal gallery
+      // Pinned horizontal gallery + progress bar
       if (hscroll && htrack && !isMobile) {
         const top = hscroll.offsetTop;
         const total = hscroll.offsetHeight - vh();
         const p = Math.min(Math.max((scrollY - top) / total, 0), 1);
         const distance = htrack.scrollWidth - window.innerWidth;
         htrack.style.transform = `translate3d(${(-p * distance).toFixed(2)}px, 0, 0)`;
+        if (hprog) hprog.style.width = (p * 100).toFixed(1) + "%";
       }
 
-      // Scroll-reactive marquee
-      if (marquee) {
-        const half = marquee.scrollWidth / 2;
-        if (half > 0) {
-          mq -= 0.6 + velSmooth * 0.35;
-          mq = mq % half;
-          if (mq > 0) mq -= half;
-          marquee.style.transform = `translateX(${mq.toFixed(2)}px)`;
-        }
+      // Scroll-reactive marquees (each with its own base direction)
+      for (const m of marquees) {
+        const half = m.el.scrollWidth / 2;
+        if (half <= 0) continue;
+        m.x += m.dir * 0.6 - velSmooth * 0.35;
+        m.x = m.x % half;
+        if (m.x > 0) m.x -= half;
+        m.el.style.transform = `translateX(${m.x.toFixed(2)}px)`;
       }
     }
 

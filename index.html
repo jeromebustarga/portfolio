@@ -68,7 +68,7 @@
 
     <!-- Scroll-reactive marquee -->
     <section class="marquee" aria-hidden="true">
-      <div class="marquee__track" data-marquee>
+      <div class="marquee__track" data-marquee data-dir="-1">
         <span>Design</span><b>✺</b><span>Development</span><b>✺</b><span>Brand</span><b>✺</b><span>Motion</span><b>✺</b><span>Interaction</span><b>✺</b>
         <span>Design</span><b>✺</b><span>Development</span><b>✺</b><span>Brand</span><b>✺</b><span>Motion</span><b>✺</b><span>Interaction</span><b>✺</b>
       </div>
@@ -85,6 +85,7 @@
           <div class="project__media reveal-img">
             <img src="https://picsum.photos/seed/nimbus/900/1200" alt="Nimbus dashboard" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">01</span>
+            <span class="project__view">View ↗</span>
           </div>
           <div class="project__info"><h3>Nimbus — SaaS Dashboard</h3><p class="project__tags">Product · React · TS</p></div>
         </article>
@@ -92,6 +93,7 @@
           <div class="project__media reveal-img">
             <img src="https://picsum.photos/seed/atlas/900/1200" alt="Atlas brand" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">02</span>
+            <span class="project__view">View ↗</span>
           </div>
           <div class="project__info"><h3>Atlas — Brand &amp; Site</h3><p class="project__tags">Identity · Webflow · Motion</p></div>
         </article>
@@ -99,6 +101,7 @@
           <div class="project__media reveal-img">
             <img src="https://picsum.photos/seed/pulseapp/900/1200" alt="Pulse app" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">03</span>
+            <span class="project__view">View ↗</span>
           </div>
           <div class="project__info"><h3>Pulse — Mobile App</h3><p class="project__tags">UI/UX · Prototyping</p></div>
         </article>
@@ -106,6 +109,7 @@
           <div class="project__media reveal-img">
             <img src="https://picsum.photos/seed/forge/900/1200" alt="Forge tooling" loading="lazy" data-parallax data-speed="0.12" />
             <span class="project__index">04</span>
+            <span class="project__view">View ↗</span>
           </div>
           <div class="project__info"><h3>Forge — Dev Tooling</h3><p class="project__tags">Full-stack · Node · API</p></div>
         </article>
@@ -115,7 +119,7 @@
     <!-- Pinned horizontal gallery -->
     <section class="hscroll" id="gallery" data-hscroll>
       <div class="hscroll__sticky">
-        <div class="hscroll__head"><p class="section-head__label">Gallery</p><h2>Drag the world →</h2></div>
+        <div class="hscroll__head"><p class="section-head__label">Gallery</p><h2>Keep scrolling →</h2></div>
         <div class="hscroll__track" data-hscroll-track>
           <figure class="hslide"><img src="https://picsum.photos/seed/g1/1000/1300" alt="" loading="lazy" /><figcaption>01 — Exploration</figcaption></figure>
           <figure class="hslide hslide--wide"><img src="https://picsum.photos/seed/g2/1600/1000" alt="" loading="lazy" /><figcaption>02 — Interface</figcaption></figure>
@@ -123,6 +127,7 @@
           <figure class="hslide hslide--wide"><img src="https://picsum.photos/seed/g4/1600/1000" alt="" loading="lazy" /><figcaption>04 — Brand</figcaption></figure>
           <figure class="hslide"><img src="https://picsum.photos/seed/g5/1000/1300" alt="" loading="lazy" /><figcaption>05 — Product</figcaption></figure>
         </div>
+        <div class="hscroll__bar"><span data-hscroll-progress></span></div>
       </div>
     </section>
 
@@ -132,6 +137,12 @@
         <div class="about__sticky">
           <p class="section-head__label reveal">About</p>
           <div class="about__photo reveal-img"><img src="https://picsum.photos/seed/jbabout/800/1000" alt="Jerome" loading="lazy" data-parallax data-speed="0.1" /></div>
+          <div class="badge" aria-hidden="true">
+            <svg viewBox="0 0 120 120"><defs><path id="badgePath" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
+              <text><textPath href="#badgePath" startOffset="0">OPEN FOR WORK ✦ 2026 ✦ OPEN FOR WORK ✦ 2026 ✦ </textPath></text>
+            </svg>
+            <span class="badge__icon">↗</span>
+          </div>
         </div>
         <div class="about__body">
           <p class="about__lead reveal" data-skew>I live in the overlap between aesthetics and engineering.</p>
@@ -146,15 +157,27 @@
       </div>
     </section>
 
+    <!-- Skills marquee -->
+    <section class="marquee marquee--alt" aria-hidden="true">
+      <div class="marquee__track" data-marquee data-dir="1">
+        <span>Figma</span><b>/</b><span>React</span><b>/</b><span>TypeScript</span><b>/</b><span>GSAP</span><b>/</b><span>Webflow</span><b>/</b><span>Three.js</span><b>/</b><span>Node</span><b>/</b>
+        <span>Figma</span><b>/</b><span>React</span><b>/</b><span>TypeScript</span><b>/</b><span>GSAP</span><b>/</b><span>Webflow</span><b>/</b><span>Three.js</span><b>/</b><span>Node</span><b>/</b>
+      </div>
+    </section>
+
     <!-- Contact -->
     <section class="contact" id="contact">
       <div class="contact__inner">
         <p class="section-head__label reveal">Contact</p>
         <h2 class="contact__title" data-skew>
-          <span class="line"><span class="line__inner">Let's build</span></span>
-          <span class="line"><span class="line__inner"><em>something.</em></span></span>
+          <span class="line"><span class="line__inner reveal">Let's build</span></span>
+          <span class="line"><span class="line__inner reveal"><em>something.</em></span></span>
         </h2>
         <a href="mailto:jeromehadebustarga@gmail.com" class="contact__email reveal" data-magnetic>jeromehadebustarga@gmail.com</a>
+        <div class="contact__meta reveal">
+          <span>Local time — <b data-clock>--:--:--</b></span>
+          <span>Based remotely · Working worldwide</span>
+        </div>
         <div class="contact__socials reveal">
           <a href="#" data-link>GitHub</a><a href="#" data-link>LinkedIn</a><a href="#" data-link>Dribbble</a><a href="#" data-link>Twitter / X</a>
         </div>
