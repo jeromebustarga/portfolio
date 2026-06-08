@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="is-loading">
+  <!-- Scroll progress -->
+  <div class="progress" data-progress aria-hidden="true"></div>
+
   <!-- Preloader -->
   <div class="loader" data-loader>
     <div class="loader__dots"><span></span><span></span><span></span></div>
@@ -48,9 +51,9 @@
   <main id="top">
     <!-- HERO -->
     <section class="hero">
-      <span class="sticker sticker--star" aria-hidden="true">✦</span>
-      <span class="sticker sticker--blob" aria-hidden="true"></span>
-      <span class="sticker sticker--squiggle" aria-hidden="true">
+      <span class="sticker sticker--star" data-speed="-0.25" aria-hidden="true">✦</span>
+      <span class="sticker sticker--blob" data-speed="0.35" aria-hidden="true"></span>
+      <span class="sticker sticker--squiggle" data-speed="-0.18" aria-hidden="true">
         <svg viewBox="0 0 100 30" fill="none"><path d="M2 15 Q 14 2, 26 15 T 50 15 T 74 15 T 98 15" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
       </span>
 
@@ -76,7 +79,7 @@
 
     <!-- Marquee of pills -->
     <section class="marquee" aria-hidden="true">
-      <div class="marquee__track">
+      <div class="marquee__track" data-marquee>
         <span class="pill pill--yellow">Web Design</span><span class="pill pill--blue">Development</span><span class="pill pill--green">Branding</span><span class="pill pill--purple">Animation</span><span class="pill pill--coral">UI / UX</span><span class="pill pill--pink">Illustration</span>
         <span class="pill pill--yellow">Web Design</span><span class="pill pill--blue">Development</span><span class="pill pill--green">Branding</span><span class="pill pill--purple">Animation</span><span class="pill pill--coral">UI / UX</span><span class="pill pill--pink">Illustration</span>
       </div>
@@ -120,10 +123,27 @@
       </div>
     </section>
 
+    <!-- PINNED HORIZONTAL GALLERY -->
+    <section class="pin" data-pin>
+      <div class="pin__sticky">
+        <div class="pin__track" data-pin-track>
+          <div class="pin__intro">
+            <h2>Scroll<br />sideways<br /><mark class="hl hl--coral">→</mark></h2>
+            <p>A peek into the playground.</p>
+          </div>
+          <figure class="snap snap--yellow"><img src="https://picsum.photos/seed/snap1/700/520" alt="" loading="lazy" /><figcaption>Concepts</figcaption></figure>
+          <figure class="snap snap--blue"><img src="https://picsum.photos/seed/snap2/700/520" alt="" loading="lazy" /><figcaption>Motion</figcaption></figure>
+          <figure class="snap snap--green"><img src="https://picsum.photos/seed/snap3/700/520" alt="" loading="lazy" /><figcaption>Brand</figcaption></figure>
+          <figure class="snap snap--purple"><img src="https://picsum.photos/seed/snap4/700/520" alt="" loading="lazy" /><figcaption>Type</figcaption></figure>
+          <figure class="snap snap--pink"><img src="https://picsum.photos/seed/snap5/700/520" alt="" loading="lazy" /><figcaption>Play</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
     <!-- ABOUT -->
     <section class="about" id="about">
       <div class="about__photo reveal">
-        <img src="https://picsum.photos/seed/jbavatar/700/800" alt="Jerome" loading="lazy" />
+        <img src="https://picsum.photos/seed/jbavatar/700/800" alt="Jerome" data-speed="0.05" loading="lazy" />
         <span class="about__tape">that's me! 📸</span>
       </div>
       <div class="about__text">

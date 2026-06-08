@@ -96,25 +96,6 @@
     counters.forEach((c) => cio.observe(c));
   }
 
-  /* ---------- Floating blob parallax ---------- */
-  const floaters = Array.from(document.querySelectorAll("[data-float]"));
-  if (fine && !prefersReduced && floaters.length) {
-    let mx = 0, my = 0, cx = 0, cy = 0;
-    window.addEventListener("mousemove", (e) => {
-      mx = (e.clientX / window.innerWidth - 0.5) * 2;
-      my = (e.clientY / window.innerHeight - 0.5) * 2;
-    });
-    const loop = () => {
-      cx += (mx - cx) * 0.05; cy += (my - cy) * 0.05;
-      floaters.forEach((el) => {
-        const s = parseFloat(el.dataset.float) * 100;
-        el.style.transform = `translate(${cx * s}px, ${cy * s}px)`;
-      });
-      requestAnimationFrame(loop);
-    };
-    loop();
-  }
-
   /* ---------- Confetti 🎉 ---------- */
   const colors = ["#ff6b6b", "#ffd23f", "#4d96ff", "#43c59e", "#b983ff", "#ff8fab"];
   function burst(x, y) {
@@ -147,20 +128,108 @@
     });
   });
 
-  /* ---------- Smooth scroll (Lenis, optional) ---------- */
+  /* ---------- Smooth scroll (Lenis) ---------- */
+  let lenis = null;
   if (typeof Lenis !== "undefined" && !prefersReduced && !isMobile) {
-    const lenis = new Lenis({ lerp: 0.1 });
+    lenis = new Lenis({ lerp: 0.1 });
     const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
-    document.querySelectorAll('a[href^="#"]').forEach((a) => {
-      a.addEventListener("click", (e) => {
-        const id = a.getAttribute("href");
-        if (id.length < 2) return;
-        const target = document.querySelector(id);
-        if (!target) return;
-        e.preventDefault();
-        lenis.scrollTo(target, { offset: -90 });
-      });
+  }
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href");
+      if (id.length < 2) return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(target, { offset: -90 });
+      else target.scrollIntoView({ behavior: "smooth" });
     });
+  });
+
+  /* ============================================
+     Unified scroll-driven engine
+     ============================================ */
+  const progressBar = document.querySelector("[data-progress]");
+  const parallaxEls = Array.from(document.querySelectorAll("[data-speed]"));
+  const blobEls = Array.from(document.querySelectorAll("[data-float]"));
+  const marquee = document.querySelector("[data-marquee]");
+  const pinSection = document.querySelector("[data-pin]");
+  const pinTrack = document.querySelector("[data-pin-track]");
+
+  // layout-based absolute top (ignores transforms — avoids feedback loop)
+  const absTop = (el) => { let t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
+  let bases = new WeakMap();
+  const measure = () => {
+    parallaxEls.forEach((el) => bases.set(el, absTop(el) + el.offsetHeight / 2));
+  };
+  measure();
+  window.addEventListener("resize", measure);
+  window.addEventListener("load", measure);
+
+  // mouse state (for blobs)
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  if (fine && !prefersReduced) {
+    window.addEventListener("mousemove", (e) => {
+      mx = (e.clientX / window.innerWidth - 0.5) * 2;
+      my = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+  }
+
+  // scroll state (for marquee velocity)
+  let lastScroll = window.scrollY, marqueeX = 0, velocity = 0;
+
+  if (!prefersReduced) {
+    const vh = () => window.innerHeight;
+
+    const tick = () => {
+      const y = window.scrollY;
+      velocity = y - lastScroll;
+      lastScroll = y;
+
+      // 1) Progress bar
+      if (progressBar) {
+        const max = document.documentElement.scrollHeight - vh();
+        const p = max > 0 ? Math.min(y / max, 1) : 0;
+        progressBar.style.transform = `scaleX(${p})`;
+      }
+
+      // 2) Parallax elements (move relative to viewport center, no feedback)
+      parallaxEls.forEach((el) => {
+        const base = bases.get(el) || 0;
+        const center = base - y - vh() / 2;
+        const speed = parseFloat(el.dataset.speed) || 0;
+        el.style.transform = `translate3d(0, ${(center * speed).toFixed(1)}px, 0)`;
+      });
+
+      // 3) Blobs: smooth mouse follow + gentle scroll drift
+      cx += (mx - cx) * 0.05; cy += (my - cy) * 0.05;
+      blobEls.forEach((el) => {
+        const s = parseFloat(el.dataset.float) * 100;
+        const drift = y * parseFloat(el.dataset.float) * 0.6;
+        el.style.transform = `translate3d(${cx * s}px, ${cy * s + drift}px, 0)`;
+      });
+
+      // 4) Marquee: constant drift + scroll-velocity boost, seamless loop
+      if (marquee) {
+        marqueeX -= 0.6 + Math.min(Math.abs(velocity) * 0.4, 8) * Math.sign(velocity || 1);
+        const half = marquee.scrollWidth / 2;
+        if (half > 0) { marqueeX = ((marqueeX % half) + half) % half - half; }
+        marquee.style.transform = `translate3d(${marqueeX}px, 0, 0)`;
+      }
+
+      // 5) Pinned horizontal gallery
+      if (pinSection && pinTrack && !isMobile) {
+        const r = pinSection.getBoundingClientRect();
+        const total = pinSection.offsetHeight - vh();
+        const scrolled = Math.min(Math.max(-r.top, 0), total);
+        const p = total > 0 ? scrolled / total : 0;
+        const dist = pinTrack.scrollWidth - window.innerWidth;
+        pinTrack.style.transform = `translate3d(${-(p * dist).toFixed(1)}px, 0, 0)`;
+      }
+
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
   }
 })();
