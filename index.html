@@ -15,7 +15,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="is-loading">
+  <!-- Preloader -->
+  <div class="loader" data-loader>
+    <span class="loader__count" data-loader-count>0</span>
+    <span class="loader__label">Jerome Bustarga — Portfolio</span>
+    <span class="loader__bar" data-loader-bar></span>
+  </div>
+
   <div class="cursor" data-cursor></div>
   <div class="cursor-dot" data-cursor-dot></div>
   <div class="progress" data-progress></div>
@@ -195,6 +202,8 @@
     <a href="#top" class="footer__top" data-magnetic>Back to top ↑</a>
   </footer>
 
+  <!-- Smooth inertia scrolling (Lenis). Site still works if it fails to load. -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

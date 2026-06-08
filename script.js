@@ -12,6 +12,30 @@
   const yearEl = document.querySelector("[data-year]");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  /* ---------- Preloader (0 -> 100 then wipe up) ---------- */
+  const loader = document.querySelector("[data-loader]");
+  const loaderCount = document.querySelector("[data-loader-count]");
+  const loaderBar = document.querySelector("[data-loader-bar]");
+  function finishLoad() {
+    document.body.classList.remove("is-loading");
+    if (loader) loader.classList.add("is-done");
+  }
+  if (loader && !prefersReduced) {
+    const dur = 1400, start = performance.now();
+    const run = (now) => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const val = Math.round(eased * 100);
+      if (loaderCount) loaderCount.textContent = val;
+      if (loaderBar) loaderBar.style.width = val + "%";
+      if (p < 1) requestAnimationFrame(run);
+      else setTimeout(finishLoad, 250);
+    };
+    requestAnimationFrame(run);
+  } else {
+    finishLoad();
+  }
+
   /* ---------- Custom cursor ---------- */
   const cursor = document.querySelector("[data-cursor]");
   const dot = document.querySelector("[data-cursor-dot]");
@@ -160,4 +184,24 @@
   window.addEventListener("resize", update);
   window.addEventListener("load", update);
   update();
+
+  /* ---------- Smooth inertia scroll (Lenis, optional) ---------- */
+  if (typeof Lenis !== "undefined" && !prefersReduced && !isMobile) {
+    const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 1, smoothWheel: true });
+    lenis.on("scroll", onScroll);
+    const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+
+    // Smooth anchor navigation
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      a.addEventListener("click", (e) => {
+        const id = a.getAttribute("href");
+        if (id.length < 2) return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: 0 });
+      });
+    });
+  }
 })();
