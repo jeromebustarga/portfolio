@@ -4,204 +4,159 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jerome Bustarga — Designer & Developer</title>
-  <meta name="description" content="Jerome Bustarga — designer & developer crafting bold, interactive digital experiences." />
+  <meta name="description" content="Hi! I'm Jerome — a designer & developer who builds playful, colorful digital experiences." />
   <meta property="og:title" content="Jerome Bustarga — Designer & Developer" />
-  <meta property="og:description" content="Bold, interactive digital experiences." />
+  <meta property="og:description" content="Playful, colorful digital experiences." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="is-loading">
   <!-- Preloader -->
   <div class="loader" data-loader>
-    <div class="loader__inner">
-      <span class="loader__count" data-loader-count>0</span>
-      <span class="loader__pct">%</span>
-    </div>
-    <span class="loader__label">Jerome Bustarga — Portfolio ’26</span>
-    <span class="loader__bar" data-loader-bar></span>
+    <div class="loader__dots"><span></span><span></span><span></span></div>
+    <p class="loader__text">loading the fun…</p>
   </div>
 
-  <div class="cursor" data-cursor></div>
-  <div class="cursor-dot" data-cursor-dot></div>
-  <div class="progress" data-progress></div>
-  <div class="noise" aria-hidden="true"></div>
+  <!-- Floating background blobs -->
+  <div class="blobs" aria-hidden="true">
+    <span class="blob blob--1" data-float="0.04"></span>
+    <span class="blob blob--2" data-float="-0.06"></span>
+    <span class="blob blob--3" data-float="0.03"></span>
+    <span class="blob blob--4" data-float="-0.05"></span>
+  </div>
 
   <header class="nav" data-nav>
-    <a href="#top" class="nav__logo">JB<span>©</span></a>
+    <a href="#top" class="nav__logo">Jerome<span>*</span></a>
     <nav class="nav__links">
-      <a href="#work" data-link>Work</a>
-      <a href="#gallery" data-link>Gallery</a>
-      <a href="#about" data-link>About</a>
-      <a href="#contact" data-link>Contact</a>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
     </nav>
-    <a href="#contact" class="nav__cta" data-magnetic>Let's talk</a>
-    <button class="nav__burger" data-burger aria-label="Open menu"><span></span><span></span></button>
+    <a href="#contact" class="btn btn--sm" data-magnetic>Say hi 👋</a>
+    <button class="nav__burger" data-burger aria-label="Menu"><span></span><span></span></button>
   </header>
 
   <div class="mobile-menu" data-mobile-menu>
-    <a href="#work" data-link>Work</a>
-    <a href="#gallery" data-link>Gallery</a>
-    <a href="#about" data-link>About</a>
-    <a href="#contact" data-link>Contact</a>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
   </div>
 
   <main id="top">
-    <!-- HERO: interactive particle name -->
+    <!-- HERO -->
     <section class="hero">
-      <h1 class="visually-hidden">Jerome Bustarga — Designer and Developer</h1>
-      <canvas class="hero__canvas" data-particles aria-hidden="true"></canvas>
-      <div class="hero__top">
-        <p class="hero__eyebrow">Designer · Developer</p>
-        <p class="hero__eyebrow hero__eyebrow--r">Available 2026</p>
+      <span class="sticker sticker--star" aria-hidden="true">✦</span>
+      <span class="sticker sticker--blob" aria-hidden="true"></span>
+      <span class="sticker sticker--squiggle" aria-hidden="true">
+        <svg viewBox="0 0 100 30" fill="none"><path d="M2 15 Q 14 2, 26 15 T 50 15 T 74 15 T 98 15" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+      </span>
+
+      <p class="hero__hi reveal">Hi there! I'm Jerome 👋</p>
+      <h1 class="hero__title">
+        <span class="reveal">I design &amp; build</span>
+        <span class="reveal"><mark class="hl hl--coral">playful</mark> digital</span>
+        <span class="reveal"><mark class="hl hl--blue">experiences</mark> ✨</span>
+      </h1>
+      <p class="hero__sub reveal">Part designer, part developer, full-time maker of colorful things that are actually fun to use.</p>
+      <div class="hero__actions reveal">
+        <a href="#work" class="btn btn--coral" data-magnetic>See my work →</a>
+        <a href="#contact" class="btn btn--ghost" data-magnetic data-confetti>Let's talk 🎉</a>
       </div>
-      <div class="hero__bottom">
-        <p class="hero__tagline">Half designer, half engineer — I build digital things that move people. <span>(Move your cursor over my name.)</span></p>
-        <div class="hero__scroll">
-          <span>Scroll</span>
-          <div class="hero__scroll-line"></div>
-        </div>
+
+      <div class="hero__badge" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><defs><path id="bp" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+          <text><textPath href="#bp" startOffset="0">★ OPEN FOR WORK ★ 2026 ★ OPEN FOR WORK ★ 2026 </textPath></text>
+        </svg>
+        <span>🚀</span>
       </div>
     </section>
 
-    <!-- Scroll-reactive marquee -->
+    <!-- Marquee of pills -->
     <section class="marquee" aria-hidden="true">
-      <div class="marquee__track" data-marquee data-dir="-1">
-        <span>Design</span><b>✺</b><span>Development</span><b>✺</b><span>Brand</span><b>✺</b><span>Motion</span><b>✺</b><span>Interaction</span><b>✺</b>
-        <span>Design</span><b>✺</b><span>Development</span><b>✺</b><span>Brand</span><b>✺</b><span>Motion</span><b>✺</b><span>Interaction</span><b>✺</b>
+      <div class="marquee__track">
+        <span class="pill pill--yellow">Web Design</span><span class="pill pill--blue">Development</span><span class="pill pill--green">Branding</span><span class="pill pill--purple">Animation</span><span class="pill pill--coral">UI / UX</span><span class="pill pill--pink">Illustration</span>
+        <span class="pill pill--yellow">Web Design</span><span class="pill pill--blue">Development</span><span class="pill pill--green">Branding</span><span class="pill pill--purple">Animation</span><span class="pill pill--coral">UI / UX</span><span class="pill pill--pink">Illustration</span>
       </div>
     </section>
 
-    <!-- WebGL 3D showcase -->
-    <section class="webgl" id="lab">
-      <canvas class="webgl__canvas" data-webgl aria-hidden="true"></canvas>
-      <div class="webgl__overlay">
-        <h2 class="webgl__title" data-skew>Design with <em>depth.</em></h2>
-      </div>
-      <p class="webgl__sub">Real-time 3D · shaders · motion — drag your cursor through it</p>
-    </section>
-
-    <!-- Work -->
+    <!-- WORK -->
     <section class="work" id="work">
-      <div class="section-head">
-        <p class="section-head__label reveal">Selected Work / 2026</p>
-        <h2 class="section-head__title reveal" data-skew>Things I've made<br />that I'm proud of.</h2>
+      <div class="head">
+        <h2 class="head__title reveal">Stuff I've made <span>🎨</span></h2>
+        <p class="head__sub reveal">A few projects I had a blast working on.</p>
       </div>
-      <div class="projects">
-        <article class="project reveal" data-tilt data-skew>
-          <div class="project__media reveal-img">
-            <img src="https://picsum.photos/seed/nimbus/900/1200" alt="Nimbus dashboard" loading="lazy" data-parallax data-speed="0.12" />
-            <span class="project__index">01</span>
-            <span class="project__view">View ↗</span>
+      <div class="cards">
+        <article class="card card--yellow reveal" data-tilt>
+          <div class="card__img"><img src="https://picsum.photos/seed/nimbus/800/600" alt="Nimbus" loading="lazy" /></div>
+          <div class="card__body">
+            <h3>Nimbus Dashboard</h3>
+            <div class="tags"><span>Product</span><span>React</span></div>
           </div>
-          <div class="project__info"><h3>Nimbus — SaaS Dashboard</h3><p class="project__tags">Product · React · TS</p></div>
         </article>
-        <article class="project reveal project--offset" data-tilt data-skew>
-          <div class="project__media reveal-img">
-            <img src="https://picsum.photos/seed/atlas/900/1200" alt="Atlas brand" loading="lazy" data-parallax data-speed="0.12" />
-            <span class="project__index">02</span>
-            <span class="project__view">View ↗</span>
+        <article class="card card--blue reveal" data-tilt>
+          <div class="card__img"><img src="https://picsum.photos/seed/atlas/800/600" alt="Atlas" loading="lazy" /></div>
+          <div class="card__body">
+            <h3>Atlas Brand &amp; Site</h3>
+            <div class="tags"><span>Brand</span><span>Webflow</span></div>
           </div>
-          <div class="project__info"><h3>Atlas — Brand &amp; Site</h3><p class="project__tags">Identity · Webflow · Motion</p></div>
         </article>
-        <article class="project reveal" data-tilt data-skew>
-          <div class="project__media reveal-img">
-            <img src="https://picsum.photos/seed/pulseapp/900/1200" alt="Pulse app" loading="lazy" data-parallax data-speed="0.12" />
-            <span class="project__index">03</span>
-            <span class="project__view">View ↗</span>
+        <article class="card card--coral reveal" data-tilt>
+          <div class="card__img"><img src="https://picsum.photos/seed/pulse/800/600" alt="Pulse" loading="lazy" /></div>
+          <div class="card__body">
+            <h3>Pulse Mobile App</h3>
+            <div class="tags"><span>UI/UX</span><span>Figma</span></div>
           </div>
-          <div class="project__info"><h3>Pulse — Mobile App</h3><p class="project__tags">UI/UX · Prototyping</p></div>
         </article>
-        <article class="project reveal project--offset" data-tilt data-skew>
-          <div class="project__media reveal-img">
-            <img src="https://picsum.photos/seed/forge/900/1200" alt="Forge tooling" loading="lazy" data-parallax data-speed="0.12" />
-            <span class="project__index">04</span>
-            <span class="project__view">View ↗</span>
+        <article class="card card--green reveal" data-tilt>
+          <div class="card__img"><img src="https://picsum.photos/seed/forge/800/600" alt="Forge" loading="lazy" /></div>
+          <div class="card__body">
+            <h3>Forge Dev Tools</h3>
+            <div class="tags"><span>Full-stack</span><span>Node</span></div>
           </div>
-          <div class="project__info"><h3>Forge — Dev Tooling</h3><p class="project__tags">Full-stack · Node · API</p></div>
         </article>
       </div>
     </section>
 
-    <!-- Pinned horizontal gallery -->
-    <section class="hscroll" id="gallery" data-hscroll>
-      <div class="hscroll__sticky">
-        <div class="hscroll__head"><p class="section-head__label">Gallery</p><h2>Keep scrolling →</h2></div>
-        <div class="hscroll__track" data-hscroll-track>
-          <figure class="hslide"><img src="https://picsum.photos/seed/g1/1000/1300" alt="" loading="lazy" /><figcaption>01 — Exploration</figcaption></figure>
-          <figure class="hslide hslide--wide"><img src="https://picsum.photos/seed/g2/1600/1000" alt="" loading="lazy" /><figcaption>02 — Interface</figcaption></figure>
-          <figure class="hslide"><img src="https://picsum.photos/seed/g3/1000/1300" alt="" loading="lazy" /><figcaption>03 — Motion</figcaption></figure>
-          <figure class="hslide hslide--wide"><img src="https://picsum.photos/seed/g4/1600/1000" alt="" loading="lazy" /><figcaption>04 — Brand</figcaption></figure>
-          <figure class="hslide"><img src="https://picsum.photos/seed/g5/1000/1300" alt="" loading="lazy" /><figcaption>05 — Product</figcaption></figure>
-        </div>
-        <div class="hscroll__bar"><span data-hscroll-progress></span></div>
-      </div>
-    </section>
-
-    <!-- About -->
+    <!-- ABOUT -->
     <section class="about" id="about">
-      <div class="about__grid">
-        <div class="about__sticky">
-          <p class="section-head__label reveal">About</p>
-          <div class="about__photo reveal-img"><img src="https://picsum.photos/seed/jbabout/800/1000" alt="Jerome" loading="lazy" data-parallax data-speed="0.1" /></div>
-          <div class="badge" aria-hidden="true">
-            <svg viewBox="0 0 120 120"><defs><path id="badgePath" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
-              <text><textPath href="#badgePath" startOffset="0">OPEN FOR WORK ✦ 2026 ✦ OPEN FOR WORK ✦ 2026 ✦ </textPath></text>
-            </svg>
-            <span class="badge__icon">↗</span>
-          </div>
-        </div>
-        <div class="about__body">
-          <p class="about__lead reveal" data-skew>I live in the overlap between aesthetics and engineering.</p>
-          <p class="reveal">For years I've helped startups turn rough ideas into polished products. I care about the small details: the easing on a hover, the rhythm of typography, the millisecond shaved off a load time.</p>
-          <p class="reveal">Brand, marketing site, or full web app — I bring both the eye and the code.</p>
-          <div class="stats">
-            <div class="stat reveal"><strong data-count="60">0</strong><span>Projects shipped</span></div>
-            <div class="stat reveal"><strong data-count="8">0</strong><span>Years experience</span></div>
-            <div class="stat reveal"><strong data-count="20">0</strong><span>Happy clients</span></div>
-          </div>
+      <div class="about__photo reveal">
+        <img src="https://picsum.photos/seed/jbavatar/700/800" alt="Jerome" loading="lazy" />
+        <span class="about__tape">that's me! 📸</span>
+      </div>
+      <div class="about__text">
+        <h2 class="reveal">A little about me 🙂</h2>
+        <p class="reveal">I'm Jerome — a designer and developer who genuinely loves making things on the internet. For me the best work happens where good design meets clean code.</p>
+        <p class="reveal">I've helped startups and brands turn fuzzy ideas into colorful, friendly products people actually enjoy using.</p>
+        <div class="stats">
+          <div class="stat stat--yellow reveal"><strong data-count="60">0</strong><span>projects</span></div>
+          <div class="stat stat--blue reveal"><strong data-count="8">0</strong><span>years</span></div>
+          <div class="stat stat--coral reveal"><strong data-count="20">0</strong><span>happy clients</span></div>
         </div>
       </div>
     </section>
 
-    <!-- Skills marquee -->
-    <section class="marquee marquee--alt" aria-hidden="true">
-      <div class="marquee__track" data-marquee data-dir="1">
-        <span>Figma</span><b>/</b><span>React</span><b>/</b><span>TypeScript</span><b>/</b><span>GSAP</span><b>/</b><span>Webflow</span><b>/</b><span>Three.js</span><b>/</b><span>Node</span><b>/</b>
-        <span>Figma</span><b>/</b><span>React</span><b>/</b><span>TypeScript</span><b>/</b><span>GSAP</span><b>/</b><span>Webflow</span><b>/</b><span>Three.js</span><b>/</b><span>Node</span><b>/</b>
-      </div>
-    </section>
-
-    <!-- Contact -->
+    <!-- CONTACT -->
     <section class="contact" id="contact">
-      <div class="contact__inner">
-        <p class="section-head__label reveal">Contact</p>
-        <h2 class="contact__title" data-skew>
-          <span class="line"><span class="line__inner reveal">Let's build</span></span>
-          <span class="line"><span class="line__inner reveal"><em>something.</em></span></span>
-        </h2>
-        <a href="mailto:jeromehadebustarga@gmail.com" class="contact__email reveal" data-magnetic>jeromehadebustarga@gmail.com</a>
-        <div class="contact__meta reveal">
-          <span>Local time — <b data-clock>--:--:--</b></span>
-          <span>Based remotely · Working worldwide</span>
-        </div>
-        <div class="contact__socials reveal">
-          <a href="#" data-link>GitHub</a><a href="#" data-link>LinkedIn</a><a href="#" data-link>Dribbble</a><a href="#" data-link>Twitter / X</a>
+      <div class="contact__card reveal">
+        <h2>Let's make something<br /><mark class="hl hl--yellow">fun</mark> together! 🎉</h2>
+        <p>Got a project, an idea, or just want to say hello? My inbox is always open.</p>
+        <a href="mailto:jeromehadebustarga@gmail.com" class="btn btn--big btn--coral" data-magnetic data-confetti>jeromehadebustarga@gmail.com</a>
+        <div class="contact__socials">
+          <a href="#" class="pill pill--blue">GitHub</a><a href="#" class="pill pill--green">LinkedIn</a><a href="#" class="pill pill--purple">Dribbble</a><a href="#" class="pill pill--pink">Twitter</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>© <span data-year></span> Jerome Bustarga</p>
-    <p>Designed &amp; built from scratch.</p>
-    <a href="#top" class="footer__top" data-magnetic>Back to top ↑</a>
+    <p>© <span data-year></span> Jerome Bustarga — made with lots of ☕ &amp; color</p>
+    <a href="#top" data-magnetic>Back to top ↑</a>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
