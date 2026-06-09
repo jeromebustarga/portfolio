@@ -207,6 +207,7 @@
       { el: document.querySelector(".hero"), key: "top" },
       { el: document.getElementById("about"), key: "about" },
       { el: document.getElementById("work"), key: "work" },
+      { el: document.getElementById("warpzone"), key: "warpzone" },
       { el: document.getElementById("skills"), key: "skills" },
       { el: document.getElementById("contact"), key: "contact" },
     ].filter((m) => m.el);

@@ -40,8 +40,9 @@
   <a href="#top" data-chapter="top"><span class="chapters__num">01</span><span class="chapters__dot"></span><span class="chapters__label">Light</span></a>
   <a href="#about" data-chapter="about"><span class="chapters__num">02</span><span class="chapters__dot"></span><span class="chapters__label">About</span></a>
   <a href="#work" data-chapter="work"><span class="chapters__num">03</span><span class="chapters__dot"></span><span class="chapters__label">Work</span></a>
-  <a href="#skills" data-chapter="skills"><span class="chapters__num">04</span><span class="chapters__dot"></span><span class="chapters__label">Skills</span></a>
-  <a href="#contact" data-chapter="contact"><span class="chapters__num">05</span><span class="chapters__dot"></span><span class="chapters__label">Contact</span></a>
+  <a href="#warpzone" data-chapter="warpzone"><span class="chapters__num">04</span><span class="chapters__dot"></span><span class="chapters__label">Warp Zone</span></a>
+  <a href="#skills" data-chapter="skills"><span class="chapters__num">05</span><span class="chapters__dot"></span><span class="chapters__label">Skills</span></a>
+  <a href="#contact" data-chapter="contact"><span class="chapters__num">06</span><span class="chapters__dot"></span><span class="chapters__label">Contact</span></a>
 </aside>
 
 <!-- Scroll progress -->
@@ -150,13 +151,46 @@
             <div class="panel__media"><img src="images/research.png" alt="Research" loading="lazy" data-fallback-label="Research"></div>
             <div class="panel__meta"><span class="panel__num">04</span><h3>Research</h3><span class="panel__tag">UX · Data</span><span class="panel__go"><i class="fa-solid fa-arrow-right"></i></span></div>
           </a>
-
-          <a href="warpzone.html" class="panel panel--warp" data-link>
-            <div class="panel__warp"><div class="warp-ring"></div><div class="warp-ring"></div><div class="warp-ring"></div><div class="warp-core"></div></div>
-            <div class="panel__meta"><span class="panel__num">→</span><h3>Enter the Warpzone</h3><span class="panel__tag">Experiments · Play</span><span class="panel__go"><i class="fa-solid fa-rocket"></i></span></div>
-          </a>
         </div>
       </div>
+    </section>
+
+    <!-- WARPZONE — dedicated portal section -->
+    <section id="warpzone" class="warp">
+      <span class="label reveal">(The Warp Zone)</span>
+      <h2 class="warp__title">
+        <span class="mask"><span>Enter the</span></span>
+        <span class="mask"><span><em>warp zone.</em></span></span>
+      </h2>
+
+      <div class="warp__portal reveal" id="warpPortal" aria-hidden="true">
+        <div class="warp__ring"></div>
+        <div class="warp__ring"></div>
+        <div class="warp__ring"></div>
+        <div class="warp__core"></div>
+        <div class="warp__orbit">
+          <span class="warp__node" style="--a:0deg"><i class="fa-solid fa-house"></i></span>
+          <span class="warp__node" style="--a:60deg"><i class="fa-solid fa-palette"></i></span>
+          <span class="warp__node" style="--a:120deg"><i class="fa-solid fa-code"></i></span>
+          <span class="warp__node" style="--a:180deg"><i class="fa-solid fa-cube"></i></span>
+          <span class="warp__node" style="--a:240deg"><i class="fa-solid fa-film"></i></span>
+          <span class="warp__node" style="--a:300deg"><i class="fa-solid fa-tag"></i></span>
+        </div>
+      </div>
+
+      <p class="warp__sub reveal">An interactive playground — a pixel platformer hiding doors to every corner of my work. Jump in, explore the maze, and pick a door.</p>
+
+      <div class="warp__controls reveal" style="--i:1" aria-hidden="true">
+        <span class="kbd">←</span><span class="kbd">→</span> Move
+        <span class="warp__sep">·</span>
+        <span class="kbd">↑</span> Jump
+        <span class="warp__sep">·</span>
+        <span class="kbd">Space</span> Enter door
+      </div>
+
+      <a href="warpzone.html" class="warp__cta reveal" style="--i:2" data-link data-magnetic>
+        <span>Press start</span> <i class="fa-solid fa-arrow-right"></i>
+      </a>
     </section>
 
     <!-- SKILLS — big interactive list -->
