@@ -3,48 +3,41 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-<title>Jerome Bustarga — Developer & Designer</title>
-<meta name="description" content="It's Jerome's World — developer and designer crafting digital experiences that blend functionality with refined aesthetics." />
+<title>Jerome Bustarga — It's Jerome's World</title>
+<meta name="description" content="It's Jerome's World — developer & designer crafting digital experiences. You bring the light." />
 <link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="loading">
 
+<!-- Custom cursor -->
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
+
 <!-- Preloader -->
 <div class="preloader" id="preloader">
-  <i class="fa-solid fa-lightbulb preloader__bulb"></i>
-  <div class="preloader__count" id="preCount">0</div>
+  <div class="preloader__bulb"><i class="fa-solid fa-lightbulb"></i></div>
+  <div class="preloader__meta">
+    <span class="preloader__label">It's Jerome's World</span>
+    <span class="preloader__count" id="preCount">0</span>
+  </div>
   <div class="preloader__bar"><i id="preBar"></i></div>
 </div>
+
+<!-- WebGL hero canvas (fixed background) -->
+<canvas id="gl" class="gl-canvas" aria-hidden="true"></canvas>
+<div class="hero-fallback" aria-hidden="true"></div>
 
 <!-- Scroll progress -->
 <div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- Background FX -->
-<div class="bg-gradient">
-  <div class="gradient-orb gradient-orb-1"></div>
-  <div class="gradient-orb gradient-orb-2"></div>
-  <div class="gradient-orb gradient-orb-3"></div>
-  <div class="floating-shapes">
-    <div class="shape shape-1" data-float="0.4"></div>
-    <div class="shape shape-2" data-float="-0.3"></div>
-    <div class="shape shape-3" data-float="0.25"></div>
-    <div class="shape shape-4" data-float="-0.5"></div>
-    <div class="shape shape-5" data-float="0.35"></div>
-    <div class="shape shape-6" data-float="-0.2"></div>
-  </div>
-</div>
-<div class="bg-grid"></div>
-
 <nav id="nav">
-  <a href="#mainContent" class="logo" id="logoNav">
-    <div class="logo-icon">
-      <img src="images/logo.png" alt="Jerome Bustarga Logo" data-fallback-icon="fa-lightbulb">
-    </div>
+  <a href="#top" class="logo" id="logoNav">
+    <span class="logo-icon"><img src="images/logo.png" alt="Logo" data-fallback-icon="fa-lightbulb"></span>
     <span class="logo-text-wrapper">
       <span class="logo-text">Jerome Bustarga</span>
       <span class="logo-text-alt">It's Jerome's World</span>
@@ -53,210 +46,151 @@
   <div class="nav-right">
     <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#about">About</a></li>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#about" data-link>About</a></li>
+      <li><a href="#work" data-link>Work</a></li>
+      <li><a href="#skills" data-link>Skills</a></li>
+      <li><a href="#contact" data-link>Contact</a></li>
     </ul>
     <div class="icon-dropdown">
       <button class="icon-dropdown-btn" id="iconDropdownBtn" aria-label="Navigation menu"><i class="fa-solid fa-grip"></i></button>
       <div class="icon-menu" id="iconMenu">
-        <a href="index.html" title="Home" aria-label="Home"><i class="fa-solid fa-house"></i></a>
-        <a href="about.html" title="About Me" aria-label="About Me"><i class="fa-solid fa-user"></i></a>
-        <a href="warpzone.html" title="Warp Zone" aria-label="Warp Zone"><i class="fa-solid fa-rocket"></i></a>
+        <a href="index.html" title="Home" data-link><i class="fa-solid fa-house"></i></a>
+        <a href="about.html" title="About" data-link><i class="fa-solid fa-user"></i></a>
+        <a href="warpzone.html" title="Warp Zone" data-link><i class="fa-solid fa-rocket"></i></a>
       </div>
     </div>
   </div>
 </nav>
 
-<main id="mainContent">
+<main id="top">
   <!-- HERO -->
-  <section class="hero-section">
-    <div class="hero-inner" id="heroInner">
-      <div class="lightbulb-container">
-        <div class="radial-light"></div>
-        <div class="light-rays">
-          <div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div>
-          <div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div>
-        </div>
-        <div class="lightbulb">
-          <img src="images/logo.png" alt="Jerome Bustarga" class="bulb-on" data-fallback-icon="fa-lightbulb">
-        </div>
-      </div>
-
-      <div class="hero-badge reveal"><i class="fa-solid fa-circle"></i> Open to work & Projects</div>
-      <div class="hero-content">
-        <h1>
-          <span class="mask" style="--i:0"><span>It's <span class="highlight">Jerome's World</span></span></span>
-          <span class="mask" style="--i:1"><span>and you're just living in it</span></span>
-        </h1>
-        <p class="reveal" style="--i:3">Developer and designer crafting digital experiences that blend functionality with refined aesthetics. Focused on creating products that are both beautiful and purposeful.</p>
-        <div class="hero-cta reveal" style="--i:4">
-          <a href="#work" class="btn btn-primary" data-magnetic>View Work <i class="fa-solid fa-arrow-down"></i></a>
-          <a href="#contact" class="btn btn-secondary" data-magnetic>Get In Touch</a>
-        </div>
-      </div>
+  <section class="hero">
+    <div class="hero__eyebrow reveal"><span>Developer</span><span class="sep">/</span><span>Designer</span><span class="sep">/</span><span>Omaha, NE</span></div>
+    <h1 class="hero__title">
+      <span class="line mask"><span>Jerome's</span></span>
+      <span class="line mask outline"><span>World<em class="dot-orange">.</em></span></span>
+    </h1>
+    <p class="hero__sub reveal" style="--i:2">A multidisciplinary maker crafting digital experiences that blend code &amp; craft. Move your cursor — you bring the light.</p>
+    <div class="hero__cta reveal" style="--i:3">
+      <a href="#work" class="btn btn-primary" data-link data-magnetic>Explore the world <i class="fa-solid fa-arrow-down"></i></a>
+      <a href="#contact" class="btn btn-ghost" data-link data-magnetic>Get in touch</a>
     </div>
-    <div class="scroll-indicator"><span>Scroll</span><div class="line"></div></div>
+    <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee__track" id="marquee">
-      <span class="marquee__item">Development <span class="dot">●</span> Design <span class="dot">●</span> <em>It's Jerome's World</em> <span class="dot">●</span> Branding <span class="dot">●</span> Motion <span class="dot">●</span></span>
-      <span class="marquee__item">Development <span class="dot">●</span> Design <span class="dot">●</span> <em>It's Jerome's World</em> <span class="dot">●</span> Branding <span class="dot">●</span> Motion <span class="dot">●</span></span>
-    </div>
-  </div>
-
-  <!-- ABOUT + STATS -->
-  <section id="about" class="about-section">
-    <div class="about-grid">
-      <div class="about-text">
-        <h2 class="mask"><span>A designer who codes,<br>a developer who <em>designs.</em></span></h2>
-        <p class="reveal">I'm Jerome — a multidisciplinary creative based in Omaha, NE. I work across the full spectrum, from brand identity and illustration to full-stack web development, turning ideas into experiences that are both beautiful and purposeful.</p>
-        <p class="reveal" style="--i:1">Whether it's a logo, a motion piece, or a Django app, I care about the craft and the details that make something feel considered.</p>
-      </div>
-      <div class="stats">
-        <div class="stat reveal" style="--i:0"><strong data-count="50">0</strong><span>Projects</span></div>
-        <div class="stat reveal" style="--i:1"><strong data-count="6">0</strong><span>Years</span></div>
-        <div class="stat reveal" style="--i:2"><strong data-count="8">0</strong><span>Disciplines</span></div>
+  <!-- The content scrim covers the canvas below the hero -->
+  <div class="content">
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marquee">
+        <span class="m">Development <b>✦</b> Design <b>✦</b> <em>Illustration</em> <b>✦</b> Branding <b>✦</b> Motion <b>✦</b> Photography <b>✦</b> </span>
+        <span class="m">Development <b>✦</b> Design <b>✦</b> <em>Illustration</em> <b>✦</b> Branding <b>✦</b> Motion <b>✦</b> Photography <b>✦</b> </span>
       </div>
     </div>
-  </section>
 
-  <div class="section-divider"></div>
-
-  <!-- WORK -->
-  <section id="work" class="work-section">
-    <div class="section-header">
-      <span class="section-label reveal">Portfolio</span>
-      <h2 class="mask"><span>Featured Work</span></h2>
-      <p class="reveal" style="--i:1">A selection of recent projects and creative explorations</p>
-    </div>
-
-    <div class="projects-grid">
-      <article class="project-card reveal" data-tilt>
-        <div class="project-visual">
-          <img src="images/illustrations.png" alt="Illustrations Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Illustrations">
+    <!-- ABOUT + STATS -->
+    <section id="about" class="about">
+      <div class="about__grid">
+        <div class="about__lead">
+          <span class="label reveal">(About)</span>
+          <h2 class="about__statement">
+            <span class="mask"><span>A designer who codes.</span></span>
+            <span class="mask"><span>A developer who <em>designs.</em></span></span>
+          </h2>
         </div>
-        <div class="project-content">
-          <div class="project-number">01</div>
-          <h3>Illustrations</h3>
-          <p>Creating vibrant digital and hand-drawn illustrations that bring stories to life. From character design to editorial work, combining artistic vision with technical skill.</p>
-          <div class="project-tags"><span class="tag">Adobe Illustrator</span><span class="tag">Character Design</span><span class="tag">Digital Art</span></div>
-          <a href="illustrations.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="about__body">
+          <p class="reveal">I'm Jerome — a multidisciplinary creative based in Omaha. I work across the full spectrum: brand identity, illustration, motion, and full-stack web development, turning ideas into experiences that feel considered down to the last detail.</p>
+          <div class="stats">
+            <div class="stat reveal" style="--i:0"><strong data-count="50">0</strong><span>Projects shipped</span></div>
+            <div class="stat reveal" style="--i:1"><strong data-count="6">0</strong><span>Years making</span></div>
+            <div class="stat reveal" style="--i:2"><strong data-count="8">0</strong><span>Disciplines</span></div>
+          </div>
         </div>
-      </article>
-
-      <article class="project-card reveal" data-tilt>
-        <div class="project-visual">
-          <img src="images/logobranding.png" alt="Logo & Branding Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Logo & Branding">
-        </div>
-        <div class="project-content">
-          <div class="project-number">02</div>
-          <h3>Logo & Branding</h3>
-          <p>Creating distinctive visual identities that capture brand essence. Crafting memorable logos and comprehensive brand systems that resonate with audiences.</p>
-          <div class="project-tags"><span class="tag">Brand Strategy</span><span class="tag">Identity Design</span><span class="tag">Typography</span></div>
-          <a href="logobranding.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
-      </article>
-
-      <article class="project-card reveal" data-tilt>
-        <div class="project-visual">
-          <img src="images/webdesign.png" alt="Web Design Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Web Design">
-        </div>
-        <div class="project-content">
-          <div class="project-number">03</div>
-          <h3>Web Design</h3>
-          <p>Designing beautiful, user-centered digital experiences with intuitive interfaces. Crafting responsive layouts that balance aesthetics with usability.</p>
-          <div class="project-tags"><span class="tag">UI/UX Design</span><span class="tag">Figma</span><span class="tag">Prototyping</span></div>
-          <a href="webdesign.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
-      </article>
-
-      <article class="project-card reveal" data-tilt>
-        <div class="project-visual">
-          <img src="images/research.png" alt="Research Portfolio Preview" class="project-image" loading="lazy" data-fallback-label="Research">
-        </div>
-        <div class="project-content">
-          <div class="project-number">04</div>
-          <h3>Research</h3>
-          <p>Exploring emerging technologies through systematic investigation. Conducting user studies, prototyping concepts, and documenting findings for future development.</p>
-          <div class="project-tags"><span class="tag">UX Research</span><span class="tag">Data Analysis</span><span class="tag">User Testing</span></div>
-          <a href="research.html" class="project-link">View Projects <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- WARPZONE CTA -->
-  <section class="warpzone-cta-section">
-    <div class="warpzone-cta-container reveal">
-      <div class="warpzone-cta-content">
-        <div class="warpzone-icon"><i class="fa-solid fa-rocket"></i></div>
-        <h2>Enter the Warpzone</h2>
-        <p>Explore more projects, experiments, and creative explorations in an interactive experience.</p>
-        <a href="warpzone.html" class="btn btn-primary" data-magnetic>Launch Warpzone <i class="fa-solid fa-arrow-right"></i></a>
       </div>
-      <div class="warpzone-cta-visual">
-        <div class="warp-ring ring-1"></div>
-        <div class="warp-ring ring-2"></div>
-        <div class="warp-ring ring-3"></div>
-        <div class="warp-core"></div>
+    </section>
+
+    <!-- WORK — pinned horizontal showcase -->
+    <section id="work" class="work" data-pin>
+      <div class="work__sticky">
+        <div class="work__track" id="workTrack">
+          <div class="work__intro">
+            <span class="label">(Selected Work)</span>
+            <h2>Things I've<br><em>made.</em></h2>
+            <p>Scroll to travel through the work →</p>
+          </div>
+
+          <a href="illustrations.html" class="panel" data-link>
+            <div class="panel__media"><img src="images/illustrations.png" alt="Illustrations" loading="lazy" data-fallback-label="Illustrations"></div>
+            <div class="panel__meta"><span class="panel__num">01</span><h3>Illustrations</h3><span class="panel__tag">Digital Art · Character</span><span class="panel__go"><i class="fa-solid fa-arrow-right"></i></span></div>
+          </a>
+
+          <a href="logobranding.html" class="panel" data-link>
+            <div class="panel__media"><img src="images/logobranding.png" alt="Logo & Branding" loading="lazy" data-fallback-label="Branding"></div>
+            <div class="panel__meta"><span class="panel__num">02</span><h3>Logo &amp; Branding</h3><span class="panel__tag">Identity · Typography</span><span class="panel__go"><i class="fa-solid fa-arrow-right"></i></span></div>
+          </a>
+
+          <a href="webdesign.html" class="panel" data-link>
+            <div class="panel__media"><img src="images/webdesign.png" alt="Web Design" loading="lazy" data-fallback-label="Web Design"></div>
+            <div class="panel__meta"><span class="panel__num">03</span><h3>Web Design</h3><span class="panel__tag">UI/UX · Prototyping</span><span class="panel__go"><i class="fa-solid fa-arrow-right"></i></span></div>
+          </a>
+
+          <a href="research.html" class="panel" data-link>
+            <div class="panel__media"><img src="images/research.png" alt="Research" loading="lazy" data-fallback-label="Research"></div>
+            <div class="panel__meta"><span class="panel__num">04</span><h3>Research</h3><span class="panel__tag">UX · Data</span><span class="panel__go"><i class="fa-solid fa-arrow-right"></i></span></div>
+          </a>
+
+          <a href="warpzone.html" class="panel panel--warp" data-link>
+            <div class="panel__warp"><div class="warp-ring"></div><div class="warp-ring"></div><div class="warp-ring"></div><div class="warp-core"></div></div>
+            <div class="panel__meta"><span class="panel__num">→</span><h3>Enter the Warpzone</h3><span class="panel__tag">Experiments · Play</span><span class="panel__go"><i class="fa-solid fa-rocket"></i></span></div>
+          </a>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <div class="section-divider"></div>
-
-  <!-- SKILLS -->
-  <section id="skills" class="skills-section">
-    <div class="section-header">
-      <span class="section-label reveal">Capabilities</span>
-      <h2 class="mask"><span>Expertise</span></h2>
-      <p class="reveal" style="--i:1">Core competencies and technical skills</p>
-    </div>
-
-    <div class="skills-grid">
-      <div class="skill-card reveal" style="--i:0"><div class="skill-icon"><i class="fa-solid fa-code"></i></div><h3>Web Development</h3><p>Full-stack applications with Django, Python, and scalable architecture.</p></div>
-      <div class="skill-card reveal" style="--i:1"><div class="skill-icon"><i class="fa-solid fa-palette"></i></div><h3>Graphic Design</h3><p>Visual content with Adobe Creative Suite for impactful brand communication.</p></div>
-      <div class="skill-card reveal" style="--i:2"><div class="skill-icon"><i class="fa-solid fa-film"></i></div><h3>Video Production</h3><p>Cinematic content with Premiere Pro, After Effects, and professional techniques.</p></div>
-      <div class="skill-card reveal" style="--i:3"><div class="skill-icon"><i class="fa-solid fa-camera"></i></div><h3>Photography</h3><p>Compelling visuals with professional editing and visual storytelling.</p></div>
-      <div class="skill-card reveal" style="--i:0"><div class="skill-icon"><i class="fa-solid fa-pen-nib"></i></div><h3>Brand Identity</h3><p>Comprehensive identities with logo design and cohesive design systems.</p></div>
-      <div class="skill-card reveal" style="--i:1"><div class="skill-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h3>Motion Graphics</h3><p>Dynamic visuals with After Effects for engaging motion design.</p></div>
-      <div class="skill-card reveal" style="--i:2"><div class="skill-icon"><i class="fa-solid fa-chart-line"></i></div><h3>Data Analytics</h3><p>Analyzing and visualizing data to drive informed decision making.</p></div>
-      <div class="skill-card reveal" style="--i:3"><div class="skill-icon"><i class="fa-solid fa-book-open"></i></div><h3>Digital Humanities</h3><p>Computational methods bridging technology and liberal arts inquiry.</p></div>
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- CONTACT -->
-  <section id="contact" class="contact-section">
-    <div class="contact-content">
-      <h2 class="mask"><span>Let's <em>Connect</em></span></h2>
-      <p class="reveal">Open to discussing new projects, creative collaborations, or opportunities to bring your ideas to life.</p>
-      <div class="hero-cta reveal" style="--i:1">
-        <a href="mailto:jeromehadebustarga@gmail.com" class="btn btn-primary" data-magnetic><i class="fa-solid fa-envelope"></i> Send Message</a>
+    <!-- SKILLS — big interactive list -->
+    <section id="skills" class="skills">
+      <div class="section-head">
+        <span class="label reveal">(Capabilities)</span>
+        <h2 class="mask"><span>What I do</span></h2>
       </div>
-      <div class="social-links reveal" style="--i:2">
+      <ul class="skill-list">
+        <li class="skill-row reveal"><span class="skill-row__idx">01</span><span class="skill-row__name">Web Development</span><span class="skill-row__desc">Django · Python · Full-stack</span><i class="fa-solid fa-arrow-right"></i></li>
+        <li class="skill-row reveal"><span class="skill-row__idx">02</span><span class="skill-row__name">Graphic Design</span><span class="skill-row__desc">Adobe Creative Suite</span><i class="fa-solid fa-arrow-right"></i></li>
+        <li class="skill-row reveal"><span class="skill-row__idx">03</span><span class="skill-row__name">Brand Identity</span><span class="skill-row__desc">Logos · Systems · Type</span><i class="fa-solid fa-arrow-right"></i></li>
+        <li class="skill-row reveal"><span class="skill-row__idx">04</span><span class="skill-row__name">Motion Graphics</span><span class="skill-row__desc">After Effects · Premiere</span><i class="fa-solid fa-arrow-right"></i></li>
+        <li class="skill-row reveal"><span class="skill-row__idx">05</span><span class="skill-row__name">Photography</span><span class="skill-row__desc">Shooting · Editing</span><i class="fa-solid fa-arrow-right"></i></li>
+        <li class="skill-row reveal"><span class="skill-row__idx">06</span><span class="skill-row__name">Data &amp; Digital Humanities</span><span class="skill-row__desc">Analysis · Visualization</span><i class="fa-solid fa-arrow-right"></i></li>
+      </ul>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact">
+      <span class="label reveal">(Let's talk)</span>
+      <h2 class="contact__title">
+        <span class="mask"><span>Let's build</span></span>
+        <span class="mask"><span>something <em>bright.</em></span></span>
+      </h2>
+      <a href="mailto:jeromehadebustarga@gmail.com" class="contact__email reveal" data-magnetic>jeromehadebustarga@gmail.com</a>
+      <div class="social-links reveal" style="--i:1">
         <a href="https://github.com/jhb09808" target="_blank" rel="noopener" class="social-link" aria-label="GitHub" data-magnetic><i class="fa-brands fa-github"></i></a>
         <a href="https://www.linkedin.com/in/jeromebustarga0321/" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn" data-magnetic><i class="fa-brands fa-linkedin-in"></i></a>
         <a href="https://behance.net/jeromebustarga" target="_blank" rel="noopener" class="social-link" aria-label="Behance" data-magnetic><i class="fa-brands fa-behance"></i></a>
         <a href="https://www.instagram.com/jeromeq.21?igsh=bzFsdzJzOHZtMWx2&utm_source=qr" target="_blank" rel="noopener" class="social-link" aria-label="Instagram" data-magnetic><i class="fa-brands fa-instagram"></i></a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <footer>
-    <div class="footer-content">
-      <div class="footer-left">© 2025 Jerome Bustarga. Thoughtfully designed & built.</div>
-      <div class="footer-right">Omaha, NE</div>
-    </div>
-  </footer>
+    <footer class="footer">
+      <div class="footer__big" aria-hidden="true">JEROME'S WORLD</div>
+      <div class="footer__row">
+        <span>© 2025 Jerome Bustarga</span>
+        <span>Thoughtfully designed &amp; built</span>
+        <span>Omaha, NE</span>
+      </div>
+    </footer>
+  </div>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="script.js"></script>
 </body>
