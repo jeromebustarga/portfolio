@@ -406,4 +406,245 @@
     requestAnimationFrame(tick);
   }
   if (!prefersReduced) requestAnimationFrame(tick);
+
+  /* ============================================================
+     Warp Zone — playable in place (desktop / keyboard)
+     ============================================================ */
+  const wzStart = document.getElementById("wzStart");
+  const wzSection = document.getElementById("warpzone");
+  const wzGame = document.getElementById("wzGame");
+  if (wzStart && wzSection && wzGame && !isTouch) {
+    const wzArena = document.getElementById("wzArena");
+    const wzChar = document.getElementById("wzChar");
+    const wzMain = document.getElementById("wzMain");
+    const wzStudio = document.getElementById("wzStudio");
+    const wzLevel = document.getElementById("wzLevel");
+    const wzExit = document.getElementById("wzExit");
+    const charCtx = document.getElementById("wzCharCanvas").getContext("2d");
+
+    let charX = 100, charY = 100, velocityX = 0, velocityY = 0;
+    let isGrounded = false, currentLevel = "main";
+    let physicsActive = false, active = false, loopStarted = false;
+    const GRAVITY = 0.6, JUMP_FORCE = -14, MOVE_SPEED = 5, MAX_FALL_SPEED = 12;
+    const keys = { ArrowLeft: false, ArrowRight: false, ArrowUp: false, ArrowDown: false, Space: false };
+
+    function drawCharacter() {
+      charCtx.clearRect(0, 0, 40, 60);
+      charCtx.fillStyle = "#f47921"; charCtx.fillRect(12, 8, 16, 16);
+      charCtx.fillStyle = "#0d0d0d"; charCtx.fillRect(15, 13, 4, 4); charCtx.fillRect(21, 13, 4, 4);
+      charCtx.fillStyle = "#e8e8e8"; charCtx.fillRect(10, 24, 20, 20);
+      charCtx.fillStyle = "#f47921"; charCtx.fillRect(10, 30, 20, 4);
+      charCtx.fillStyle = "#a0a0a0"; charCtx.fillRect(12, 44, 6, 12); charCtx.fillRect(22, 44, 6, 12);
+    }
+    drawCharacter();
+
+    const mainGrid = [];
+    for (let row = 0; row < 20; row++) {
+      mainGrid[row] = [];
+      for (let col = 0; col < 30; col++) {
+        if (row === 0 || row === 19 || col === 0 || col === 29) mainGrid[row][col] = 1;
+        else if (row >= 17) mainGrid[row][col] = 1;
+        else if (col >= 3 && col <= 9 && row === 14) mainGrid[row][col] = 1;
+        else if (col >= 5 && col <= 11 && row === 10) mainGrid[row][col] = 1;
+        else if (col >= 20 && col <= 26 && row === 14) mainGrid[row][col] = 1;
+        else if (col >= 18 && col <= 24 && row === 10) mainGrid[row][col] = 1;
+        else if (col >= 13 && col <= 16 && row === 6) mainGrid[row][col] = 1;
+        else if (col >= 12 && col <= 17 && row === 13) mainGrid[row][col] = 1;
+        else mainGrid[row][col] = 0;
+      }
+    }
+    const mainDoors = [
+      { row: 12, col: 6, icon: "fa-door-open", label: "Repository", type: "repository" },
+      { row: 8, col: 21, icon: "fa-door-open", label: "Studio", type: "studio" },
+      { row: 4, col: 14, icon: "fa-house", label: "Home", type: "home" },
+      { row: 12, col: 23, icon: "fa-user", label: "About", type: "about" },
+    ];
+    const studioGrid = [];
+    for (let row = 0; row < 20; row++) {
+      studioGrid[row] = [];
+      for (let col = 0; col < 30; col++) {
+        if (row === 0 || row === 19 || col === 0 || col === 29) studioGrid[row][col] = 1;
+        else if ((col === 7 || col === 15 || col === 22) && (row < 6 || (row > 9 && row < 13) || row > 16)) studioGrid[row][col] = 1;
+        else if ((row === 7 || row === 14) && (col < 6 || (col > 9 && col < 14) || (col > 17 && col < 21) || col > 24)) studioGrid[row][col] = 1;
+        else studioGrid[row][col] = 0;
+      }
+    }
+    const studioDoors = [
+      { row: 4, col: 4, icon: "fa-palette", label: "Illustrations", type: "illustrations" },
+      { row: 11, col: 11, icon: "fa-tag", label: "Branding", type: "branding" },
+      { row: 4, col: 19, icon: "fa-cube", label: "3D Art", type: "3dart" },
+      { row: 4, col: 26, icon: "fa-code", label: "Web Design", type: "webdesign" },
+      { row: 4, col: 11, icon: "fa-film", label: "Film", type: "film" },
+      { row: 11, col: 19, icon: "fa-arrow-left", label: "Back", type: "back" },
+    ];
+
+    function buildGrid(container, grid, doors, doorClass) {
+      container.innerHTML = "";
+      for (let row = 0; row < grid.length; row++) {
+        for (let col = 0; col < grid[row].length; col++) {
+          const cell = document.createElement("div");
+          cell.className = "wz-cell " + (grid[row][col] === 1 ? "wall" : "path");
+          const d = doors.find((x) => x.row === row && x.col === col);
+          if (d) {
+            const door = document.createElement("div");
+            door.className = doorClass;
+            door.dataset.type = d.type;
+            door.innerHTML = '<div class="wz-prompt">Press space</div><div class="wz-door-icon"><i class="fa-solid ' + d.icon + '"></i></div><div class="wz-door-label">' + d.label + "</div>";
+            cell.appendChild(door);
+          }
+          container.appendChild(cell);
+        }
+      }
+    }
+    buildGrid(wzMain, mainGrid, mainDoors, "wz-door");
+    buildGrid(wzStudio, studioGrid, studioDoors, "wz-sdoor");
+    wzMain.classList.add("active");
+
+    function showToast(html) {
+      const old = document.getElementById("wzToast");
+      if (old) old.remove();
+      const t = document.createElement("div");
+      t.className = "wz-toast"; t.id = "wzToast"; t.innerHTML = html;
+      document.body.appendChild(t);
+    }
+    const moveHint = '<span class="wz-key">←</span> <span class="wz-key">→</span> Move · <span class="wz-key">↑</span> Jump · <span class="wz-key">Space</span> Enter';
+    const mazeHint = '<span class="wz-key">←</span> <span class="wz-key">↑</span> <span class="wz-key">↓</span> <span class="wz-key">→</span> Move · <span class="wz-key">Space</span> Enter';
+
+    function placeChar(colMul, rowMul, half) {
+      const r = wzArena.getBoundingClientRect();
+      const cw = r.width / 30, ch = r.height / 20;
+      charX = half ? cw * colMul + cw / 2 - 20 : cw * colMul - 20;
+      charY = half ? ch * rowMul + ch / 2 - 30 : ch * rowMul - 30;
+      wzChar.style.left = charX + "px";
+      wzChar.style.top = charY + "px";
+    }
+
+    function powerOn() {
+      if (active) return;
+      active = true;
+      wzSection.classList.add("playing");
+      document.body.style.overflow = "hidden";
+      if (lenis) lenis.stop();
+      showToast(moveHint);
+      requestAnimationFrame(() => {
+        placeChar(15, 10, false);
+        isGrounded = false; velocityY = 0; physicsActive = true;
+      });
+      if (!loopStarted) { loopStarted = true; moveCharacter(); }
+    }
+    function powerOff() {
+      active = false; physicsActive = false;
+      wzSection.classList.remove("playing");
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+      const t = document.getElementById("wzToast"); if (t) t.remove();
+      // reset to main hub for next time
+      currentLevel = "main";
+      wzStudio.classList.remove("active"); wzMain.classList.add("active");
+      wzLevel.textContent = "Main hub";
+    }
+    wzStart.addEventListener("click", (e) => { e.preventDefault(); powerOn(); });
+    wzExit.addEventListener("click", powerOff);
+
+    function switchToStudio() {
+      currentLevel = "studio";
+      wzMain.classList.remove("active"); wzStudio.classList.add("active");
+      wzLevel.textContent = "Studio maze";
+      showToast(mazeHint);
+      velocityX = velocityY = 0; isGrounded = false; physicsActive = false;
+      setTimeout(() => { placeChar(17, 11, true); physicsActive = true; }, 100);
+    }
+    function switchToMain() {
+      currentLevel = "main";
+      wzStudio.classList.remove("active"); wzMain.classList.add("active");
+      wzLevel.textContent = "Main hub";
+      showToast(moveHint);
+      velocityX = velocityY = 0; isGrounded = false; physicsActive = false;
+      requestAnimationFrame(() => { placeChar(15, 10, false); physicsActive = true; });
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (!active) return;
+      if (e.code in keys || e.code === "Space") {
+        e.preventDefault();
+        if (e.code === "Space") { keys.Space = true; checkDoorEntry(); }
+        else if (e.code === "ArrowUp") { keys.ArrowUp = true; if (currentLevel === "main" && isGrounded) { velocityY = JUMP_FORCE; isGrounded = false; } }
+        else keys[e.code] = true;
+      } else if (e.code === "Escape") { powerOff(); }
+    });
+    window.addEventListener("keyup", (e) => {
+      if (e.code in keys || e.code === "Space") { if (e.code === "Space") keys.Space = false; else keys[e.code] = false; }
+    });
+
+    function getWalls() {
+      return (currentLevel === "main" ? wzMain : wzStudio).querySelectorAll(".wz-cell.wall");
+    }
+    function platformCollision(x, y) {
+      const a = wzArena.getBoundingClientRect();
+      const box = { left: a.left + x, right: a.left + x + 40, top: a.top + y, bottom: a.top + y + 60 };
+      for (const w of getWalls()) {
+        const r = w.getBoundingClientRect();
+        if (box.bottom >= r.top - 2 && box.bottom <= r.top + 15 && box.right > r.left + 5 && box.left < r.right - 5 && velocityY >= 0)
+          return { collision: true, platformTop: r.top - a.top };
+      }
+      return { collision: false };
+    }
+    function isWallAt(x, y) {
+      const a = wzArena.getBoundingClientRect(), m = 6;
+      const box = { left: a.left + x + m, right: a.left + x + 40 - m, top: a.top + y + m, bottom: a.top + y + 60 - m };
+      for (const w of getWalls()) {
+        const r = w.getBoundingClientRect();
+        if (!(box.right < r.left || box.left > r.right || box.bottom < r.top || box.top > r.bottom)) return true;
+      }
+      return false;
+    }
+    function moveCharacter() {
+      requestAnimationFrame(moveCharacter);
+      if (!active || !physicsActive) return;
+      const a = wzArena.getBoundingClientRect();
+      if (currentLevel === "main") {
+        velocityX = keys.ArrowLeft ? -MOVE_SPEED : keys.ArrowRight ? MOVE_SPEED : 0;
+        if (!isGrounded) { velocityY += GRAVITY; if (velocityY > MAX_FALL_SPEED) velocityY = MAX_FALL_SPEED; }
+        let newX = charX + velocityX, newY = charY + velocityY;
+        if (newX < 5) newX = 5;
+        if (newX > a.width - 45) newX = a.width - 45;
+        if (!isWallAt(newX, charY)) charX = newX; else velocityX = 0;
+        const c = platformCollision(charX, newY);
+        if (c.collision) { charY = c.platformTop - 58; velocityY = 0; isGrounded = true; }
+        else if (!isWallAt(charX, newY)) { charY = newY; isGrounded = false; }
+        else if (velocityY > 0) { velocityY = 0; isGrounded = true; }
+        if (charY > a.height - 65) { charY = a.height - 65; velocityY = 0; isGrounded = true; }
+        if (isGrounded && charY < a.height - 65 && !platformCollision(charX, charY + 2).collision) isGrounded = false;
+      } else {
+        const sp = 4;
+        let newX = charX, newY = charY;
+        if (keys.ArrowLeft && charX > 5) newX = charX - sp;
+        if (keys.ArrowRight && charX < a.width - 45) newX = charX + sp;
+        if (keys.ArrowUp && charY > 5) newY = charY - sp;
+        if (keys.ArrowDown && charY < a.height - 65) newY = charY + sp;
+        if (!isWallAt(newX, charY)) charX = newX;
+        if (!isWallAt(charX, newY)) charY = newY;
+      }
+      wzChar.style.left = charX + "px";
+      wzChar.style.top = charY + "px";
+      checkDoorCollision();
+    }
+    function overlap(r1, r2) { return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom); }
+    function checkDoorCollision() {
+      const cr = wzChar.getBoundingClientRect();
+      (currentLevel === "main" ? wzMain.querySelectorAll(".wz-door") : wzStudio.querySelectorAll(".wz-sdoor"))
+        .forEach((d) => d.classList.toggle("can-enter", overlap(cr, d.getBoundingClientRect())));
+    }
+    function checkDoorEntry() {
+      const d = (currentLevel === "main" ? wzMain : wzStudio).querySelector(".can-enter");
+      if (!d) return;
+      const t = d.dataset.type;
+      if (t === "studio") switchToStudio();
+      else if (t === "back") switchToMain();
+      else {
+        const map = { repository: "repository.html", home: "index.html", about: "about.html", illustrations: "illustrations.html", branding: "logobranding.html", webdesign: "webdesign.html", film: "film.html", "3dart": "3d-art.html" };
+        if (map[t]) window.location.href = map[t];
+      }
+    }
+  }
 })();

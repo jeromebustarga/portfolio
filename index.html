@@ -188,9 +188,23 @@
         <span class="kbd">Space</span> Enter door
       </div>
 
-      <a href="warpzone.html" class="warp__cta reveal" style="--i:2" data-link data-magnetic>
+      <a href="warpzone.html" class="warp__cta reveal" id="wzStart" style="--i:2" data-link data-magnetic>
         <span>Press start</span> <i class="fa-solid fa-arrow-right"></i>
       </a>
+
+      <!-- Playable in-place arena (desktop) -->
+      <div class="wz-game" id="wzGame" aria-hidden="true">
+        <div class="wz-game__header">
+          <span class="wz-game__level">Now playing · <span class="accent" id="wzLevel">Main hub</span></span>
+          <button class="wz-game__exit" id="wzExit" type="button">Exit warp zone ✕</button>
+        </div>
+        <div class="wz-arena" id="wzArena">
+          <div class="wz-char" id="wzChar"><canvas id="wzCharCanvas" width="40" height="60"></canvas></div>
+          <div class="wz-level wz-main" id="wzMain"></div>
+          <div class="wz-level wz-studio" id="wzStudio"></div>
+        </div>
+        <div class="wz-game__caption"><span>Plate · The warp zone</span><span>Arrows &amp; Space</span></div>
+      </div>
     </section>
 
     <!-- SKILLS — big interactive list -->
