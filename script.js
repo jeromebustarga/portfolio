@@ -523,8 +523,11 @@
       if (active) return;
       active = true;
       wzSection.classList.add("playing");
+      // Bring the game fully into view BEFORE freezing scroll (intro collapses to 100vh)
+      const targetY = wzSection.getBoundingClientRect().top + window.scrollY;
+      if (lenis) { lenis.scrollTo(targetY, { immediate: true, force: true }); lenis.stop(); }
+      else window.scrollTo(0, targetY);
       document.body.style.overflow = "hidden";
-      if (lenis) lenis.stop();
       showToast(moveHint);
       requestAnimationFrame(() => {
         placeChar(15, 10, false);
