@@ -52,14 +52,17 @@ body.cursor-ready .cursor-light { opacity: 1; }
 body.loading { overflow: hidden; height: 100vh; }
 
 /* ============================================================ WebGL canvas */
-.gl-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; display: block; }
-.hero-fallback { position: fixed; inset: 0; z-index: 0; display: none; background:
-  radial-gradient(900px circle at 30% 20%, rgba(244,121,33,0.18), transparent 55%),
-  radial-gradient(700px circle at 75% 70%, rgba(244,121,33,0.10), transparent 55%), var(--bg);
+/* Hero background image (fixed, sits behind the transparent hero; content scrim covers it on scroll) */
+.hero-bg { position: fixed; inset: 0; z-index: 0;
+  background:
+    url("images/hero-bg.jpg") center / cover no-repeat,
+    linear-gradient(180deg, #0a0a1a 0%, #2a1a3a 44%, #c98a3a 60%, #1a2a3a 80%, #060606 100%);
 }
-body.webgl-off .gl-canvas { display: none; }
-body.webgl-off .hero-fallback { display: block; animation: heroFade 14s ease-in-out infinite alternate; }
-@keyframes heroFade { from { filter: hue-rotate(0) brightness(1); } to { filter: brightness(1.15); } }
+/* Readability scrim + blend into the dark content below */
+.hero-bg::after { content: ''; position: absolute; inset: 0; background:
+  radial-gradient(120% 90% at 50% 40%, transparent 0%, rgba(6,6,6,0.35) 55%, rgba(6,6,6,0.7) 100%),
+  linear-gradient(to bottom, rgba(6,6,6,0.55) 0%, rgba(6,6,6,0.25) 30%, rgba(6,6,6,0.45) 58%, rgba(6,6,6,0.96) 100%);
+}
 
 /* ============================================================ Atmosphere embers */
 .atmosphere { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 3; pointer-events: none; }
