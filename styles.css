@@ -132,6 +132,8 @@ nav.hidden { transform: translateY(-110%); }
 .hero__eyebrow { display: flex; gap: 14px; align-items: center; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 28px; }
 .hero__eyebrow .sep { color: var(--accent); }
 .hero__title { font-family: var(--serif); font-weight: 400; line-height: 0.86; letter-spacing: -0.02em; font-size: clamp(72px, 17vw, 260px); }
+/* Tight lines, with the J's descender allowed to bleed past the clip edge */
+.hero__title .mask { padding: 0; margin: 0; overflow: clip; overflow-clip-margin: 0.45em; }
 .hero__title .line { display: block; }
 .hero__title em { font-style: italic; }
 .hero__title .dot-orange { color: var(--accent); }
