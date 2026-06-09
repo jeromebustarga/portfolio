@@ -207,6 +207,8 @@
   if (chapters && "IntersectionObserver" in window) {
     const map = [
       { el: document.querySelector(".hero"), key: "top" },
+      { el: document.getElementById("archive"), key: "archive" },
+      { el: document.getElementById("motion"), key: "motion" },
       { el: document.getElementById("about"), key: "about" },
       { el: document.getElementById("work"), key: "work" },
       { el: document.getElementById("warpzone"), key: "warpzone" },
@@ -362,8 +364,14 @@
   const hero = document.querySelector(".hero");
   const workSection = document.querySelector("[data-pin]");
   const workTrack = document.getElementById("workTrack");
+  const stripTrack = document.getElementById("stripTrack");
+  const stackSection = document.getElementById("archive");
+  const stackProgress = document.getElementById("stackProgress");
+  const plates = stackSection
+    ? Array.from(stackSection.querySelectorAll(".stack-img")).map((el) => ({ el, x: +el.dataset.x || 0, y: +el.dataset.y || 0, rot: +el.dataset.rot || 0 }))
+    : [];
 
-  let marqueeX = 0, prevY = window.scrollY, lastY = window.scrollY, navHidden = false;
+  let marqueeX = 0, stripX = 0, prevY = window.scrollY, lastY = window.scrollY, navHidden = false;
 
   function tick() {
     const y = window.scrollY;
@@ -399,6 +407,27 @@
       const dist = workTrack.scrollWidth - window.innerWidth;
       workTrack.style.transform = `translate3d(${-(p * dist).toFixed(1)}px,0,0)`;
     }
+
+    // Motion film strip: continuous drift + scroll-velocity boost
+    if (stripTrack) {
+      stripX -= 0.7 + Math.min(Math.abs(vel) * 0.3, 6) * Math.sign(vel || 1);
+      const half = stripTrack.scrollWidth / 2;
+      if (half > 0) stripX = ((stripX % half) + half) % half - half;
+      stripTrack.style.transform = `translate3d(${stripX}px,0,0)`;
+    }
+
+    // Archive: spread the plates as you scroll through the pinned section
+    if (stackSection && plates.length) {
+      const r = stackSection.getBoundingClientRect();
+      const total = stackSection.offsetHeight - vh;
+      const p = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
+      const sf = Math.min(1, window.innerWidth / 1300);
+      for (const pl of plates) {
+        pl.el.style.transform = `translate(calc(-50% + ${(pl.x * p * sf).toFixed(1)}px), calc(-50% + ${(pl.y * p * sf).toFixed(1)}px)) rotate(${(pl.rot * p).toFixed(2)}deg)`;
+      }
+      if (stackProgress) stackProgress.style.width = (p * 100).toFixed(1) + "%";
+    }
+
     requestAnimationFrame(tick);
   }
   if (!prefersReduced) requestAnimationFrame(tick);

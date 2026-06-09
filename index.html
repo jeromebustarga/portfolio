@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=23">
+<link rel="stylesheet" href="styles.css?v=24">
 </head>
 <body class="loading">
 
@@ -37,11 +37,13 @@
 <!-- Chapter / scene navigation -->
 <aside class="chapters" id="chapters" aria-hidden="true">
   <a href="#top" data-chapter="top"><span class="chapters__num">01</span><span class="chapters__dot"></span><span class="chapters__label">Light</span></a>
-  <a href="#about" data-chapter="about"><span class="chapters__num">02</span><span class="chapters__dot"></span><span class="chapters__label">About</span></a>
-  <a href="#work" data-chapter="work"><span class="chapters__num">03</span><span class="chapters__dot"></span><span class="chapters__label">Work</span></a>
-  <a href="#warpzone" data-chapter="warpzone"><span class="chapters__num">04</span><span class="chapters__dot"></span><span class="chapters__label">Warp Zone</span></a>
-  <a href="#skills" data-chapter="skills"><span class="chapters__num">05</span><span class="chapters__dot"></span><span class="chapters__label">Skills</span></a>
-  <a href="#contact" data-chapter="contact"><span class="chapters__num">06</span><span class="chapters__dot"></span><span class="chapters__label">Contact</span></a>
+  <a href="#archive" data-chapter="archive"><span class="chapters__num">02</span><span class="chapters__dot"></span><span class="chapters__label">Archive</span></a>
+  <a href="#motion" data-chapter="motion"><span class="chapters__num">03</span><span class="chapters__dot"></span><span class="chapters__label">Motion</span></a>
+  <a href="#about" data-chapter="about"><span class="chapters__num">04</span><span class="chapters__dot"></span><span class="chapters__label">About</span></a>
+  <a href="#work" data-chapter="work"><span class="chapters__num">05</span><span class="chapters__dot"></span><span class="chapters__label">Work</span></a>
+  <a href="#warpzone" data-chapter="warpzone"><span class="chapters__num">06</span><span class="chapters__dot"></span><span class="chapters__label">Warp Zone</span></a>
+  <a href="#skills" data-chapter="skills"><span class="chapters__num">07</span><span class="chapters__dot"></span><span class="chapters__label">Skills</span></a>
+  <a href="#contact" data-chapter="contact"><span class="chapters__num">08</span><span class="chapters__dot"></span><span class="chapters__label">Contact</span></a>
 </aside>
 
 <!-- Scroll progress -->
@@ -85,6 +87,47 @@
       <div class="marquee__track" id="marquee">
         <span class="m">Development <b>✦</b> Design <b>✦</b> <em>Illustration</em> <b>✦</b> Branding <b>✦</b> Motion <b>✦</b> Photography <b>✦</b> </span>
         <span class="m">Development <b>✦</b> Design <b>✦</b> <em>Illustration</em> <b>✦</b> Branding <b>✦</b> Motion <b>✦</b> Photography <b>✦</b> </span>
+      </div>
+    </div>
+
+    <!-- ARCHIVE — scroll-spread stack -->
+    <section class="stack-section" id="archive">
+      <div class="stack-sticky">
+        <div class="stack-header">
+          <span class="label">(The Archive)</span>
+          <h2>The <em>archive</em></h2>
+          <span class="meta">↓ Scroll to spread the plates</span>
+        </div>
+        <div class="stack-container">
+          <div class="stack-img s1" data-x="-340" data-y="-90" data-rot="-14" data-caption="Plate 01 · 2024"><img src="images/dataviz.jpg" alt=""></div>
+          <div class="stack-img s2" data-x="-115" data-y="-30" data-rot="-5" data-caption="Plate 02 · 2025"><img src="images/portrait.png" alt=""></div>
+          <div class="stack-img s3" data-x="115" data-y="-30" data-rot="5" data-caption="Plate 03 · 2025"><img src="images/po2.png" alt=""></div>
+          <div class="stack-img s4" data-x="340" data-y="-90" data-rot="14" data-caption="Plate 04 · 2026"><img src="images/po1.png" alt=""></div>
+        </div>
+        <div class="stack-progress"><div class="stack-progress-fill" id="stackProgress"></div></div>
+      </div>
+    </section>
+
+    <!-- MOTION — continuous film strip -->
+    <div class="film-strip" id="motion">
+      <div class="film-strip-header">
+        <span class="meta">— Motion Graphics</span>
+        <span class="meta">↔ scroll continuously</span>
+      </div>
+      <div class="strip-track" id="stripTrack">
+        <div class="strip-frame" data-num="A·01" data-caption="Mograph"><video src="images/EX2 - Mograph Questionnaire.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="A·02" data-caption="Mantras"><video src="images/EX3 - Personal Mantras.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="A·03" data-caption="Strokes & Reveals"><video src="images/EX4 - Strokes & Reveals.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="A·04" data-caption="Keyframes 1"><video src="images/EX7 - Keyframes Basics - Obstacles.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="B·01" data-caption="2d Tracking"><video src="images/EX8 - 2d Tracking.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="B·02" data-caption="Keyframes 2"><video src="images/EX7 - Keyframes Basics - Race.mp4" autoplay muted loop playsinline></video></div>
+        <!-- Duplicates for seamless loop -->
+        <div class="strip-frame" data-num="A·01" data-caption="Mograph"><video src="images/EX2 - Mograph Questionnaire.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="A·02" data-caption="Mantras"><video src="images/EX3 - Personal Mantras.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="A·03" data-caption="Strokes & Reveals"><video src="images/EX4 - Strokes & Reveals.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="A·04" data-caption="Keyframes 1"><video src="images/EX7 - Keyframes Basics - Obstacles.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="B·01" data-caption="2d Tracking"><video src="images/EX8 - 2d Tracking.mp4" autoplay muted loop playsinline></video></div>
+        <div class="strip-frame" data-num="B·02" data-caption="Keyframes 2"><video src="images/EX7 - Keyframes Basics - Race.mp4" autoplay muted loop playsinline></video></div>
       </div>
     </div>
 
@@ -242,6 +285,6 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=23"></script>
+<script src="script.js?v=24"></script>
 </body>
 </html>
