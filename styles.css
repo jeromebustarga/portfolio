@@ -55,7 +55,7 @@ body.loading { overflow: hidden; height: 100vh; }
 /* Hero background image (fixed, sits behind the transparent hero; content scrim covers it on scroll) */
 .hero-bg { position: fixed; inset: 0; z-index: 0;
   background:
-    url("images/hero-bg.jpg") center / cover no-repeat,
+    url("images/hero-bg.png") center / cover no-repeat,
     linear-gradient(180deg, #0a0a1a 0%, #2a1a3a 44%, #c98a3a 60%, #1a2a3a 80%, #060606 100%);
 }
 /* Readability scrim + blend into the dark content below */
