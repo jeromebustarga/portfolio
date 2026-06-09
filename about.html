@@ -12,21 +12,73 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=28">
 <style>
-  /* ---- About-page specifics (theme tokens come from styles.css) ---- */
-  .about-hero { max-width: var(--max); margin: 0 auto; min-height: 100vh; display: flex; align-items: center; padding: 150px 48px 80px; }
-  .about-hero__grid { display: grid; grid-template-columns: 0.85fr 1fr; gap: clamp(40px, 7vw, 100px); align-items: center; width: 100%; }
-  .about-portrait { position: relative; aspect-ratio: 1; border-radius: 24px; overflow: hidden; border: 1px solid var(--line); background: linear-gradient(135deg, rgba(244,121,33,0.14), var(--bg-soft)); box-shadow: 0 40px 90px rgba(0,0,0,0.55); }
-  .about-portrait img, .about-portrait video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s var(--ease), transform 0.6s var(--ease); }
-  .about-portrait .anim { opacity: 0; }
-  .about-portrait:hover .anim, .about-portrait.show-anim .anim { opacity: 1; }
-  .about-portrait:hover img { transform: scale(1.04); }
+  /* ---- Intro reveal (centered profile -> glitch -> slides to side) ---- */
+  #overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9990; transition: opacity 1s ease; }
+  body.reveal-page #overlay { opacity: 0; pointer-events: none; }
+
+  #portraitStage { position: fixed; top: 0; left: 0; z-index: 9995; will-change: transform; pointer-events: none; }
+  body.video-ended #portraitStage { pointer-events: auto; }
+  .profile-wrap { width: clamp(240px, 30vw, 360px); aspect-ratio: 1; position: relative; border-radius: 50%; overflow: hidden; border: 2px solid rgba(244,121,33,0.35); box-shadow: 0 0 0 4px rgba(255,255,255,0.06), 0 0 70px rgba(244,121,33,0.3); cursor: pointer; }
+  .profile-wrap img, .profile-wrap video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease; }
+  .p-real { opacity: 1; z-index: 3; }
+  .p-static { opacity: 0; z-index: 2; }
+  .p-video { opacity: 0; z-index: 1; }
+  body.glitch-transition .profile-wrap { animation: glitchEffect 0.8s ease; }
+  body.glitch-transition .p-real { opacity: 0; }
+  body.glitch-transition .p-static { opacity: 1; }
+  body.reveal-page .p-static { opacity: 1; z-index: 3; }
+  body.reveal-page .p-real { opacity: 0; }
+  body.video-playing .p-video { opacity: 1; z-index: 3; }
+  body.video-playing .p-static { opacity: 0; }
+  body.video-ended .p-static { opacity: 1; z-index: 3; }
+  body.video-ended .p-video { opacity: 0; }
+  body.video-ended .profile-wrap:hover .p-static { opacity: 0; }
+  body.video-ended .profile-wrap:hover .p-real { opacity: 1; z-index: 4; }
+
+  @keyframes glitchEffect {
+    0%, 100% { transform: translate(0, 0); filter: none; }
+    10% { transform: translate(-5px, -5px); filter: hue-rotate(90deg) brightness(1.2); }
+    20% { transform: translate(5px, 5px); filter: hue-rotate(-90deg) brightness(0.8); }
+    30% { transform: translate(-3px, 3px); filter: hue-rotate(45deg) contrast(2); }
+    40% { transform: translate(3px, -3px); filter: hue-rotate(-45deg) saturate(3); }
+    50% { transform: translate(-2px, -2px); box-shadow: -5px -5px 0 rgba(244,121,33,0.8), 5px 5px 0 rgba(255,255,255,0.8), 0 0 80px rgba(244,121,33,0.6); }
+    60% { transform: translate(2px, 2px); filter: contrast(3) brightness(1.5); }
+    70% { transform: translate(-1px, 1px); filter: invert(0.2) hue-rotate(180deg); }
+    80% { transform: translate(1px, -1px); box-shadow: 0 0 20px rgba(244,121,33,1), 0 0 40px rgba(255,255,255,0.8); }
+    90% { transform: translate(0, 0); filter: brightness(1.3); }
+  }
+
+  .image-particles { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: clamp(240px, 30vw, 360px); aspect-ratio: 1; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
+  body.animated .image-particles { opacity: 1; }
+  .particle { position: absolute; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0; }
+  body.animated .particle { animation: particleFloat 3s ease-in-out infinite; }
+  .particle:nth-child(1) { top: 10%; left: 50%; animation-delay: 0s; }
+  .particle:nth-child(2) { top: 30%; left: 80%; animation-delay: 0.3s; }
+  .particle:nth-child(3) { top: 50%; left: 90%; animation-delay: 0.6s; }
+  .particle:nth-child(4) { top: 70%; left: 80%; animation-delay: 0.9s; }
+  .particle:nth-child(5) { top: 90%; left: 50%; animation-delay: 1.2s; }
+  .particle:nth-child(6) { top: 70%; left: 20%; animation-delay: 1.5s; }
+  .particle:nth-child(7) { top: 50%; left: 10%; animation-delay: 1.8s; }
+  .particle:nth-child(8) { top: 30%; left: 20%; animation-delay: 2.1s; }
+  @keyframes particleFloat { 0%,100% { opacity: 0; transform: translateY(0) scale(1); } 50% { opacity: 0.8; transform: translateY(-20px) scale(1.5); } }
+
+  /* main hidden until reveal */
+  main { opacity: 0; transition: opacity 1s ease; }
+  body.reveal-page main { opacity: 1; }
+
+  /* ---- Hero ---- */
+  .about-hero { position: relative; max-width: var(--max); margin: 0 auto; min-height: 100vh; display: flex; align-items: center; padding: 150px 48px 80px; }
+  .about-hero__grid { width: 100%; display: grid; grid-template-columns: clamp(240px, 30vw, 360px) 1fr; gap: clamp(40px, 7vw, 100px); align-items: center; padding-left: 6%; }
+  .hero-image-space { width: clamp(240px, 30vw, 360px); aspect-ratio: 1; }
+  .about-hero__text { display: flex; flex-direction: column; }
   .about-hero__eyebrow { display: flex; gap: 12px; align-items: center; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 22px; }
   .about-hero__eyebrow .sep { color: var(--accent); }
-  .about-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 10vw, 132px); line-height: 0.9; letter-spacing: -0.02em; }
+  .about-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 10vw, 130px); line-height: 0.9; letter-spacing: -0.02em; }
   .about-hero h1 em { color: var(--accent); font-style: italic; }
   .about-hero p { color: var(--text-dim); max-width: 52ch; margin: 26px 0 36px; font-size: 16px; line-height: 1.8; }
   .about-hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
 
+  /* ---- Story ---- */
   .story { max-width: var(--max); margin: 0 auto; padding: clamp(60px, 9vh, 120px) 48px; }
   .story__row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 80px); align-items: center; padding: clamp(40px, 6vh, 70px) 0; border-top: 1px solid var(--line); }
   .story__row:nth-child(even) .story__media { order: 2; }
@@ -40,8 +92,8 @@
   .story__tags span { font-size: 11px; letter-spacing: 0.02em; padding: 6px 14px; border-radius: 100px; color: var(--accent); background: rgba(244,121,33,0.08); border: 1px solid rgba(244,121,33,0.18); }
 
   @media (max-width: 900px) {
-    .about-hero__grid { grid-template-columns: 1fr; gap: 40px; }
-    .about-portrait { max-width: 360px; }
+    .about-hero__grid { grid-template-columns: 1fr; justify-items: center; text-align: center; padding-left: 0; gap: 36px; }
+    .about-hero__text { align-items: center; }
     .story__row { grid-template-columns: 1fr; gap: 28px; }
     .story__row:nth-child(even) .story__media { order: 0; }
   }
@@ -50,30 +102,32 @@
     .about-hero__cta { flex-direction: column; }
     .about-hero__cta .btn { width: 100%; justify-content: center; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    #overlay { display: none; }
+    main { opacity: 1; }
+  }
 </style>
 </head>
-<body class="loading">
+<body>
 
 <!-- Custom cursor -->
 <div class="cursor" id="cursor" aria-hidden="true"></div>
 <div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
 
-<!-- Preloader (click to enter) -->
-<div class="preloader" id="preloader">
-  <button class="preloader__enter" id="preEnter" type="button" aria-label="Click the logo to enter">
-    <span class="preloader__bulb">
-      <img src="images/logo.png?v=26" alt="Enter" data-fallback-icon="fa-lightbulb">
-      <span class="pf" aria-hidden="true">
-        <span class="pf-flash"></span>
-        <i class="pf-ray" style="--a:0deg"></i><i class="pf-ray" style="--a:30deg"></i><i class="pf-ray" style="--a:60deg"></i>
-        <i class="pf-ray" style="--a:90deg"></i><i class="pf-ray" style="--a:120deg"></i><i class="pf-ray" style="--a:150deg"></i>
-        <i class="pf-ray" style="--a:180deg"></i><i class="pf-ray" style="--a:210deg"></i><i class="pf-ray" style="--a:240deg"></i>
-        <i class="pf-ray" style="--a:270deg"></i><i class="pf-ray" style="--a:300deg"></i><i class="pf-ray" style="--a:330deg"></i>
-      </span>
-    </span>
-    <span class="preloader__label">About — Jerome's World</span>
-    <span class="preloader__hint">Click the light to enter</span>
-  </button>
+<!-- Intro overlay -->
+<div id="overlay"></div>
+
+<!-- Portrait stage (centered -> slides to hero spot) -->
+<div id="portraitStage" style="transform: translate(50vw, 50vh) translate(-50%, -50%) scale(1.15);">
+  <div class="image-particles">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+  </div>
+  <div class="profile-wrap" id="profileWrap">
+    <img src="images/jerome-real.png" alt="Jerome Bustarga" class="p-real">
+    <img src="images/jerome-animated.png" alt="" class="p-static" aria-hidden="true">
+    <video src="images/jerome-animated.mp4" class="p-video" muted playsinline preload="auto" id="pVideo" aria-hidden="true"></video>
+  </div>
 </div>
 
 <!-- Atmospheric ember layer -->
@@ -103,20 +157,14 @@
 <main id="top">
   <div class="content">
     <!-- HERO -->
-    <section class="about-hero">
+    <section class="about-hero" id="home">
       <div class="about-hero__grid">
-        <div class="about-portrait reveal" id="aboutPortrait">
-          <img src="images/jerome-real.png" alt="Jerome Bustarga" class="real">
-          <video src="images/jerome-animated.mp4" class="anim" muted loop playsinline preload="metadata" aria-hidden="true"></video>
-        </div>
+        <div class="hero-image-space" id="heroImageSpace"></div>
         <div class="about-hero__text">
-          <div class="about-hero__eyebrow reveal"><span>Developer</span><span class="sep">/</span><span>Designer</span><span class="sep">/</span><span>San Diego, CA</span></div>
-          <h1>
-            <span class="mask"><span>About</span></span>
-            <span class="mask"><span><em>Jerome.</em></span></span>
-          </h1>
-          <p class="reveal" style="--i:2">A multidisciplinary creator blending computer science, design, and digital humanities — crafting digital experiences that inspire and empower.</p>
-          <div class="about-hero__cta reveal" style="--i:3">
+          <div class="about-hero__eyebrow"><span>Developer</span><span class="sep">/</span><span>Designer</span><span class="sep">/</span><span>San Diego, CA</span></div>
+          <h1>About <em>Jerome.</em></h1>
+          <p>A multidisciplinary creator blending computer science, design, and digital humanities — crafting digital experiences that inspire and empower.</p>
+          <div class="about-hero__cta">
             <a href="#story" class="btn btn-primary" data-link data-magnetic>My journey <i class="fa-solid fa-arrow-down"></i></a>
             <a href="#contact" class="btn btn-ghost" data-link data-magnetic>Get in touch</a>
           </div>
@@ -212,7 +260,7 @@
       </div>
     </section>
 
-    <!-- CONTACT (shared theme) -->
+    <!-- CONTACT -->
     <section id="contact" class="contact">
       <span class="label reveal">(Let's talk)</span>
       <h2 class="contact__title">
@@ -242,19 +290,54 @@
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="script.js?v=28"></script>
 <script>
-  // Portrait: real photo by default, play the animated video on hover (autoplay on touch)
+  // Intro: centered portrait -> glitch -> slides into the hero spot -> video plays.
   (function () {
-    var p = document.getElementById("aboutPortrait");
-    if (!p) return;
-    var v = p.querySelector("video.anim");
-    if (!v) return;
-    if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
-      p.classList.add("show-anim");
-      v.play().catch(function () {});
-    } else {
-      p.addEventListener("mouseenter", function () { v.currentTime = 0; v.play().catch(function () {}); });
-      p.addEventListener("mouseleave", function () { v.pause(); });
+    var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var stage = document.getElementById("portraitStage");
+    var space = document.getElementById("heroImageSpace");
+    var video = document.getElementById("pVideo");
+    if (!stage || !space) return;
+
+    var landed = false;
+    var cur = { x: window.innerWidth / 2, y: window.innerHeight / 2 }, scale = 1.15;
+    function spaceCenter() { var r = space.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+    function loop() {
+      var t = landed ? spaceCenter() : { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      var ts = landed ? 1 : 1.15;
+      cur.x += (t.x - cur.x) * 0.08; cur.y += (t.y - cur.y) * 0.08; scale += (ts - scale) * 0.08;
+      stage.style.transform = "translate(" + cur.x + "px," + cur.y + "px) translate(-50%,-50%) scale(" + scale.toFixed(3) + ")";
+      requestAnimationFrame(loop);
     }
+    loop();
+
+    function endVideo() {
+      if (document.body.classList.contains("video-ended")) return;
+      document.body.classList.remove("video-playing");
+      document.body.classList.add("video-ended");
+    }
+
+    if (prefersReduced) { document.body.classList.add("reveal-page", "video-ended"); landed = true; return; }
+
+    setTimeout(function () {
+      document.body.classList.add("animated", "glitch-transition");
+      setTimeout(function () {
+        document.body.classList.remove("glitch-transition");
+        document.body.classList.add("reveal-page");
+        landed = true;
+        setTimeout(function () {
+          document.body.classList.add("video-playing");
+          if (video && video.getAttribute("src")) {
+            video.loop = false;
+            var pr = video.play();
+            if (pr && pr.catch) pr.catch(function () {});
+            video.addEventListener("ended", endVideo);
+            setTimeout(endVideo, 8000); // safety if the video never fires 'ended'
+          } else {
+            endVideo();
+          }
+        }, 1200);
+      }, 800);
+    }, 1200);
   })();
 </script>
 </body>
