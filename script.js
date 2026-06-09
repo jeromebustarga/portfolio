@@ -523,11 +523,10 @@
       if (active) return;
       active = true;
       wzSection.classList.add("playing");
-      // Bring the game fully into view BEFORE freezing scroll (intro collapses to 100vh)
+      // Gently bring the game into view — scrolling stays enabled
       const targetY = wzSection.getBoundingClientRect().top + window.scrollY;
-      if (lenis) { lenis.scrollTo(targetY, { immediate: true, force: true }); lenis.stop(); }
-      else window.scrollTo(0, targetY);
-      document.body.style.overflow = "hidden";
+      if (lenis) lenis.scrollTo(targetY, { duration: 0.9 });
+      else window.scrollTo({ top: targetY, behavior: "smooth" });
       showToast(moveHint);
       requestAnimationFrame(() => {
         placeChar(15, 10, false);
@@ -538,8 +537,6 @@
     function powerOff() {
       active = false; physicsActive = false;
       wzSection.classList.remove("playing");
-      document.body.style.overflow = "";
-      if (lenis) lenis.start();
       const t = document.getElementById("wzToast"); if (t) t.remove();
       // reset to main hub for next time
       currentLevel = "main";
@@ -566,14 +563,20 @@
       requestAnimationFrame(() => { placeChar(15, 10, false); physicsActive = true; });
     }
 
+    function wzVisible() {
+      const r = wzSection.getBoundingClientRect();
+      return r.top < window.innerHeight * 0.6 && r.bottom > window.innerHeight * 0.4;
+    }
     window.addEventListener("keydown", (e) => {
       if (!active) return;
-      if (e.code in keys || e.code === "Space") {
+      if (e.code === "Escape") { powerOff(); return; }
+      // Only grab game keys while the arena is on screen; otherwise let the page scroll
+      if ((e.code in keys || e.code === "Space") && wzVisible()) {
         e.preventDefault();
         if (e.code === "Space") { keys.Space = true; checkDoorEntry(); }
         else if (e.code === "ArrowUp") { keys.ArrowUp = true; if (currentLevel === "main" && isGrounded) { velocityY = JUMP_FORCE; isGrounded = false; } }
         else keys[e.code] = true;
-      } else if (e.code === "Escape") { powerOff(); }
+      }
     });
     window.addEventListener("keyup", (e) => {
       if (e.code in keys || e.code === "Space") { if (e.code === "Space") keys.Space = false; else keys[e.code] = false; }
