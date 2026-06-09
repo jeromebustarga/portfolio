@@ -167,7 +167,7 @@ nav.hidden { transform: translateY(-110%); }
 /* Full-bleed background image + dark scrim for readability */
 .about::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 100vw; z-index: 0;
   background:
-    linear-gradient(rgba(6,6,6,0.82), rgba(6,6,6,0.9)),
+    linear-gradient(rgba(6,6,6,0.5), rgba(6,6,6,0.62)),
     url("images/about-bg.png") center / cover no-repeat;
 }
 .about__grid { position: relative; z-index: 1; }
