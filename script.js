@@ -107,6 +107,9 @@
 
     const clock = new THREE.Clock();
     const render = () => {
+      requestAnimationFrame(render);
+      // Skip rendering when the hero is scrolled out of view (big perf win)
+      if (window.scrollY > window.innerHeight * 1.3) return;
       uniforms.uTime.value = clock.getElapsedTime();
       // idle orbit when the cursor hasn't moved recently
       const idle = performance.now() - lastMove > 2500;
@@ -119,7 +122,6 @@
       mouseSmooth.y += (mouseTarget.y - mouseSmooth.y) * 0.05;
       uniforms.uMouse.value.set(mouseSmooth.x, mouseSmooth.y);
       renderer.render(scene, camera);
-      requestAnimationFrame(render);
     };
     render();
     return true;
@@ -500,6 +502,26 @@
     buildGrid(wzStudio, studioGrid, studioDoors, "wz-sdoor");
     wzMain.classList.add("active");
 
+    // Precompute wall rectangles in arena-local pixels (recomputed on resize) —
+    // avoids hundreds of getBoundingClientRect calls per frame.
+    const wallRects = { main: [], studio: [] };
+    function computeWalls() {
+      const r = wzArena.getBoundingClientRect();
+      if (!r.width) return;
+      const cw = r.width / 30, ch = r.height / 20;
+      const build = (grid) => {
+        const arr = [];
+        for (let row = 0; row < 20; row++)
+          for (let col = 0; col < 30; col++)
+            if (grid[row][col] === 1) arr.push({ x: col * cw, y: row * ch, w: cw, h: ch });
+        return arr;
+      };
+      wallRects.main = build(mainGrid);
+      wallRects.studio = build(studioGrid);
+    }
+    computeWalls();
+    window.addEventListener("resize", computeWalls);
+
     function showToast(html) {
       const old = document.getElementById("wzToast");
       if (old) old.remove();
@@ -523,6 +545,7 @@
       if (active) return;
       active = true;
       wzSection.classList.add("playing");
+      computeWalls(); // arena is now visible and sized
       // Gently bring the game into view — scrolling stays enabled
       const targetY = wzSection.getBoundingClientRect().top + window.scrollY;
       if (lenis) lenis.scrollTo(targetY, { duration: 0.9 });
@@ -582,25 +605,19 @@
       if (e.code in keys || e.code === "Space") { if (e.code === "Space") keys.Space = false; else keys[e.code] = false; }
     });
 
-    function getWalls() {
-      return (currentLevel === "main" ? wzMain : wzStudio).querySelectorAll(".wz-cell.wall");
-    }
     function platformCollision(x, y) {
-      const a = wzArena.getBoundingClientRect();
-      const box = { left: a.left + x, right: a.left + x + 40, top: a.top + y, bottom: a.top + y + 60 };
-      for (const w of getWalls()) {
-        const r = w.getBoundingClientRect();
-        if (box.bottom >= r.top - 2 && box.bottom <= r.top + 15 && box.right > r.left + 5 && box.left < r.right - 5 && velocityY >= 0)
-          return { collision: true, platformTop: r.top - a.top };
+      const box = { left: x, right: x + 40, top: y, bottom: y + 60 };
+      for (const w of wallRects[currentLevel]) {
+        if (box.bottom >= w.y - 2 && box.bottom <= w.y + 15 && box.right > w.x + 5 && box.left < w.x + w.w - 5 && velocityY >= 0)
+          return { collision: true, platformTop: w.y };
       }
       return { collision: false };
     }
     function isWallAt(x, y) {
-      const a = wzArena.getBoundingClientRect(), m = 6;
-      const box = { left: a.left + x + m, right: a.left + x + 40 - m, top: a.top + y + m, bottom: a.top + y + 60 - m };
-      for (const w of getWalls()) {
-        const r = w.getBoundingClientRect();
-        if (!(box.right < r.left || box.left > r.right || box.bottom < r.top || box.top > r.bottom)) return true;
+      const m = 6;
+      const box = { left: x + m, right: x + 40 - m, top: y + m, bottom: y + 60 - m };
+      for (const w of wallRects[currentLevel]) {
+        if (!(box.right < w.x || box.left > w.x + w.w || box.bottom < w.y || box.top > w.y + w.h)) return true;
       }
       return false;
     }
