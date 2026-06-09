@@ -40,10 +40,23 @@ body.cursor-ready .cursor-light { opacity: 1; }
 @media (hover: none), (pointer: coarse) { .cursor, .cursor-light { display: none; } }
 
 /* ============================================================ Preloader */
-.preloader { position: fixed; inset: 0; z-index: 11000; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; transition: transform 1s var(--ease); }
-.preloader.done { transform: translateY(-100%); }
+.preloader { position: fixed; inset: 0; z-index: 11000; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; transition: opacity 0.6s var(--ease), visibility 0.6s; }
+.preloader.done { opacity: 0; visibility: hidden; }
 .preloader__enter { background: none; border: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 22px; color: inherit; }
-.preloader__bulb { display: grid; place-items: center; transition: transform 0.4s var(--ease); }
+.preloader__bulb { position: relative; display: grid; place-items: center; transition: transform 0.4s var(--ease); }
+
+/* Ignition burst (on click) */
+.pf { position: absolute; top: 50%; left: 50%; width: 0; height: 0; pointer-events: none; z-index: 2; }
+.pf-ray { position: absolute; left: 0; bottom: 0; width: 2px; height: 80vh; transform-origin: 50% 100%; transform: translateX(-50%) rotate(var(--a)) scaleY(0); background: linear-gradient(to top, transparent, rgba(255,217,168,0.9) 28%, var(--accent)); opacity: 0; border-radius: 2px; }
+.pf-flash { position: absolute; top: 50%; left: 50%; width: 46px; height: 46px; border-radius: 50%; transform: translate(-50%,-50%) scale(0); background: radial-gradient(circle, rgba(255,228,184,0.95), rgba(244,121,33,0.6) 40%, transparent 72%); opacity: 0; }
+.preloader.igniting .pf-ray { animation: rayBurst 0.75s cubic-bezier(0.2,0.8,0.2,1) forwards; }
+@keyframes rayBurst { 0% { transform: translateX(-50%) rotate(var(--a)) scaleY(0); opacity: 0; } 18% { opacity: 1; } 100% { transform: translateX(-50%) rotate(var(--a)) scaleY(1); opacity: 0; } }
+.preloader.igniting .pf-flash { animation: flashBurst 0.85s ease-out forwards; }
+@keyframes flashBurst { 0% { transform: translate(-50%,-50%) scale(0); opacity: 1; } 55% { opacity: 1; } 100% { transform: translate(-50%,-50%) scale(55); opacity: 0; } }
+.preloader.igniting .preloader__bulb img, .preloader.igniting .preloader__bulb i { animation: bulbPop 0.6s var(--ease) forwards; }
+@keyframes bulbPop { 0% { transform: scale(1); } 25% { transform: scale(1.3); } 100% { transform: scale(0.4); opacity: 0; } }
+.preloader.igniting .preloader__label, .preloader.igniting .preloader__hint { animation: fadeOutUp 0.35s ease forwards; }
+@keyframes fadeOutUp { to { opacity: 0; transform: translateY(-12px); } }
 .preloader__enter:hover .preloader__bulb { transform: scale(1.08); }
 .preloader__bulb img { width: clamp(80px, 13vw, 120px); height: auto; filter: drop-shadow(0 0 30px rgba(244,121,33,0.7)) drop-shadow(0 0 60px rgba(244,121,33,0.4)); animation: bulbGlow 3s ease-in-out infinite; }
 .preloader__bulb i { font-size: 60px; color: var(--accent); filter: drop-shadow(0 0 30px rgba(244,121,33,0.7)) drop-shadow(0 0 60px rgba(244,121,33,0.4)); animation: bulbGlow 3s ease-in-out infinite; }

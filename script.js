@@ -268,11 +268,19 @@
     if (preloader) preloader.classList.add("done");
     startReveals();
   }
-  // Wait for the user to click the logo (or press Enter) — no auto-load
+  // Wait for the user to click the logo (or press Enter), then play the ignition reveal
+  let entering = false;
+  function enterSite() {
+    if (entering || revealStarted) return;
+    entering = true;
+    if (prefersReduced || !preloader) { finishLoad(); return; }
+    preloader.classList.add("igniting");
+    setTimeout(finishLoad, 720);
+  }
   if (preEnter) {
-    preEnter.addEventListener("click", finishLoad);
+    preEnter.addEventListener("click", enterSite);
     window.addEventListener("keydown", (e) => {
-      if (!revealStarted && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); finishLoad(); }
+      if (!revealStarted && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); enterSite(); }
     });
   } else {
     finishLoad();

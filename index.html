@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=26">
+<link rel="stylesheet" href="styles.css?v=27">
 </head>
 <body class="loading">
 
@@ -21,7 +21,16 @@
 <!-- Preloader -->
 <div class="preloader" id="preloader">
   <button class="preloader__enter" id="preEnter" type="button" aria-label="Click the logo to enter">
-    <span class="preloader__bulb"><img src="images/logo.png?v=26" alt="Enter" data-fallback-icon="fa-lightbulb"></span>
+    <span class="preloader__bulb">
+      <img src="images/logo.png?v=26" alt="Enter" data-fallback-icon="fa-lightbulb">
+      <span class="pf" aria-hidden="true">
+        <span class="pf-flash"></span>
+        <i class="pf-ray" style="--a:0deg"></i><i class="pf-ray" style="--a:30deg"></i><i class="pf-ray" style="--a:60deg"></i>
+        <i class="pf-ray" style="--a:90deg"></i><i class="pf-ray" style="--a:120deg"></i><i class="pf-ray" style="--a:150deg"></i>
+        <i class="pf-ray" style="--a:180deg"></i><i class="pf-ray" style="--a:210deg"></i><i class="pf-ray" style="--a:240deg"></i>
+        <i class="pf-ray" style="--a:270deg"></i><i class="pf-ray" style="--a:300deg"></i><i class="pf-ray" style="--a:330deg"></i>
+      </span>
+    </span>
     <span class="preloader__label">It's Jerome's World</span>
     <span class="preloader__hint">Click the light to enter</span>
   </button>
@@ -284,6 +293,6 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=26"></script>
+<script src="script.js?v=27"></script>
 </body>
 </html>
