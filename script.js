@@ -296,8 +296,8 @@
   }
 
   /* ---------- Reveals ---------- */
-  const revealEls = document.querySelectorAll(".reveal, .mask");
   function startReveals() {
+    const revealEls = document.querySelectorAll(".reveal, .mask");
     if (prefersReduced || !("IntersectionObserver" in window)) { revealEls.forEach((el) => el.classList.add("in")); return; }
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("in"); io.unobserve(entry.target); } });
