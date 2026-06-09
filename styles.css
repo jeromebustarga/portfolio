@@ -61,6 +61,23 @@ body.webgl-off .gl-canvas { display: none; }
 body.webgl-off .hero-fallback { display: block; animation: heroFade 14s ease-in-out infinite alternate; }
 @keyframes heroFade { from { filter: hue-rotate(0) brightness(1); } to { filter: brightness(1.15); } }
 
+/* ============================================================ Atmosphere embers */
+.atmosphere { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 3; pointer-events: none; }
+body.webgl-off .atmosphere { opacity: 0.7; }
+@media (hover: none), (pointer: coarse) { .atmosphere { display: none; } }
+
+/* ============================================================ Chapter nav */
+.chapters { position: fixed; right: 34px; top: 50%; transform: translateY(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 22px; mix-blend-mode: difference; opacity: 0; transition: opacity 0.6s ease; }
+body:not(.loading) .chapters { opacity: 1; }
+.chapters a { display: flex; align-items: center; justify-content: flex-end; gap: 12px; color: #fff; }
+.chapters__num { font-family: var(--serif); font-size: 12px; opacity: 0; transform: translateX(8px); transition: all 0.4s var(--ease); }
+.chapters__label { font-size: 12px; letter-spacing: 0.04em; opacity: 0; transform: translateX(8px); transition: all 0.4s var(--ease); width: 0; overflow: hidden; white-space: nowrap; }
+.chapters__dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); transition: all 0.4s var(--ease); flex-shrink: 0; }
+.chapters a:hover .chapters__label, .chapters a.active .chapters__label { opacity: 0.85; transform: none; width: auto; }
+.chapters a:hover .chapters__num { opacity: 0.6; transform: none; }
+.chapters a.active .chapters__dot { background: var(--accent); width: 22px; border-radius: 4px; box-shadow: 0 0 12px var(--accent); }
+@media (max-width: 900px) { .chapters { display: none; } }
+
 /* ============================================================ Scroll progress */
 .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 1001; transform: scaleX(0); transform-origin: 0 50%; background: linear-gradient(90deg, #7a3a0e, var(--accent), var(--accent-light)); box-shadow: 0 0 12px rgba(244,121,33,0.6); }
 

@@ -128,6 +128,105 @@
   glActive = initGL();
   if (!glActive) document.body.classList.add("webgl-off");
 
+  /* ============================================================
+     Atmospheric embers — layered, cursor-reactive depth
+     ============================================================ */
+  const atmo = document.getElementById("atmosphere");
+  let embers = [];
+  const pointer = { x: -9999, y: -9999 };
+  if (atmo && !isTouch && !prefersReduced) {
+    const ctx = atmo.getContext("2d");
+    let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio, 1.5);
+    const resize = () => {
+      W = window.innerWidth; H = window.innerHeight;
+      atmo.width = W * dpr; atmo.height = H * dpr;
+      atmo.style.width = W + "px"; atmo.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const COUNT = window.innerWidth < 1100 ? 45 : 75;
+    const spawn = (init) => {
+      const depth = Math.random(); // 0 far .. 1 near
+      return {
+        x: Math.random() * W,
+        y: init ? Math.random() * H : H + 20,
+        r: 0.6 + depth * 2.2,
+        depth,
+        vy: -(0.15 + depth * 0.55),
+        drift: (Math.random() - 0.5) * 0.4,
+        phase: Math.random() * Math.PI * 2,
+        sway: 0.3 + Math.random() * 0.8,
+        alpha: 0.15 + depth * 0.5,
+      };
+    };
+    for (let i = 0; i < COUNT; i++) embers.push(spawn(true));
+
+    const drawAtmo = () => {
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = "lighter";
+      const t = performance.now() * 0.001;
+      for (const e of embers) {
+        e.y += e.vy;
+        e.x += e.drift + Math.sin(t * e.sway + e.phase) * 0.25 * e.depth;
+        // gentle cursor influence (nearer layers react more)
+        const dx = e.x - pointer.x, dy = e.y - pointer.y;
+        const dist2 = dx * dx + dy * dy;
+        if (dist2 < 26000) {
+          const f = (1 - dist2 / 26000) * e.depth * 1.6;
+          e.x += (dx / Math.sqrt(dist2 + 1)) * f;
+          e.y += (dy / Math.sqrt(dist2 + 1)) * f;
+        }
+        if (e.y < -20) Object.assign(e, spawn(false));
+        if (e.x < -20) e.x = W + 20; else if (e.x > W + 20) e.x = -20;
+        const flick = 0.7 + Math.sin(t * 2 + e.phase) * 0.3;
+        const a = e.alpha * flick;
+        const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r * 4);
+        g.addColorStop(0, "rgba(255,180,90," + a + ")");
+        g.addColorStop(0.4, "rgba(244,121,33," + a * 0.5 + ")");
+        g.addColorStop(1, "rgba(244,121,33,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r * 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(drawAtmo);
+    };
+    drawAtmo();
+    window.addEventListener("mousemove", (e) => { pointer.x = e.clientX; pointer.y = e.clientY; });
+    window.addEventListener("mouseleave", () => { pointer.x = -9999; pointer.y = -9999; });
+  }
+
+  /* ============================================================
+     Chapter / scene navigation
+     ============================================================ */
+  const chapters = document.getElementById("chapters");
+  if (chapters && "IntersectionObserver" in window) {
+    const map = [
+      { el: document.querySelector(".hero"), key: "top" },
+      { el: document.getElementById("about"), key: "about" },
+      { el: document.getElementById("work"), key: "work" },
+      { el: document.getElementById("skills"), key: "skills" },
+      { el: document.getElementById("contact"), key: "contact" },
+    ].filter((m) => m.el);
+    const links = {};
+    chapters.querySelectorAll("[data-chapter]").forEach((a) => (links[a.dataset.chapter] = a));
+    const setActive = (key) => {
+      Object.values(links).forEach((a) => a.classList.remove("active"));
+      if (links[key]) links[key].classList.add("active");
+    };
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const m = map.find((x) => x.el === entry.target);
+          if (m) setActive(m.key);
+        }
+      });
+    }, { threshold: 0.01, rootMargin: "-45% 0px -45% 0px" });
+    map.forEach((m) => cio.observe(m.el));
+  }
+
   /* ---------- Custom cursor ---------- */
   const cursor = document.getElementById("cursor");
   const cursorLight = document.getElementById("cursorLight");
