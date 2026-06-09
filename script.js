@@ -275,7 +275,7 @@
     entering = true;
     if (prefersReduced || !preloader) { finishLoad(); return; }
     preloader.classList.add("igniting");
-    setTimeout(finishLoad, 720);
+    setTimeout(finishLoad, 1000);
   }
   if (preEnter) {
     preEnter.addEventListener("click", enterSite);
