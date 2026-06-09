@@ -292,12 +292,6 @@
     navLinks.querySelectorAll("a").forEach((l) => l.addEventListener("click", () => { hamburgerBtn.classList.remove("active"); navLinks.classList.remove("active"); }));
     window.addEventListener("click", (e) => { if (!e.target.closest("nav")) { hamburgerBtn.classList.remove("active"); navLinks.classList.remove("active"); } });
   }
-  const iconDropdownBtn = document.getElementById("iconDropdownBtn");
-  const iconMenu = document.getElementById("iconMenu");
-  if (iconDropdownBtn) {
-    iconDropdownBtn.addEventListener("click", (e) => { e.stopPropagation(); iconMenu.classList.toggle("show"); });
-    window.addEventListener("click", (e) => { if (!e.target.closest(".icon-dropdown")) iconMenu.classList.remove("show"); });
-  }
 
   /* ---------- Reveals ---------- */
   const revealEls = document.querySelectorAll(".reveal, .mask");
