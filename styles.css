@@ -245,6 +245,14 @@ nav.hidden { transform: translateY(-110%); }
 .warp__cta:hover i { transform: translateX(5px); }
 @media (max-width: 700px) { .warp__cta { width: 100%; justify-content: center; } }
 
+/* Desktop-only note (shown on touch instead of the game) */
+.warp__note { display: none; align-items: center; gap: 10px; margin-top: 30px; padding: 13px 22px; border: 1px solid var(--line); border-radius: 100px; font-size: 13px; letter-spacing: 0.03em; color: var(--text-dim); }
+.warp__note i { color: var(--accent); }
+@media (hover: none), (pointer: coarse) {
+  .warp__cta, .warp__controls { display: none !important; }
+  .warp__note { display: inline-flex; }
+}
+
 /* ---- Playable warp arena (inline) ---- */
 .wz-game { display: none; width: 100%; max-width: 1120px; margin: 0 auto; flex-direction: column; gap: 12px; }
 .warp.playing .wz-game { display: flex; }

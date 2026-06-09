@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=22">
+<link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body class="loading">
 
@@ -178,9 +178,10 @@
         <span class="kbd">Space</span> Enter door
       </div>
 
-      <a href="warpzone.html" class="warp__cta reveal" id="wzStart" style="--i:2" data-link data-magnetic>
+      <button type="button" class="warp__cta reveal" id="wzStart" style="--i:2" data-magnetic>
         <span>Press start</span> <i class="fa-solid fa-arrow-right"></i>
-      </a>
+      </button>
+      <p class="warp__note reveal" style="--i:2"><i class="fa-solid fa-desktop"></i> The Warp Zone is playable on desktop only</p>
 
       <!-- Playable in-place arena (desktop) -->
       <div class="wz-game" id="wzGame" aria-hidden="true">
@@ -241,6 +242,6 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=22"></script>
+<script src="script.js?v=23"></script>
 </body>
 </html>
