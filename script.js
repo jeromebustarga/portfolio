@@ -260,8 +260,7 @@
 
   /* ---------- Preloader ---------- */
   const preloader = document.getElementById("preloader");
-  const preCount = document.getElementById("preCount");
-  const preBar = document.getElementById("preBar");
+  const preEnter = document.getElementById("preEnter");
   let revealStarted = false;
   function finishLoad() {
     if (revealStarted) return; revealStarted = true;
@@ -269,22 +268,15 @@
     if (preloader) preloader.classList.add("done");
     startReveals();
   }
-  if (prefersReduced) {
-    if (preCount) preCount.textContent = "100";
-    if (preBar) preBar.style.width = "100%";
-    setTimeout(finishLoad, 150);
+  // Wait for the user to click the logo (or press Enter) — no auto-load
+  if (preEnter) {
+    preEnter.addEventListener("click", finishLoad);
+    window.addEventListener("keydown", (e) => {
+      if (!revealStarted && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); finishLoad(); }
+    });
   } else {
-    const dur = 1300, t0 = performance.now();
-    const step = (now) => {
-      const p = Math.min((now - t0) / dur, 1);
-      const n = Math.round((1 - Math.pow(1 - p, 2)) * 100);
-      if (preCount) preCount.textContent = n;
-      if (preBar) preBar.style.width = n + "%";
-      if (p < 1) requestAnimationFrame(step); else setTimeout(finishLoad, 300);
-    };
-    requestAnimationFrame(step);
+    finishLoad();
   }
-  setTimeout(finishLoad, 4500);
 
   /* ---------- Nav menus ---------- */
   const hamburgerBtn = document.getElementById("hamburgerBtn");
