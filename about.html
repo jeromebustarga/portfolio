@@ -85,46 +85,31 @@
   .about-hero p { color: var(--text-dim); max-width: 52ch; margin: 26px 0 36px; font-size: 16px; line-height: 1.8; }
   .about-hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
 
-  /* ---- Journey: timeline of light ---- */
-  .journey { max-width: var(--max); margin: 0 auto; padding: clamp(60px, 9vh, 120px) 48px; }
-  .journey__track { position: relative; margin-top: clamp(30px, 6vh, 70px); }
-  .journey__line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-50%); background: var(--line); border-radius: 2px; overflow: hidden; }
-  .journey__fill { position: absolute; top: 0; left: 0; width: 100%; height: 0%; background: linear-gradient(180deg, var(--accent-light), var(--accent)); box-shadow: 0 0 14px rgba(244,121,33,0.8); }
-  .jstep { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(60px, 9vw, 130px); align-items: center; padding: clamp(36px, 6vh, 64px) 0; }
-  .jstep__node { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--text-faint); transition: all 0.5s var(--ease); z-index: 2; }
-  .jstep.lit .jstep__node { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px rgba(244,121,33,0.9), 0 0 40px rgba(244,121,33,0.45); }
-  .jstep__media { aspect-ratio: 16/11; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: linear-gradient(135deg, rgba(244,121,33,0.1), var(--bg-soft)); box-shadow: 0 26px 60px rgba(0,0,0,0.5); transform: rotate(-2.5deg); transition: transform 0.55s var(--ease), opacity 0.5s, filter 0.5s; opacity: 0.45; filter: grayscale(0.5) brightness(0.8); }
-  .jstep:nth-child(even) .jstep__media { transform: rotate(2.5deg); }
-  .jstep:nth-child(even) .jstep__media { order: 2; }
-  .jstep.lit .jstep__media { opacity: 1; filter: none; }
-  .jstep:hover .jstep__media { transform: rotate(0deg) scale(1.02); }
-  .jstep__media img { width: 100%; height: 100%; object-fit: cover; }
-  .jstep__text { position: relative; transition: opacity 0.5s; opacity: 0.4; }
-  .jstep.lit .jstep__text { opacity: 1; }
-  .jstep__big { position: absolute; top: -0.55em; left: -0.06em; font-family: var(--serif); font-size: clamp(80px, 9vw, 150px); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgba(244,121,33,0.25); user-select: none; pointer-events: none; transition: -webkit-text-stroke-color 0.5s; }
-  .jstep.lit .jstep__big { -webkit-text-stroke-color: rgba(244,121,33,0.55); }
-  .jstep__label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
-  .jstep__text h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 4vw, 48px); line-height: 1.02; letter-spacing: -0.01em; margin-bottom: 16px; }
-  .jstep__text h3 em { color: var(--accent); font-style: italic; }
-  .jstep__text p { color: var(--text-dim); line-height: 1.8; margin-bottom: 22px; font-size: 15px; max-width: 46ch; }
-  .jstep__tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .jstep__tags span { font-size: 11px; letter-spacing: 0.02em; padding: 6px 14px; border-radius: 100px; color: var(--accent); background: rgba(244,121,33,0.08); border: 1px solid rgba(244,121,33,0.18); }
-  .journey__end { position: relative; display: flex; justify-content: center; padding-top: 10px; }
-  .journey__end i { font-size: 22px; color: var(--text-faint); transition: all 0.6s var(--ease); }
-  .journey__end.lit i { color: var(--accent); text-shadow: 0 0 24px rgba(244,121,33,0.9), 0 0 60px rgba(244,121,33,0.5); }
+  /* ---- Story: editorial long-read ---- */
+  .story { max-width: 980px; margin: 0 auto; padding: clamp(60px, 9vh, 120px) 48px; }
+  .story .section-head { margin-bottom: clamp(28px, 5vh, 56px); }
+  .story__lead { font-family: var(--serif); font-size: clamp(26px, 3.4vw, 46px); line-height: 1.32; letter-spacing: -0.01em; color: var(--text); max-width: 18ch; margin-bottom: clamp(48px, 8vh, 90px); }
+  .story__lead em { color: var(--accent); font-style: italic; }
+  .story__chapter { margin-bottom: clamp(44px, 7vh, 80px); }
+  .story__eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+  .story__eyebrow::before { content: ''; width: 30px; height: 1px; background: var(--accent); }
+  .story__chapter h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 4.2vw, 48px); line-height: 1.04; letter-spacing: -0.01em; margin-bottom: 22px; }
+  .story__chapter h3 em { color: var(--accent); font-style: italic; }
+  .story__chapter p { color: var(--text-dim); font-size: clamp(16px, 1.5vw, 18px); line-height: 1.9; max-width: 66ch; margin-bottom: 22px; }
+  .story__chapter p strong { color: var(--text); font-weight: 500; }
+  .story__chapter--first p:first-of-type::first-letter { font-family: var(--serif); float: left; font-size: 3.6em; line-height: 0.74; padding: 8px 14px 0 0; color: var(--accent); }
+  .pullquote { font-family: var(--serif); font-style: italic; font-size: clamp(30px, 5.5vw, 64px); line-height: 1.12; letter-spacing: -0.02em; color: var(--text); text-align: center; max-width: 17ch; margin: clamp(50px, 9vh, 110px) auto; }
+  .pullquote em { color: var(--accent); }
+  .story__figure { margin: clamp(34px, 6vh, 56px) 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 70px rgba(0,0,0,0.5); }
+  .story__figure img { width: 100%; display: block; }
+  .story__figure figcaption { font-size: 12px; letter-spacing: 0.04em; color: var(--text-dim); padding: 12px 16px; border-top: 1px solid var(--line); }
 
   @media (max-width: 900px) {
     .about-hero__grid { grid-template-columns: 1fr; justify-items: center; text-align: center; padding-left: 0; gap: 36px; }
     .about-hero__text { align-items: center; }
-    .journey__line { left: 8px; transform: none; }
-    .jstep { grid-template-columns: 1fr; gap: 22px; padding-left: 40px; }
-    .jstep__node { left: 8px; top: 28px; transform: translate(-50%, 0); }
-    .jstep:nth-child(even) .jstep__media { order: 0; }
-    .jstep__media, .jstep:nth-child(even) .jstep__media { transform: rotate(0); }
-    .jstep__big { position: static; display: block; margin-bottom: -0.25em; }
   }
   @media (max-width: 700px) {
-    .about-hero, .journey { padding-left: 24px; padding-right: 24px; }
+    .about-hero, .story { padding-left: 24px; padding-right: 24px; }
   }
   @media (prefers-reduced-motion: reduce) {
     #overlay { display: none; }
@@ -193,114 +178,66 @@
       <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
     </section>
 
-    <!-- JOURNEY — timeline of light -->
-    <section id="story" class="journey">
+    <!-- STORY — editorial long-read -->
+    <section id="story" class="story">
       <div class="section-head">
         <span class="label reveal">(My Story)</span>
-        <h2 class="mask"><span>The journey<br>so <em>far.</em></span></h2>
+        <h2 class="mask"><span>My <em>story.</em></span></h2>
       </div>
 
-      <div class="journey__track" id="journeyTrack">
-        <div class="journey__line" aria-hidden="true"><div class="journey__fill" id="journeyFill"></div></div>
+      <p class="story__lead reveal">From a small town called <em>Pili</em>, in Camarines Sur, Philippines.</p>
 
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/creighton.png" alt="Education" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">01</span>
-            <div class="jstep__label">Education</div>
-            <h3>Academic <em>Foundation</em></h3>
-            <p>Currently pursuing Computer Science with a Graphic Design minor and Digital Humanities focus at Creighton University. This interdisciplinary path lets me blend technical prowess with creative storytelling and visual design.</p>
-            <div class="jstep__tags"><span>Computer Science</span><span>Graphic Design</span><span>Digital Humanities</span></div>
-          </div>
-        </div>
-
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/philippines.png" alt="Origins" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">02</span>
-            <div class="jstep__label">Origins</div>
-            <h3>Filipino <em>Heritage</em></h3>
-            <p>Born and raised in the Philippines, I bring a unique cultural perspective to my work — fueling my commitment to inclusive design for communities facing digital divides, language barriers, and limited connectivity.</p>
-            <div class="jstep__tags"><span>Cultural Design</span><span>Inclusive UX</span><span>Accessibility</span></div>
-          </div>
-        </div>
-
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/create.png" alt="Philosophy" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">03</span>
-            <div class="jstep__label">Philosophy</div>
-            <h3>Design That <em>Empowers</em></h3>
-            <p>I believe users deserve design that reflects their visual culture — bold, culturally-inspired palettes rather than generic corporate aesthetics. Every project is a chance to craft something that resonates authentically.</p>
-            <div class="jstep__tags"><span>Brand Identity</span><span>Visual Storytelling</span><span>User Advocacy</span></div>
-          </div>
-        </div>
-
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/story-technical.jpg" alt="Technical" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">04</span>
-            <div class="jstep__label">Technical</div>
-            <h3>Full-Stack <em>Expertise</em></h3>
-            <p>Building sophisticated web apps with modern frameworks and clean architecture. From Django and Spring Boot backends to interactive p5.js experiences, I turn complex ideas into elegant solutions that perform across all devices.</p>
-            <div class="jstep__tags"><span>Django &amp; Python</span><span>JavaScript &amp; p5.js</span><span>Spring Boot</span></div>
-          </div>
-        </div>
-
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/hdr.png" alt="Experience" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">05</span>
-            <div class="jstep__label">Experience</div>
-            <h3>Industry <em>Insights</em></h3>
-            <p>Internships at HDR Inc. and BrookHaven Integrated Wealth Strategies gave me real-world experience in professional environments — collaborating with teams, meeting deadlines, and delivering work that exceeds expectations.</p>
-            <div class="jstep__tags"><span>HDR Inc.</span><span>BrookHaven IWS</span><span>Collaboration</span></div>
-          </div>
-        </div>
-
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/research.png" alt="Research" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">06</span>
-            <div class="jstep__label">Research</div>
-            <h3>The Algorithm <em>Mirror</em></h3>
-            <p>"The Algorithm Mirror" visualizes YouTube recommendation algorithms through aesthetic data art, making complex algorithmic systems tangible — reflecting my commitment to transparency and privacy-first design.</p>
-            <div class="jstep__tags"><span>Data Visualization</span><span>Transparency</span><span>Privacy-First</span></div>
-          </div>
-        </div>
-
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/advocacy.png" alt="Advocacy" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">07</span>
-            <div class="jstep__label">Advocacy</div>
-            <h3>Designing for <em>Good</em></h3>
-            <p>"Konektado?" addresses digital literacy and the digital divide, while "Liwanag" focuses on financial protection for Filipino users. I'm passionate about using design as a tool for social impact and community empowerment.</p>
-            <div class="jstep__tags"><span>Digital Literacy</span><span>Social Impact</span><span>Community Design</span></div>
-          </div>
-        </div>
-
-        <div class="jstep reveal">
-          <span class="jstep__node" aria-hidden="true"></span>
-          <div class="jstep__media"><img src="images/story-future.jpg" alt="Future" loading="lazy"></div>
-          <div class="jstep__text">
-            <span class="jstep__big" aria-hidden="true">08</span>
-            <div class="jstep__label">Future</div>
-            <h3>What's <em>Next</em></h3>
-            <p>Always exploring new technologies and design trends — generative art, brand identities, immersive web experiences. I'm driven by curiosity and the desire to create meaningful work that makes a difference.</p>
-            <div class="jstep__tags"><span>Innovation</span><span>Growth</span><span>Impact</span></div>
-          </div>
-        </div>
-
-        <div class="journey__end" id="journeyEnd" aria-hidden="true"><i class="fa-solid fa-lightbulb"></i></div>
+      <div class="story__chapter story__chapter--first reveal">
+        <span class="story__eyebrow">Beginnings</span>
+        <p>I've been fond of designing since I was fifteen. Back then I'd volunteer to make invitations, banners, and flyers for family occasions — weddings, birthdays, even my cousins' school projects. It was something I did on the side, because growing up in poverty, our dreams had to be practical. We needed a way to pull ourselves up, so design stayed a quiet thing I loved rather than something I imagined building a life on.</p>
       </div>
+
+      <figure class="story__figure reveal">
+        <img src="images/philippines.png" alt="The Philippines" loading="lazy">
+        <figcaption>Pili, Camarines Sur — where it started.</figcaption>
+      </figure>
+
+      <p class="pullquote reveal">"Growing up in poverty, our dreams had to be <em>practical</em>."</p>
+
+      <div class="story__chapter reveal">
+        <span class="story__eyebrow">The Pause</span>
+        <h3>Falling <em>behind</em>, finding forward</h3>
+        <p>There was a stretch when I was an out-of-school youth, and I really felt like I'd fallen behind. Maybe it was meant to happen that way. I stepped back from my own education so my siblings could continue theirs — and in that pause, I started to find my passion.</p>
+      </div>
+
+      <div class="story__chapter reveal">
+        <span class="story__eyebrow">The Bakery</span>
+        <h3>A pizzeria, a <em>pandemic</em>, a diploma</h3>
+        <p>Around that time, my mom and I started a business: a bakery and pizzeria. I handled everything on the front — the marketing, the banners and flyers and calling cards, the social media, even making the pizza boxes. The business carried us through COVID, and during those years I got the chance to go back and finish high school.</p>
+        <p>My last two years were spent balancing online school and the business at the same time. It was hard, but <strong>giving up was never an option</strong> — the business was our only source of income. And even with all of that, the dream stayed in the back of my mind. Between online school, the business, and volunteer and civic work, I still found the time to apply to schools in the US.</p>
+      </div>
+
+      <figure class="story__figure reveal">
+        <img src="images/PIZZA1.jpg" alt="The bakery and pizzeria" loading="lazy">
+        <figcaption>The family bakery &amp; pizzeria — marketing, boxes, and all.</figcaption>
+      </figure>
+
+      <p class="pullquote reveal">"My life changed <em>overnight</em>."</p>
+
+      <div class="story__chapter reveal">
+        <span class="story__eyebrow">The Turn</span>
+        <h3>Five offers, one <em>scholarship</em></h3>
+        <p>I was accepted to five schools that offered me scholarships, though none were enough on their own. I also finished high school as the valedictorian. I shared my story online, and my provincial government recognized it — awarding me a scholarship large enough to actually pursue college in the USA. My life changed overnight.</p>
+      </div>
+
+      <div class="story__chapter reveal">
+        <span class="story__eyebrow">Creighton</span>
+        <h3>Where code and design <em>meet</em></h3>
+        <p>I went to Creighton University and started as a physics major on the engineering track. One of the requirements was a computer science class — and the moment I took my first one, I fell in love, so I switched my major to Computer Science. Then another requirement put me in a graphic design class, and design and I met again. This time I did not dismiss it.</p>
+        <p>I took on both majors, and that's where I learned that coding and design can actually live together. I didn't waste my time in college — I took graphic design and computer science side by side and became the flexible person I am today, someone who found his place where creativity and problem-solving meet. I finished recognized as the <strong>most outstanding graduate in the Graphic Design and Film program</strong>.</p>
+      </div>
+
+      <figure class="story__figure reveal">
+        <img src="images/creighton.png" alt="Creighton University" loading="lazy">
+        <figcaption>Creighton University — physics, then code, then design.</figcaption>
+      </figure>
+
+      <p class="pullquote reveal">"Coding and design can actually <em>live together</em>."</p>
     </section>
 
     <!-- CONTACT -->
