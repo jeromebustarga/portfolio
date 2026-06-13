@@ -65,6 +65,47 @@
   .modal-story p strong { color: var(--text); font-weight: 500; }
   .story-image { width: 100%; height: auto; border-radius: 12px; margin: 28px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--line); }
 
+  /* Nav contact button (styled like a link) */
+  .nav-contact { background: none; border: 0; cursor: pointer; font-family: var(--sans); font-size: 13px; color: #fff; position: relative; padding: 4px 0; }
+  .nav-contact::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: #fff; transform: scaleX(0); transform-origin: right; transition: transform 0.4s var(--ease); }
+  .nav-contact:hover::after { transform: scaleX(1); transform-origin: left; }
+  @media (max-width: 700px) { .nav-contact { display: block; width: 100%; text-align: left; padding: 20px 0; font-size: 22px; font-family: var(--serif); border-bottom: 1px solid var(--line); } .nav-contact::after { display: none; } }
+
+  /* Hero motion decor (CSS-only) */
+  .ill-hero { position: relative; overflow: hidden; }
+  .ill-hero__bgword { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -54%); font-family: var(--serif); font-style: italic; font-size: clamp(120px, 26vw, 380px); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgba(244,121,33,0.10); white-space: nowrap; pointer-events: none; user-select: none; z-index: 0; }
+  .ill-hero > *:not(.ill-hero__bgword):not(.ideco) { position: relative; z-index: 1; }
+  .ideco { position: absolute; pointer-events: none; z-index: 0; opacity: 0.85; }
+  .ideco svg { display: block; overflow: visible; }
+  .tb { transform-box: fill-box; transform-origin: center; }
+  .a-spin { animation: iSpin 14s linear infinite; }
+  .a-spin-r { animation: iSpin 11s linear infinite reverse; }
+  .a-bob { animation: iBob 3.6s ease-in-out infinite; }
+  .a-twinkle { animation: iTwinkle 2.2s ease-in-out infinite; }
+  .a-dash { stroke-dasharray: 8 8; animation: iDash 1.8s linear infinite; }
+  @keyframes iSpin { to { transform: rotate(360deg); } }
+  @keyframes iBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  @keyframes iTwinkle { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.2; transform: scale(0.6); } }
+  @keyframes iDash { to { stroke-dashoffset: -32; } }
+
+  .gallery-item { transform-style: preserve-3d; }
+
+  /* Contact popup */
+  .cpop { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(6,6,6,0.75); backdrop-filter: blur(14px); opacity: 0; visibility: hidden; transition: opacity 0.4s var(--ease), visibility 0.4s; }
+  .cpop.active { opacity: 1; visibility: visible; }
+  .cpop__card { position: relative; width: 100%; max-width: 480px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 20px; padding: clamp(34px, 5vw, 54px); text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.6); transform: translateY(20px) scale(0.98); transition: transform 0.5s var(--ease); }
+  .cpop.active .cpop__card { transform: none; }
+  .cpop__card .label { display: inline-block; }
+  .cpop__card h3 { font-family: var(--serif); font-size: clamp(34px, 6vw, 56px); font-weight: 400; line-height: 1; margin: 14px 0 4px; }
+  .cpop__card p { color: var(--text-dim); font-size: 14px; margin-top: 8px; }
+  .cpop__email { display: inline-block; font-family: var(--serif); font-style: italic; font-size: clamp(18px, 3.2vw, 26px); color: var(--text); margin-top: 16px; position: relative; padding-bottom: 4px; }
+  .cpop__email::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.5s var(--ease); }
+  .cpop__email:hover { color: var(--accent); }
+  .cpop__email:hover::after { transform: scaleX(1); transform-origin: left; }
+  .cpop__close { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,0.04); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--ease); }
+  .cpop__close:hover { background: var(--accent); border-color: var(--accent); color: #060606; transform: rotate(90deg); }
+  .cpop .social-links { margin-top: 28px; }
+
   @media (max-width: 1024px) { .ill-hero, .gallery { padding-left: 28px; padding-right: 28px; } .modal-content { padding: 60px 28px; } .modal-content-inner { gap: 40px; } }
   @media (max-width: 900px) { .modal-content-inner { grid-template-columns: 1fr; } .modal-details { order: 2; max-width: 100%; } .modal-image-container { order: 1; } }
   @media (max-width: 700px) {
@@ -76,29 +117,11 @@
   }
 </style>
 </head>
-<body class="loading">
+<body>
 
 <!-- Custom cursor -->
 <div class="cursor" id="cursor" aria-hidden="true"></div>
 <div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
-
-<!-- Preloader (click to enter) -->
-<div class="preloader" id="preloader">
-  <button class="preloader__enter" id="preEnter" type="button" aria-label="Click the logo to enter">
-    <span class="preloader__bulb">
-      <img src="images/logo.png?v=26" alt="Enter" data-fallback-icon="fa-lightbulb">
-      <span class="pf" aria-hidden="true">
-        <span class="pf-flash"></span>
-        <i class="pf-ray" style="--a:0deg"></i><i class="pf-ray" style="--a:30deg"></i><i class="pf-ray" style="--a:60deg"></i>
-        <i class="pf-ray" style="--a:90deg"></i><i class="pf-ray" style="--a:120deg"></i><i class="pf-ray" style="--a:150deg"></i>
-        <i class="pf-ray" style="--a:180deg"></i><i class="pf-ray" style="--a:210deg"></i><i class="pf-ray" style="--a:240deg"></i>
-        <i class="pf-ray" style="--a:270deg"></i><i class="pf-ray" style="--a:300deg"></i><i class="pf-ray" style="--a:330deg"></i>
-      </span>
-    </span>
-    <span class="preloader__label">Illustrations</span>
-    <span class="preloader__hint">Click the light to enter</span>
-  </button>
-</div>
 
 <!-- Atmospheric ember layer -->
 <canvas id="atmosphere" class="atmosphere" aria-hidden="true"></canvas>
@@ -118,9 +141,8 @@
     <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html" data-link>Home</a></li>
-      <li><a href="index.html#work" data-link>Work</a></li>
       <li><a href="about.html" data-link>About</a></li>
-      <li><a href="index.html#contact" data-link>Contact</a></li>
+      <li><button type="button" class="nav-contact" id="contactBtn" data-link>Contact</button></li>
     </ul>
   </div>
 </nav>
@@ -128,6 +150,11 @@
 <main id="top">
   <div class="content">
     <section class="ill-hero">
+      <span class="ill-hero__bgword" aria-hidden="true">drawn</span>
+      <span class="ideco" style="top:24%;left:7%" aria-hidden="true"><svg width="58" height="58" viewBox="0 0 58 58"><path class="tb a-spin" d="M29 3 L34 22 L53 14 L38 29 L53 44 L34 36 L29 55 L24 36 L5 44 L20 29 L5 14 L24 22 Z" fill="#f47921"/></svg></span>
+      <span class="ideco" style="top:30%;right:8%" aria-hidden="true"><svg width="46" height="46" viewBox="0 0 46 46"><circle class="tb a-bob" cx="23" cy="23" r="16" stroke="#f47921" stroke-width="5" fill="none"/></svg></span>
+      <span class="ideco" style="bottom:14%;left:14%" aria-hidden="true"><svg width="72" height="28" viewBox="0 0 72 28"><path class="a-dash" d="M3 14 Q14 3 25 14 T47 14 T69 14" stroke="rgba(244,241,234,.5)" stroke-width="4" stroke-linecap="round" fill="none"/></svg></span>
+      <span class="ideco" style="top:18%;right:28%" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20"><circle class="tb a-twinkle" cx="10" cy="10" r="6" fill="#ff9642"/></svg></span>
       <span class="label reveal">(Illustrations)</span>
       <h1 class="ill-hero__title"><span class="mask"><span>My <em>illustrations.</em></span></span></h1>
       <p class="reveal" style="--i:2">A collection of digital and hand-drawn illustrations that bring stories to life — each piece exploring different themes, techniques, and creative visions.</p>
@@ -147,6 +174,23 @@
     </footer>
   </div>
 </main>
+
+<!-- Contact popup -->
+<div class="cpop" id="contactPopup" data-lenis-prevent>
+  <div class="cpop__card">
+    <button class="cpop__close" id="cpopClose" type="button" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <span class="label">(Let's talk)</span>
+    <h3>Get in <em style="color:var(--accent);font-style:italic">touch</em></h3>
+    <p>Got a project or just want to say hi?</p>
+    <a class="cpop__email" href="mailto:jeromehadebustarga@gmail.com">jeromehadebustarga@gmail.com</a>
+    <div class="social-links">
+      <a href="https://github.com/jhb09808" target="_blank" rel="noopener" class="social-link" aria-label="GitHub" data-magnetic><i class="fa-brands fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/jeromebustarga0321/" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn" data-magnetic><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="https://behance.net/jeromebustarga" target="_blank" rel="noopener" class="social-link" aria-label="Behance" data-magnetic><i class="fa-brands fa-behance"></i></a>
+      <a href="https://www.instagram.com/jeromeq.21?igsh=bzFsdzJzOHZtMWx2&utm_source=qr" target="_blank" rel="noopener" class="social-link" aria-label="Instagram" data-magnetic><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </div>
+</div>
 
 <!-- Modal -->
 <div class="modal" id="modal" data-lenis-prevent>
@@ -337,6 +381,18 @@ illustrations.forEach((item, index) => {
     el.addEventListener("mouseenter", () => cursorEl.classList.add("hover"));
     el.addEventListener("mouseleave", () => cursorEl.classList.remove("hover"));
   }
+  // subtle 3D tilt toward the cursor
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const img = el.querySelector(".gallery-item-image");
+    el.addEventListener("mousemove", (e) => {
+      const r = el.getBoundingClientRect();
+      const rx = ((e.clientY - r.top) / r.height - 0.5) * -7;
+      const ry = ((e.clientX - r.left) / r.width - 0.5) * 7;
+      el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      if (img) img.style.transform = "scale(1.06)";
+    });
+    el.addEventListener("mouseleave", () => { el.style.transform = ""; if (img) img.style.transform = ""; });
+  }
   galleryGrid.appendChild(el);
 });
 
@@ -393,7 +449,32 @@ function closeModal() {
 }
 modalClose.addEventListener("click", closeModal);
 modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("active")) closeModal(); });
+
+/* Contact popup */
+const contactPopup = document.getElementById("contactPopup");
+const contactBtn = document.getElementById("contactBtn");
+const cpopClose = document.getElementById("cpopClose");
+const navLinksEl = document.getElementById("navLinks");
+const hamburgerEl = document.getElementById("hamburgerBtn");
+function openContact() {
+  contactPopup.classList.add("active");
+  document.body.style.overflow = "hidden";
+  if (navLinksEl) navLinksEl.classList.remove("active");
+  if (hamburgerEl) hamburgerEl.classList.remove("active");
+}
+function closeContact() {
+  contactPopup.classList.remove("active");
+  if (!modal.classList.contains("active")) document.body.style.overflow = "";
+}
+if (contactBtn) contactBtn.addEventListener("click", (e) => { e.stopPropagation(); openContact(); });
+if (cpopClose) cpopClose.addEventListener("click", closeContact);
+contactPopup.addEventListener("click", (e) => { if (e.target === contactPopup) closeContact(); });
+
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (modal.classList.contains("active")) closeModal();
+  else if (contactPopup.classList.contains("active")) closeContact();
+});
 </script>
 </body>
 </html>
