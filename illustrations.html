@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+<title>Illustrations — Jerome Bustarga</title>
+<meta name="description" content="Illustrations by Jerome Bustarga — digital and hand-drawn work that brings stories to life." />
+<link rel="icon" type="image/png" href="images/favicon.png?v=26">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=31">
+<style>
+  /* ---- Illustrations page (theme tokens from styles.css) ---- */
+  main { position: relative; z-index: 2; background: var(--bg); }
+
+  .ill-hero { max-width: var(--max); margin: 0 auto; padding: 168px 48px 30px; text-align: center; }
+  .ill-hero .label { display: inline-block; margin-bottom: 18px; }
+  .ill-hero__title { font-family: var(--serif); font-weight: 400; font-size: clamp(48px, 9vw, 120px); line-height: 0.92; letter-spacing: -0.02em; }
+  .ill-hero__title em { color: var(--accent); font-style: italic; }
+  .ill-hero p { max-width: 560px; margin: 26px auto 0; color: var(--text-dim); font-size: 16px; line-height: 1.7; }
+
+  .gallery { max-width: 1500px; margin: 0 auto; padding: 50px 48px 110px; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+  .gallery-item { position: relative; aspect-ratio: 4/5; border-radius: 16px; overflow: hidden; cursor: pointer; background: var(--bg-soft); border: 1px solid var(--line); opacity: 0; transform: translateY(24px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), border-color 0.3s; }
+  .gallery-item.visible { opacity: 1; transform: none; }
+  .gallery-item:hover { border-color: rgba(244,121,33,0.4); }
+  .gallery-item-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
+  .gallery-item:hover .gallery-item-image { transform: scale(1.05); }
+  .gallery-item-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,6,6,0.95) 0%, rgba(6,6,6,0.4) 42%, transparent 64%); opacity: 0; transition: opacity 0.4s ease; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; }
+  .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+  .gallery-item-title { font-family: var(--serif); font-size: 24px; font-weight: 400; margin-bottom: 6px; color: var(--text); }
+  .gallery-item-category { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+  @media (hover: none) and (pointer: coarse) {
+    .gallery-item-overlay { opacity: 1; background: linear-gradient(to top, rgba(6,6,6,0.9) 0%, rgba(6,6,6,0.3) 50%, transparent 72%); }
+  }
+
+  /* Modal */
+  .modal { display: none; position: fixed; inset: 0; background: rgba(6,6,6,0.96); z-index: 10000; backdrop-filter: blur(20px); overflow-y: auto; }
+  .modal.active { display: block; animation: modalFade 0.3s ease; }
+  @keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
+  .modal-content { width: 100%; max-width: 1400px; min-height: 100vh; margin: 0 auto; padding: 80px 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: modalUp 0.5s var(--ease); }
+  .modal-content.is-case-study { justify-content: flex-start; }
+  @keyframes modalUp { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-content-inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center; width: 100%; }
+  .modal-image { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+  .modal-details { max-width: 550px; }
+  .modal-category { display: inline-block; padding: 8px 16px; background: rgba(244,121,33,0.1); border: 1px solid rgba(244,121,33,0.2); border-radius: 100px; font-size: 11px; font-weight: 500; color: var(--accent); margin-bottom: 20px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .modal-title { font-family: var(--serif); font-size: clamp(32px, 5vw, 48px); font-weight: 400; line-height: 1.15; margin-bottom: 12px; color: var(--text); }
+  .modal-year { font-size: 14px; color: var(--text-faint); margin-bottom: 24px; }
+  .modal-description { font-size: 15px; line-height: 1.8; color: var(--text-dim); margin-bottom: 32px; }
+  .modal-tools h4 { font-size: 11px; font-weight: 500; color: var(--text); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .tool-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tool-tag { padding: 7px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 100px; font-size: 12px; color: var(--text-dim); }
+  .modal-close { position: fixed; top: 28px; right: 28px; width: 48px; height: 48px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 50%; color: var(--text-dim); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--ease); z-index: 10001; }
+  .modal-close:hover { background: var(--accent); border-color: var(--accent); color: #060606; transform: rotate(90deg); }
+  .modal-case-study { width: 100%; max-width: 900px; }
+  .modal-header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .modal-header .modal-category { margin-bottom: 16px; }
+  .modal-story h3 { font-family: var(--serif); font-size: 28px; font-weight: 400; margin: 48px 0 20px; color: var(--accent); letter-spacing: -0.01em; }
+  .modal-story h3:first-child { margin-top: 0; }
+  .modal-story h4 { font-size: 16px; font-weight: 500; margin: 32px 0 16px; color: var(--text); }
+  .modal-story p { font-size: 15px; line-height: 1.85; color: var(--text-dim); margin-bottom: 20px; }
+  .modal-story p strong { color: var(--text); font-weight: 500; }
+  .story-image { width: 100%; height: auto; border-radius: 12px; margin: 28px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--line); }
+
+  @media (max-width: 1024px) { .ill-hero, .gallery { padding-left: 28px; padding-right: 28px; } .modal-content { padding: 60px 28px; } .modal-content-inner { gap: 40px; } }
+  @media (max-width: 900px) { .modal-content-inner { grid-template-columns: 1fr; } .modal-details { order: 2; max-width: 100%; } .modal-image-container { order: 1; } }
+  @media (max-width: 700px) {
+    .ill-hero { padding: 130px 24px 20px; }
+    .gallery { padding: 30px 24px 70px; }
+    .gallery-grid { grid-template-columns: 1fr; gap: 20px; }
+    .modal-content { padding: 70px 24px; }
+    .modal-close { top: 18px; right: 18px; width: 44px; height: 44px; }
+  }
+</style>
+</head>
+<body class="loading">
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
+
+<!-- Preloader (click to enter) -->
+<div class="preloader" id="preloader">
+  <button class="preloader__enter" id="preEnter" type="button" aria-label="Click the logo to enter">
+    <span class="preloader__bulb">
+      <img src="images/logo.png?v=26" alt="Enter" data-fallback-icon="fa-lightbulb">
+      <span class="pf" aria-hidden="true">
+        <span class="pf-flash"></span>
+        <i class="pf-ray" style="--a:0deg"></i><i class="pf-ray" style="--a:30deg"></i><i class="pf-ray" style="--a:60deg"></i>
+        <i class="pf-ray" style="--a:90deg"></i><i class="pf-ray" style="--a:120deg"></i><i class="pf-ray" style="--a:150deg"></i>
+        <i class="pf-ray" style="--a:180deg"></i><i class="pf-ray" style="--a:210deg"></i><i class="pf-ray" style="--a:240deg"></i>
+        <i class="pf-ray" style="--a:270deg"></i><i class="pf-ray" style="--a:300deg"></i><i class="pf-ray" style="--a:330deg"></i>
+      </span>
+    </span>
+    <span class="preloader__label">Illustrations</span>
+    <span class="preloader__hint">Click the light to enter</span>
+  </button>
+</div>
+
+<!-- Atmospheric ember layer -->
+<canvas id="atmosphere" class="atmosphere" aria-hidden="true"></canvas>
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav id="nav">
+  <a href="index.html" class="logo" id="logoNav">
+    <span class="logo-icon"><img src="images/logo.png?v=26" alt="Logo" data-fallback-icon="fa-lightbulb"></span>
+    <span class="logo-text-wrapper">
+      <span class="logo-text">Jerome Bustarga</span>
+      <span class="logo-text-alt">It's Jerome's World</span>
+    </span>
+  </a>
+  <div class="nav-right">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" data-link>Home</a></li>
+      <li><a href="index.html#work" data-link>Work</a></li>
+      <li><a href="about.html" data-link>About</a></li>
+      <li><a href="index.html#contact" data-link>Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="top">
+  <div class="content">
+    <section class="ill-hero">
+      <span class="label reveal">(Illustrations)</span>
+      <h1 class="ill-hero__title"><span class="mask"><span>My <em>illustrations.</em></span></span></h1>
+      <p class="reveal" style="--i:2">A collection of digital and hand-drawn illustrations that bring stories to life — each piece exploring different themes, techniques, and creative visions.</p>
+    </section>
+
+    <section class="gallery">
+      <div class="gallery-grid" id="galleryGrid"><!-- generated --></div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer__big" aria-hidden="true">ILLUSTRATIONS</div>
+      <div class="footer__row">
+        <span>© 2025 Jerome Bustarga</span>
+        <span>Thoughtfully designed &amp; built</span>
+        <span>San Diego, CA</span>
+      </div>
+    </footer>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal" id="modal" data-lenis-prevent>
+  <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+  <div class="modal-content" id="modalContent"><!-- generated --></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="script.js?v=31"></script>
+<script>
+/* ---- Illustrations: gallery data + modal ---- */
+const illustrations = [
+  {
+    id: 1,
+    title: "Duck Playground Concept",
+    category: "Concept Design",
+    year: "2024",
+    image: "images/duckfinal1.png",
+    images: ["images/ducksketch1.png", "images/ducksketch2.png", "images/duckfinal1.png", "images/duckfinal2.png"],
+    description: `
+    <h3>Initial Concept</h3>
+    <p>For my playground design project, I've created this giant rubber duck play structure aimed at the 2-5 age group. It's meant to be an outdoor installation - nothing fancy, just needs some shade to keep the equipment from getting too hot and the kids comfortable while they play.</p>
+    <img src="images/ducksketch1.png" alt="Initial duck playground sketch" class="story-image">
+    <p>The coolest part about this design is how it breaks away from typical playground stuff - I mean, it's literally a massive duck that kids can climb on and slide through. The sketch shows my side-view concept with a tube slide coming out of the duck's body, some safety railings (because obviously, we can't have kids falling off), and climbing platforms. I added some small figures in the drawing to show the scale, plus a few trees to give it some context.</p>
+    <p>For the ground surface, I'm thinking either rubber flooring or that engineered wood fiber stuff - whatever meets safety standards and won't break the budget. The surface needs to extend past the duck's footprint for safety zones and all that technical stuff we learned about.</p>
+    <img src="images/ducksketch2.png" alt="Technical development sketches" class="story-image">
+    <p>Right now, I've only got this side perspective sketch done because, honestly, designing playground equipment is way more complex than I initially thought. Still need to work on another 2-point perspective view (probably from the front or back), add color to one of the views, and include all the technical measurements for things like overall height, slide length, and platform heights.</p>
+    <h3>Final Design Evolution</h3>
+    <img src="images/duckfinal1.png" alt="Final duck playground design - main view" class="story-image">
+    <p>After careful consideration, I completely revamped my original playground design which was too complex and potentially unsafe for younger children. My new duck-themed playground equipment is specifically designed for children ages 4-8, creating a whimsical and engaging outdoor play space that encourages both physical activity and imaginative play.</p>
+    <p>The equipment is intended for exterior installation in public parks or school playgrounds, ideally in temperate climates where the bright yellow coating can maintain its vibrancy. While the structure can withstand various weather conditions, it's best suited for areas that don't experience extreme temperature fluctuations that could affect the durability of the materials.</p>
+    <img src="images/duckfinal2.png" alt="Final duck playground design - technical view" class="story-image">
+    <p>What sets my design apart is the cohesive duck theme that transforms standard playground elements into an immersive experience. The main structure features two connected play towers with duck head toppers, creating a unified aesthetic that's both playful and memorable. I incorporated traditional elements like slides, climbing nets, and swings but reimagined them within the duck theme, making them more engaging for young children who can pretend they're playing in a duck pond adventure.</p>
+    <p>For safety and aesthetics, I've decided to use poured-in-place rubber surfacing in a combination of teal and brown colors to complement the yellow equipment while creating the illusion of water and earth. This provides excellent impact absorption for falls and is ADA compliant, making the playground accessible to children of all abilities.</p>`,
+    tools: ["Concept Design", "Hand Sketching", "3D Visualization", "Safety Planning"]
+  },
+  {
+    id: 2,
+    title: "Aloha - Expressive Typography",
+    category: "Digital Lettering",
+    year: "2024",
+    image: "images/alohafinal.png",
+    images: ["images/aloha1.png", "images/aloha2.png", "images/aloha3.png", "images/alohafinal.png"],
+    description: `
+    <h3>Exploring Hawaiian Spirit Through Typography</h3>
+    <p>This expressive text project began as an exploration of how typography can embody cultural spirit and emotion. Using the Sketchbook app on my iPad, I wanted to capture the warm, welcoming essence of the Hawaiian greeting "Aloha" through hand-lettered design.</p>
+    <img src="images/aloha1.png" alt="Initial Aloha sketch - grayscale" class="story-image">
+    <p>I started with a simple grayscale sketch, focusing on the letterforms themselves. The challenge was to create letters that felt organic and flowing, like the ocean waves and gentle breezes of the islands. Each letter needed to have its own personality while still working cohesively as a complete word.</p>
+    <h3>Adding Life Through Color</h3>
+    <img src="images/aloha2.png" alt="Aloha with initial color exploration" class="story-image">
+    <p>The next phase involved introducing color to bring the design to life. I began experimenting with tropical palettes - the turquoise of ocean waters and the warm yellows of Hawaiian sunshine. The hibiscus flower started to take shape, becoming a central element that would replace the 'O' in Aloha.</p>
+    <img src="images/aloha3.png" alt="Aloha with refined hibiscus integration" class="story-image">
+    <p>As the design evolved, I refined the hibiscus flower, making it more prominent and detailed. The petals needed to feel delicate yet bold enough to hold their own among the other letterforms. I added subtle gradients and shadows to give the flower dimension and make it pop off the page.</p>
+    <h3>Final Tropical Expression</h3>
+    <img src="images/alohafinal.png" alt="Final Aloha design with tropical elements" class="story-image">
+    <p>The final design brings together all the tropical elements - the flowing letterforms, the vibrant hibiscus, and lush palm fronds that frame the composition. The addition of green foliage creates depth and transforms the word into a complete tropical scene. The color palette evolved to include rich greens, warm coral pinks, and golden yellows that capture the essence of a Hawaiian sunset.</p>
+    <p>Working entirely in the Sketchbook app allowed me to maintain a hand-drawn, organic feel throughout the design process. Each brushstroke and color choice was intentional, building layers of meaning into what started as a simple word. The result is typography that doesn't just spell "Aloha" - it embodies the warmth, beauty, and welcoming spirit of Hawaiian culture.</p>`,
+    tools: ["Sketchbook App", "Digital Lettering", "iPad Pro", "Hand Lettering"]
+  },
+  {
+    id: 3,
+    title: "Noir Film Opening - Storyboard",
+    category: "Storyboarding",
+    year: "2024",
+    image: "images/sb-final.png",
+    images: ["images/sb-sketch.png", "images/sb-closeup1.png", "images/sb-closeup2.png", "images/sb-closeup1refined.png", "images/sb-closeup2refined.png", "images/sb-final.png"],
+    description: `
+    <h3>Project Overview</h3>
+    <p>This is a noir-style film opening sequence that serves as both story introduction and opening credits. Created entirely in the Sketchbook app, the visual style suggests a 1940s period piece with strong film noir influences. The total runtime is approximately 1 minute and 1 second, with 20 carefully composed scenes.</p>
+    <img src="images/sb-sketch.png" alt="Initial storyboard sketch layout" class="story-image">
+    <h3>Key Scene Development</h3>
+    <p>Two pivotal scenes received special attention during the development process. These frames capture the essence of the noir atmosphere and required multiple refinements to achieve the right mood and composition.</p>
+    <h4>Thumbnail 17 - Original and Refined</h4>
+    <img src="images/sb-closeup1.png" alt="Thumbnail 17 - Original sketch" class="story-image">
+    <img src="images/sb-closeup1refined.png" alt="Thumbnail 17 - Refined version" class="story-image">
+    <h4>Thumbnail 19 - Original and Refined</h4>
+    <img src="images/sb-closeup2.png" alt="Thumbnail 19 - Original sketch" class="story-image">
+    <img src="images/sb-closeup2refined.png" alt="Thumbnail 19 - Refined version" class="story-image">
+    <h3>Camera Work & Cinematography</h3>
+    <p><strong>Camera Shots:</strong> I've carefully planned the camera shots to enhance the noir atmosphere. The close-ups appear in frames 1, 3, and 19, focusing on our protagonist's emotional reactions and contemplative moments. Medium shots dominate frames 6, 8, and 14, particularly during character interactions and the pivotal meeting with the mysterious woman. I've incorporated long shots in frames 2, 4, and 13 to establish the urban setting, while wide shots in frames 5 and 15 showcase the imposing city architecture.</p>
+    <p><strong>Camera Angles:</strong> My camera angles vary to create visual interest and dramatic tension. Eye-level shots appear in most character-focused scenes, particularly in frames 1 and 3 for intimate moments. Low angles in frames 4 and 13 emphasize the towering buildings and create a sense of urban claustrophobia. I use high angles strategically in frames 2 and 7 to show the characters' isolation in the city streets, while a dramatic dutch angle appears in frame 3 during the doppelganger reveal.</p>
+    <p><strong>Camera Movements:</strong> The camera movements I've planned include tracking shots following our protagonist through the streets in frames 2 and 5, static shots for the intense close-ups and dialogue scenes in frames 1 and 14, and slow pans across the cityscape in frames 4 and 13. A dolly movement appears in frame 7 to smoothly reveal the mysterious figures in the street.</p>
+    <h3>Audio Design</h3>
+    <p><strong>Sound Design:</strong> The sound design I envision layers atmospheric elements throughout: footsteps echoing on wet pavement in frames 2 and 5, distant traffic sounds in frames 4 and 13, and the distinctive sound of a newspaper rustling in frame 6. The clapperboard scene in frame 9 features the sharp snap of the slate, while frame 12 includes the subtle sound of a cigarette being lit. The soundscape creates a moody noir atmosphere through city ambience, environmental effects, and dramatic sound effects.</p>
+    <p><strong>Music:</strong> My musical score features a noir jazz soundtrack that ebbs and flows with the narrative. A melancholic trumpet theme introduces our protagonist in frame 1, building tension during the doppelganger reveal in frame 3. Piano undertones accompany the street scenes, while the final revelation in frames 17-18 features a full orchestral crescendo. The score includes solo piano opening with melancholic melody, deep bass undertones during tense moments, and subtle string arrangements building tension.</p>
+    <p><strong>Narration:</strong> The narration employs a deep, gravelly male voice (40-50 age range) that guides us through the story in classic noir style. It opens strongly in frame 1, becomes introspective during the doppelganger encounter in frame 3, and delivers the final revelation with gravitas in the closing frames. The voice maintains a world-weary yet intelligent tone throughout, speaking with deliberate pacing and carrying authority and experience.</p>
+    <img src="images/sb-final.png" alt="Complete storyboard layout" class="story-image">
+    <h3>Timing & Pacing</h3>
+    <p>This piece runs approximately 2 minutes and 30 seconds, with careful pacing throughout. The opening sequence (frames 1-4) takes 20 seconds to establish the mood, while the crucial doppelganger reveal in frame 3 extends to 15 seconds. The middle investigation sequences (frames 5-13) occupy about 45 seconds, building to the climactic revelation in the final 30 seconds (frames 14-18).</p>
+    <p>The overall production creates a classic noir atmosphere while maintaining modern production values, perfect for establishing the film's tone and introducing main characters through stylized visuals and atmospheric audio.</p>`,
+    tools: ["Sketchbook App", "Storyboarding", "Visual Development", "iPad Pro"]
+  },
+  {
+    id: 4,
+    title: "Surreal Collage Exploration",
+    category: "Digital Collage",
+    year: "2024",
+    image: "images/collagev1.png",
+    images: ["images/collagev1.png", "images/collagev2.png"],
+    description: `
+    <h3>Creative Exploration Through Collage</h3>
+    <p>This digital collage project started as an experimental exploration in Photoshop, combining disparate elements to create something unexpectedly harmonious. Without a predetermined concept, I let the process guide the composition, allowing each element to inform the next choice.</p>
+    <img src="images/collagev1.png" alt="Collage with blue background" class="story-image">
+    <p>The first version emerged with a vibrant blue background that creates a dreamlike atmosphere. The central figure - a vintage photograph - serves as an anchor point, while organic elements like the orange flowers create bursts of warm color against the cool backdrop. The grayscale machinery or architectural elements at the base ground the composition, creating an interesting tension between the natural and mechanical.</p>
+    <h3>Exploring Different Moods</h3>
+    <img src="images/collagev2.png" alt="Collage with cream background" class="story-image">
+    <p>For the second iteration, I experimented with a warmer, cream-colored background to see how it would transform the overall mood. This subtle change dramatically shifts the piece from dreamy and surreal to something more nostalgic and vintage. The same elements take on different relationships with each other - the orange flowers feel more integrated, while the contrast with the grayscale elements becomes softer and more harmonious.</p>
+    <h3>Process & Technique</h3>
+    <p>Working in Photoshop, I approached this as a purely intuitive exercise. Starting with the central figure, I began layering elements based on visual relationships rather than conceptual ones. The challenge was finding the right balance - knowing when to add another element and when the composition was complete. Each piece was carefully masked and blended using various layer modes to create seamless transitions between the photographic elements.</p>
+    <p>The beauty of this project lies in its spontaneity. Without the pressure of conveying a specific message or meaning, I was free to focus purely on composition, color relationships, and the unexpected conversations that emerge when unrelated images share the same space. Sometimes the most interesting work comes from simply playing with visual elements and seeing where they lead.</p>`,
+    tools: ["Photoshop", "Digital Collage", "Photo Manipulation", "Layer Masking"]
+  },
+  {
+    id: 5,
+    title: "Mental Health Services Data Visualization",
+    category: "Information Design",
+    year: "2024",
+    image: "images/datavizfinal.jpg",
+    images: ["images/datavizfinal.jpg", "images/annotated-DataViz_Slides-01.png", "images/annotated-DataViz_Slides-02.png", "images/annotated-DataViz_Slides-03.png", "images/annotated-DataViz_Slides-04.png", "images/annotated-DataViz_Slides-05.png", "images/annotated-DataViz_Slides-06.png", "images/annotated-DataViz_Slides-07.png", "images/annotated-DataViz_Slides-08.png", "images/annotated-DataViz_Slides-09.png", "images/annotated-DataViz_Slides-10.png"],
+    description: `
+    <h3>Visualizing Student Mental Health Trends</h3>
+    <p>This comprehensive data visualization project examines nine years of mental health service utilization at Creighton University (2015-2024), revealing critical patterns in how students access counseling services. Created using Adobe Illustrator for the infographic poster and InDesign for the presentation deck, this project transforms complex statistical data into an accessible visual narrative.</p>
+    <img src="images/datavizfinal.jpg" alt="Final data visualization poster" class="story-image">
+    <h3>Design Approach</h3>
+    <p>The visual design employs a sophisticated blue color palette that evokes both professionalism and the emotional depth of the subject matter. The centerpiece features a striking blue jay illustration - Creighton's mascot - which serves as both a visual anchor and symbolic representation of the university community. This creative choice transforms what could be dry statistics into an engaging visual story that resonates with the campus identity.</p>
+    <h3>Key Data Insights</h3>
+    <img src="images/annotated-DataViz_Slides-04.png" alt="Total contacts vs unique students chart" class="story-image">
+    <p>The data reveals several critical trends: Total contacts peaked at 7,775 during the 2020-2021 academic year at the height of the COVID-19 pandemic, while unique student numbers reached their maximum of 1,317 in 2021-2022. This divergence between total contacts and unique students provides insight into service intensity and student engagement patterns.</p>
+    <img src="images/annotated-DataViz_Slides-05.png" alt="Gender distribution analysis" class="story-image">
+    <p>Perhaps the most striking finding is the persistent gender disparity in service utilization. Female students consistently utilize counseling services at approximately twice the rate of male students - a 71% to 29% split that has remained remarkably stable across the entire nine-year period. This pattern persists despite changes in leadership, service models, and external factors like the pandemic.</p>
+    <img src="images/annotated-DataViz_Slides-07.png" alt="Specialized services utilization trends" class="story-image">
+    <p>The visualization also tracks specialized services, revealing that psychiatric services have increased by nearly 50% since 2015-2016, while the Phoenix clinic (opened in 2021-2022) shows the steepest growth trajectory with a 630% increase to 146 users. These trends suggest that diversifying service options helps reach different student populations.</p>
+    <h3>Visual Hierarchy & Information Architecture</h3>
+    <img src="images/annotated-DataViz_Slides-08.png" alt="Major events timeline" class="story-image">
+    <p>The poster employs a clear visual hierarchy with three main data visualizations supported by a timeline of major events. Each chart type was carefully selected to best represent its data: a combination chart for comparing total contacts versus unique students, stacked bars for gender distribution over time, and line graphs for tracking specialized services. The timeline contextualizes the data by marking significant events like COVID-19's impact, new director appointments, and service model changes.</p>
+    <h3>Technical Execution</h3>
+    <p>Created in Adobe Illustrator, the poster required precise data plotting and careful attention to visual balance. The challenge was presenting multiple complex datasets while maintaining clarity and visual appeal. The background incorporates subtle brain imagery and geometric patterns that reinforce the mental health theme without overwhelming the data. Typography choices balance readability with visual impact, using size and weight variations to guide the viewer through the information hierarchy.</p>
+    <img src="images/annotated-DataViz_Slides-10.png" alt="Conclusions and recommendations" class="story-image">
+    <h3>Impact & Recommendations</h3>
+    <p>The visualization concludes with actionable insights: the need for targeted outreach to male students, the promise of specialized services like the Phoenix clinic, and the importance of expanding data collection beyond binary gender categories. By transforming raw data into compelling visual narratives, this project demonstrates how effective information design can drive institutional understanding and policy decisions.</p>
+    <p>The accompanying presentation deck, designed in InDesign, expands on each visualization with detailed analysis and contextual information, creating a comprehensive resource for stakeholders to understand and act upon these critical mental health trends.</p>`,
+    tools: ["Adobe Illustrator", "Adobe InDesign", "Data Analysis", "Information Design", "Statistical Visualization"]
+  },
+  {
+    id: 6,
+    title: "Character Scene Illustration",
+    category: "Vector Illustration",
+    year: "2025",
+    image: "images/finalscene.png",
+    images: ["images/process1.png", "images/process2.png", "images/process3.png", "images/process4.png", "images/finalscene.png"],
+    description: `
+    <h3>Building a Vibrant Character Scene</h3>
+    <p>This vector illustration project, created entirely in Adobe Illustrator, explores the process of building a dynamic character scene from individual elements to a cohesive composition. The project demonstrates the iterative nature of digital illustration and the importance of thoughtful character development and scene composition.</p>
+    <h3>Initial Character Development</h3>
+    <img src="images/process1.png" alt="Character design exploration" class="story-image">
+    <p>The project began with exploring character designs and clothing variations. Working with a limited color palette of grays, whites, and purples, I focused on creating distinct silhouettes and forms. The t-shirt designs served as a starting point for understanding how simple shapes and colors could convey personality and style.</p>
+    <h3>Movement and Gesture Studies</h3>
+    <img src="images/process2.png" alt="Movement and gesture exploration" class="story-image">
+    <p>Next, I developed the characters' movements and interactions. This phase introduced more dynamic poses and began exploring how multiple figures could interact within a shared space. The addition of props and gestural elements helped bring life to the static vector forms.</p>
+    <img src="images/process3.png" alt="Group composition development" class="story-image">
+    <p>The composition evolved to include group dynamics, with characters arranged to create visual flow and narrative suggestion. The monochromatic approach at this stage allowed me to focus on composition and balance without the distraction of color.</p>
+    <h3>Color and Environmental Context</h3>
+    <img src="images/process4.png" alt="Adding color and environment" class="story-image">
+    <p>Introducing color transformed the piece dramatically. The yellow and purple palette created energy and contrast, while the addition of environmental elements like scattered shapes and abstract backgrounds gave the characters a world to inhabit. This stage was crucial in establishing mood and atmosphere.</p>
+    <h3>Final Composition</h3>
+    <img src="images/finalscene.png" alt="Final scene illustration" class="story-image">
+    <p>The final scene brings everything together with a vibrant blue background that makes the warm orange and yellow tones pop. The characters now exist in a playful, energetic environment with floating elements that suggest movement and joy. The composition balances multiple focal points while maintaining visual cohesion through consistent style and color relationships.</p>
+    <p>This project showcases the evolution from simple character studies to a complete illustrated scene, demonstrating how vector illustration in Adobe Illustrator can create engaging, stylized narratives through shape, color, and composition.</p>`,
+    tools: ["Adobe Illustrator", "Vector Illustration", "Character Design", "Scene Composition"]
+  }
+];
+
+const galleryGrid = document.getElementById("galleryGrid");
+const cursorEl = document.getElementById("cursor");
+
+illustrations.forEach((item, index) => {
+  const el = document.createElement("div");
+  el.className = "gallery-item";
+  el.style.transitionDelay = (index % 3) * 0.08 + "s";
+  el.innerHTML = `
+    <img src="${item.image}" alt="${item.title}" class="gallery-item-image" loading="lazy">
+    <div class="gallery-item-overlay">
+      <div class="gallery-item-title">${item.title}</div>
+      <div class="gallery-item-category">${item.category}</div>
+    </div>`;
+  el.addEventListener("click", () => openModal(item));
+  if (cursorEl) {
+    el.addEventListener("mouseenter", () => cursorEl.classList.add("hover"));
+    el.addEventListener("mouseleave", () => cursorEl.classList.remove("hover"));
+  }
+  galleryGrid.appendChild(el);
+});
+
+const galleryObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("visible"); galleryObserver.unobserve(entry.target); } });
+}, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+document.querySelectorAll(".gallery-item").forEach((item) => galleryObserver.observe(item));
+
+/* Modal */
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
+const modalClose = document.getElementById("modalClose");
+
+function openModal(item) {
+  const isCaseStudy = item.images && item.images.length > 1;
+  modalContent.classList.toggle("is-case-study", isCaseStudy);
+  if (isCaseStudy) {
+    modalContent.innerHTML = `
+      <div class="modal-case-study">
+        <div class="modal-header">
+          <div class="modal-category">${item.category}</div>
+          <h2 class="modal-title">${item.title}</h2>
+          <div class="modal-year">${item.year}</div>
+        </div>
+        <div class="modal-story">${item.description}</div>
+        <div class="modal-tools">
+          <h4>Tools &amp; Methods</h4>
+          <div class="tool-tags">${item.tools.map((t) => `<span class="tool-tag">${t}</span>`).join("")}</div>
+        </div>
+      </div>`;
+  } else {
+    modalContent.innerHTML = `
+      <div class="modal-content-inner">
+        <div class="modal-image-container"><img src="${item.image}" alt="${item.title}" class="modal-image"></div>
+        <div class="modal-details">
+          <div class="modal-category">${item.category}</div>
+          <h2 class="modal-title">${item.title}</h2>
+          <div class="modal-year">${item.year}</div>
+          <div class="modal-description">${item.description}</div>
+          <div class="modal-tools">
+            <h4>Tools Used</h4>
+            <div class="tool-tags">${item.tools.map((t) => `<span class="tool-tag">${t}</span>`).join("")}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+  modal.classList.add("active");
+  modal.scrollTop = 0;
+  document.body.style.overflow = "hidden";
+}
+function closeModal() {
+  modal.classList.remove("active");
+  document.body.style.overflow = "";
+}
+modalClose.addEventListener("click", closeModal);
+modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("active")) closeModal(); });
+</script>
+</body>
+</html>
