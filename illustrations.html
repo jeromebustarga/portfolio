@@ -33,8 +33,9 @@
   .gallery-item { position: relative; border-radius: 16px; overflow: hidden; cursor: pointer; background: var(--bg-soft); border: 1px solid var(--line); opacity: 0; transform: translateY(24px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), border-color 0.3s; }
   .gallery-item.visible { opacity: 1; transform: none; }
   .gallery-item:hover { border-color: rgba(244,121,33,0.4); }
+  .gi-inner { position: absolute; inset: -9% 0; will-change: transform; }
   .gallery-item-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
-  .gallery-item:hover .gallery-item-image { transform: scale(1.05); }
+  .gallery-item:hover .gallery-item-image { transform: scale(1.06); }
   .gallery-item-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,6,6,0.95) 0%, rgba(6,6,6,0.4) 42%, transparent 64%); opacity: 0; transition: opacity 0.4s ease; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; }
   .gallery-item:hover .gallery-item-overlay { opacity: 1; }
   .gallery-item-title { font-family: var(--serif); font-size: 24px; font-weight: 400; margin-bottom: 6px; color: var(--text); }
@@ -401,7 +402,7 @@ illustrations.forEach((item, index) => {
   el.className = "gallery-item";
   el.style.transitionDelay = (index % 3) * 0.08 + "s";
   el.innerHTML = `
-    <img src="${item.image}" alt="${item.title}" class="gallery-item-image" loading="lazy">
+    <div class="gi-inner"><img src="${item.image}" alt="${item.title}" class="gallery-item-image" loading="lazy"></div>
     <div class="gallery-item-overlay">
       <div class="gallery-item-title">${item.title}</div>
       <div class="gallery-item-category">${item.category}</div>
@@ -411,20 +412,37 @@ illustrations.forEach((item, index) => {
     el.addEventListener("mouseenter", () => cursorEl.classList.add("hover"));
     el.addEventListener("mouseleave", () => cursorEl.classList.remove("hover"));
   }
-  // subtle 3D tilt toward the cursor
+  // subtle 3D tilt toward the cursor (image scale handled by CSS hover)
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    const img = el.querySelector(".gallery-item-image");
     el.addEventListener("mousemove", (e) => {
       const r = el.getBoundingClientRect();
       const rx = ((e.clientY - r.top) / r.height - 0.5) * -7;
       const ry = ((e.clientX - r.left) / r.width - 0.5) * 7;
       el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-      if (img) img.style.transform = "scale(1.06)";
     });
-    el.addEventListener("mouseleave", () => { el.style.transform = ""; if (img) img.style.transform = ""; });
+    el.addEventListener("mouseleave", () => { el.style.transform = ""; });
   }
   galleryGrid.appendChild(el);
 });
+
+/* Scroll-driven parallax: each tile's image drifts at its own rate */
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const giInners = Array.from(document.querySelectorAll(".gi-inner"));
+  const giLoop = () => {
+    const vh = window.innerHeight;
+    for (let i = 0; i < giInners.length; i++) {
+      const gi = giInners[i];
+      const r = gi.parentElement.getBoundingClientRect();
+      if (r.bottom < -120 || r.top > vh + 120) continue;
+      const center = r.top + r.height / 2 - vh / 2;
+      const dir = i % 2 === 0 ? -1 : 1;
+      const ty = (center / vh) * 34 * dir;
+      gi.style.transform = `translate3d(0, ${ty.toFixed(2)}px, 0)`;
+    }
+    requestAnimationFrame(giLoop);
+  };
+  giLoop();
+}
 
 const galleryObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("visible"); galleryObserver.unobserve(entry.target); } });
