@@ -82,7 +82,7 @@ body.loading { overflow: hidden; height: 100vh; }
 
 /* ============================================================ WebGL canvas */
 /* Hero background image (fixed, sits behind the transparent hero; content scrim covers it on scroll) */
-.hero-bg { position: fixed; inset: 0; z-index: 0;
+.hero-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background:
     url("images/hero-bg.png") center / cover no-repeat,
     linear-gradient(180deg, #0a0a1a 0%, #2a1a3a 44%, #c98a3a 60%, #1a2a3a 80%, #060606 100%);
@@ -358,11 +358,11 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
 
 /* ============================================================ Work — pinned horizontal */
 .work { position: relative; height: 340vh; }
-.work__sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; overflow: hidden; perspective: 1200px; }
-.work__track { display: flex; align-items: center; gap: 40px; padding: 0 48px; will-change: transform; transform-style: preserve-3d; }
-/* 3D floating gallery: JS rotates/recedes panels by distance from center,
-   CSS bobs them gently on their own loop */
-.panel { transform-style: preserve-3d; will-change: transform; }
+.work__sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; overflow: hidden; }
+.work__track { display: flex; align-items: center; gap: 40px; padding: 0 48px; will-change: transform; }
+/* Floating gallery: JS recedes panels by distance from center (2D so they stay
+   clickable), CSS bobs them gently on their own loop */
+.panel { will-change: transform; }
 .panel__float { display: flex; flex-direction: column; will-change: transform; animation: panelBob 6s ease-in-out infinite; }
 .work__track .panel:nth-of-type(2) .panel__float { animation-delay: -1.5s; }
 .work__track .panel:nth-of-type(3) .panel__float { animation-delay: -3s; }
@@ -1639,7 +1639,9 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
         for (const pn of workPanels) {
           const pr = pn.getBoundingClientRect();
           const c = Math.max(-1, Math.min(1, (pr.left + pr.width / 2 - cx) / window.innerWidth));
-          pn.style.transform = `rotateY(${(c * -16).toFixed(2)}deg) translateZ(${(-Math.abs(c) * 180).toFixed(1)}px)`;
+          const k = Math.abs(c);
+          pn.style.transform = `scale(${(1 - k * 0.14).toFixed(3)}) translateY(${(k * 16).toFixed(1)}px)`;
+          pn.style.opacity = (1 - k * 0.45).toFixed(3);
         }
       }
     }
