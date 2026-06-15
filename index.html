@@ -297,7 +297,7 @@ nav.hidden { transform: translateY(-110%); }
   position: absolute; inset: 0; z-index: 60; opacity: 0; will-change: opacity;
   background:
     linear-gradient(rgba(6,10,32,0.12), rgba(6,6,6,0.3)),
-    url("images/about-hero-bg.png") center / cover no-repeat;
+    url("images/hero-bg.png") center / cover no-repeat;
   display: flex; align-items: flex-end; justify-content: center; padding-bottom: 9vh;
 }
 .forest-reveal__caption { color: var(--text); background: rgba(6,6,6,0.55); padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); backdrop-filter: blur(6px); }
@@ -705,6 +705,23 @@ nav.hidden { transform: translateY(-110%); }
 </nav>
 
 <main id="top">
+  <!-- HOLOGRAM FOREST — the entry: fly deeper, then the hero emerges -->
+  <section class="forest-section" id="forest">
+    <div class="forest-sticky">
+      <div class="forest-stars" aria-hidden="true"></div>
+      <div class="forest-ground" aria-hidden="true"></div>
+      <div class="forest-scene" id="forestScene" aria-hidden="true"></div>
+      <div class="forest-reveal" id="forestReveal" aria-hidden="true">
+        <span class="meta forest-reveal__caption">Welcome · It's Jerome's World</span>
+      </div>
+      <div class="forest-header">
+        <span class="meta">— The Hologram Forest</span>
+        <span class="meta">↓ scroll to go deeper</span>
+      </div>
+      <div class="tunnel-progress forest-progress" aria-hidden="true"><div id="forestProgress"></div></div>
+    </div>
+  </section>
+
   <!-- HERO -->
   <section class="hero">
     <!-- Motion decor: floating animated shapes around the hero -->
@@ -890,23 +907,6 @@ nav.hidden { transform: translateY(-110%); }
           <div class="cpiece cpiece--text cpiece--mono" data-order="10" data-rot="-7" data-fx="-380" data-fy="320" data-fr="-40" style="left:14%;top:81%">SAN DIEGO · CA — 2025</div>
 
         </div>
-      </div>
-    </section>
-
-    <!-- HOLOGRAM FOREST — scroll flies you deeper between glowing trees -->
-    <section class="forest-section" id="forest">
-      <div class="forest-sticky">
-        <div class="forest-stars" aria-hidden="true"></div>
-        <div class="forest-ground" aria-hidden="true"></div>
-        <div class="forest-scene" id="forestScene" aria-hidden="true"></div>
-        <div class="forest-reveal" id="forestReveal" aria-hidden="true">
-          <span class="meta forest-reveal__caption">You've arrived · It's Jerome's World</span>
-        </div>
-        <div class="forest-header">
-          <span class="meta">— The Hologram Forest</span>
-          <span class="meta">↓ scroll to go deeper</span>
-        </div>
-        <div class="tunnel-progress forest-progress" aria-hidden="true"><div id="forestProgress"></div></div>
       </div>
     </section>
 
@@ -1586,10 +1586,6 @@ nav.hidden { transform: translateY(-110%); }
       if (down && !navHidden) { nav.classList.add("hidden"); navHidden = true; }
       else if (!down && navHidden) { nav.classList.remove("hidden"); navHidden = false; }
       lastY = y;
-    }
-    if (hero && y < vh * 1.2) {
-      hero.style.opacity = Math.max(1 - y / (vh * 0.75), 0);
-      hero.style.transform = `translate3d(0, ${y * 0.2}px, 0)`;
     }
     if (veilRows.length) {
       const r = veilSection.getBoundingClientRect();
