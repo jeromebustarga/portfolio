@@ -269,8 +269,13 @@ nav.hidden { transform: translateY(-110%); }
 .forest-section { position: relative; height: 440vh; z-index: 1; }
 .forest-sticky {
   position: sticky; top: 0; height: 100vh; overflow: hidden;
-  background: linear-gradient(180deg, #060a20 0%, #0a1232 34%, #14324a 68%, #0c2438 100%);
+  background: transparent; /* the hero (below) is the backdrop */
 }
+.forest-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 1; }
+.entry-dim { position: absolute; inset: 0; z-index: 2; background: #060606; opacity: 0.8; pointer-events: none; }
+/* Hide site chrome while flying through the forest entry */
+nav, .chapters { transition: opacity 0.5s ease, visibility 0.5s; }
+body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: hidden; pointer-events: none; }
 .forest-stars { position: absolute; inset: 0; opacity: 0.9;
   background-image:
     radial-gradient(1.5px 1.5px at 18% 12%, rgba(255,255,255,0.9), transparent),
@@ -287,7 +292,7 @@ nav.hidden { transform: translateY(-110%); }
     linear-gradient(180deg, transparent, rgba(12,46,58,0.7));
 }
 .forest-header { position: absolute; top: 96px; left: 48px; right: 48px; display: flex; justify-content: space-between; gap: 16px; z-index: 70; }
-.forest-scene { position: absolute; inset: 0; perspective: 850px; transform-style: preserve-3d; }
+.forest-scene { position: absolute; inset: 0; z-index: 3; perspective: 850px; transform-style: preserve-3d; }
 .hf-item { position: absolute; top: 50%; left: 50%; opacity: 0; will-change: transform, opacity; transform: translate(-50%,-50%); }
 .hf-item svg { display: block; overflow: visible; filter: drop-shadow(0 0 9px currentColor); }
 .hf-holo { animation: holoFlicker 3.6s ease-in-out infinite; }
@@ -640,7 +645,7 @@ nav.hidden { transform: translateY(-110%); }
 
 </style>
 </head>
-<body class="loading">
+<body class="loading chrome-hidden">
 
 <!-- Custom cursor -->
 <div class="cursor" id="cursor" aria-hidden="true"></div>
@@ -705,51 +710,42 @@ nav.hidden { transform: translateY(-110%); }
 </nav>
 
 <main id="top">
-  <!-- HOLOGRAM FOREST — the entry: fly deeper, then the hero emerges -->
+  <!-- ENTRY: the hero is the backdrop; the hologram forest flies in front and clears as you scroll deeper -->
   <section class="forest-section" id="forest">
     <div class="forest-sticky">
-      <div class="forest-stars" aria-hidden="true"></div>
-      <div class="forest-ground" aria-hidden="true"></div>
+      <!-- HERO backdrop -->
+      <div class="hero" id="entryHero">
+        <div class="hero-deco" aria-hidden="true">
+          <span class="deco" style="top:20%;left:9%">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><path class="tb a-spin" d="M32 3 L37 24 L58 16 L42 32 L58 48 L37 40 L32 61 L27 40 L6 48 L22 32 L6 16 L27 24 Z" fill="#f47921"/></svg>
+          </span>
+          <span class="deco" style="top:26%;right:8%">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle class="tb a-pulse" cx="26" cy="26" r="18" stroke="#f47921" stroke-width="6"/></svg>
+          </span>
+          <span class="deco" style="bottom:24%;left:13%">
+            <svg width="76" height="30" viewBox="0 0 76 30" fill="none"><path class="a-dash" d="M3 15 Q14 3 25 15 T47 15 T69 15" stroke="rgba(244,241,234,.55)" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
+          </span>
+          <span class="deco" style="bottom:30%;right:14%">
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path class="tb a-bob" d="M22 5 L39 37 L5 37 Z" stroke="rgba(244,241,234,.5)" stroke-width="4" stroke-linejoin="round" fill="none"/></svg>
+          </span>
+          <span class="deco" style="top:14%;right:30%">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle class="tb a-twinkle" cx="11" cy="11" r="6" fill="#ff9642"/></svg>
+          </span>
+        </div>
+        <div class="hero__eyebrow reveal"><span>Developer</span><span class="sep">/</span><span>Designer</span><span class="sep">/</span><span>San Diego, CA</span></div>
+        <h1 class="hero__title">
+          <span class="line mask"><span>Jerome's</span></span>
+          <span class="line mask outline"><span>World<em class="dot-orange">.</em></span></span>
+        </h1>
+        <p class="hero__sub reveal" style="--i:2">A multidisciplinary maker crafting digital experiences that blend code &amp; craft. Move your cursor — you bring the light.</p>
+        <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
+      </div>
+      <!-- dim overlay (fades out as the forest clears, resolving the hero) -->
+      <div class="entry-dim" id="entryDim" aria-hidden="true"></div>
+      <!-- forest holograms, in front of the hero -->
       <div class="forest-scene" id="forestScene" aria-hidden="true"></div>
-      <div class="forest-reveal" id="forestReveal" aria-hidden="true">
-        <span class="meta forest-reveal__caption">Welcome · It's Jerome's World</span>
-      </div>
-      <div class="forest-header">
-        <span class="meta">— The Hologram Forest</span>
-        <span class="meta">↓ scroll to go deeper</span>
-      </div>
       <div class="tunnel-progress forest-progress" aria-hidden="true"><div id="forestProgress"></div></div>
     </div>
-  </section>
-
-  <!-- HERO -->
-  <section class="hero">
-    <!-- Motion decor: floating animated shapes around the hero -->
-    <div class="hero-deco" aria-hidden="true">
-      <span class="deco" data-depth="0.06" style="top:20%;left:9%">
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><path class="tb a-spin" d="M32 3 L37 24 L58 16 L42 32 L58 48 L37 40 L32 61 L27 40 L6 48 L22 32 L6 16 L27 24 Z" fill="#f47921"/></svg>
-      </span>
-      <span class="deco" data-depth="-0.08" style="top:26%;right:8%">
-        <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle class="tb a-pulse" cx="26" cy="26" r="18" stroke="#f47921" stroke-width="6"/></svg>
-      </span>
-      <span class="deco" data-depth="0.1" style="bottom:24%;left:13%">
-        <svg width="76" height="30" viewBox="0 0 76 30" fill="none"><path class="a-dash" d="M3 15 Q14 3 25 15 T47 15 T69 15" stroke="rgba(244,241,234,.55)" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
-      </span>
-      <span class="deco" data-depth="-0.05" style="bottom:30%;right:14%">
-        <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path class="tb a-bob" d="M22 5 L39 37 L5 37 Z" stroke="rgba(244,241,234,.5)" stroke-width="4" stroke-linejoin="round" fill="none"/></svg>
-      </span>
-      <span class="deco" data-depth="0.04" style="top:14%;right:30%">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle class="tb a-twinkle" cx="11" cy="11" r="6" fill="#ff9642"/></svg>
-      </span>
-    </div>
-
-    <div class="hero__eyebrow reveal"><span>Developer</span><span class="sep">/</span><span>Designer</span><span class="sep">/</span><span>San Diego, CA</span></div>
-    <h1 class="hero__title">
-      <span class="line mask"><span>Jerome's</span></span>
-      <span class="line mask outline"><span>World<em class="dot-orange">.</em></span></span>
-    </h1>
-    <p class="hero__sub reveal" style="--i:2">A multidisciplinary maker crafting digital experiences that blend code &amp; craft. Move your cursor — you bring the light.</p>
-    <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
   </section>
 
   <!-- The content scrim covers the canvas below the hero -->
@@ -1476,6 +1472,7 @@ nav.hidden { transform: translateY(-110%); }
   const forestSection = document.querySelector(".forest-section");
   const forestScene = document.getElementById("forestScene");
   const forestReveal = document.getElementById("forestReveal");
+  const entryDim = document.getElementById("entryDim");
   const forestProgress = document.getElementById("forestProgress");
   let forestItems = [];
   if (forestSection && forestScene && !prefersReduced) {
@@ -1681,9 +1678,9 @@ nav.hidden { transform: translateY(-110%); }
           f.el.style.transform =
             `translate(-50%,-50%) translate3d(${xo.toFixed(1)}px,${yo.toFixed(1)}px,${z.toFixed(1)}px) scale(${f.s})`;
         }
-        if (forestReveal) {
-          forestReveal.style.opacity = Math.min(Math.max((p - 0.84) / 0.14, 0), 1).toFixed(3);
-        }
+        if (entryDim) entryDim.style.opacity = Math.max(0.8 * (1 - p / 0.85), 0).toFixed(3);
+        if (forestScene) forestScene.style.opacity = (1 - Math.min(Math.max((p - 0.72) / 0.26, 0), 1)).toFixed(3);
+        document.body.classList.toggle("chrome-hidden", p < 0.92);
         if (forestProgress) forestProgress.style.width = (p * 100).toFixed(1) + "%";
       }
     }
