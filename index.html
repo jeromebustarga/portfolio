@@ -271,8 +271,8 @@ nav.hidden { transform: translateY(-110%); }
   position: sticky; top: 0; height: 100vh; overflow: hidden;
   background: transparent; /* the hero (below) is the backdrop */
 }
-.forest-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 1; }
-.entry-dim { position: absolute; inset: 0; z-index: 2; background: #060606; opacity: 0.8; pointer-events: none; }
+.forest-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 1; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
+.forest-layer { position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, #060a20 0%, #0a1232 34%, #14324a 68%, #0c2438 100%); will-change: opacity; }
 /* Hide site chrome while flying through the forest entry */
 nav, .chapters { transition: opacity 0.5s ease, visibility 0.5s; }
 body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -740,10 +740,12 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
         <p class="hero__sub reveal" style="--i:2">A multidisciplinary maker crafting digital experiences that blend code &amp; craft. Move your cursor — you bring the light.</p>
         <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
       </div>
-      <!-- dim overlay (fades out as the forest clears, resolving the hero) -->
-      <div class="entry-dim" id="entryDim" aria-hidden="true"></div>
-      <!-- forest holograms, in front of the hero -->
-      <div class="forest-scene" id="forestScene" aria-hidden="true"></div>
+      <!-- dim/forest layer: gradient bg + stars + holograms; covers the hero at first, fades to reveal it -->
+      <div class="forest-layer" id="forestLayer" aria-hidden="true">
+        <div class="forest-stars"></div>
+        <div class="forest-ground"></div>
+        <div class="forest-scene" id="forestScene"></div>
+      </div>
       <div class="tunnel-progress forest-progress" aria-hidden="true"><div id="forestProgress"></div></div>
     </div>
   </section>
@@ -1471,8 +1473,8 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
   /* Hologram forest: procedurally built glowing layers, camera flies through */
   const forestSection = document.querySelector(".forest-section");
   const forestScene = document.getElementById("forestScene");
-  const forestReveal = document.getElementById("forestReveal");
-  const entryDim = document.getElementById("entryDim");
+  const forestLayer = document.getElementById("forestLayer");
+  const entryHero = document.getElementById("entryHero");
   const forestProgress = document.getElementById("forestProgress");
   let forestItems = [];
   if (forestSection && forestScene && !prefersReduced) {
@@ -1678,9 +1680,13 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
           f.el.style.transform =
             `translate(-50%,-50%) translate3d(${xo.toFixed(1)}px,${yo.toFixed(1)}px,${z.toFixed(1)}px) scale(${f.s})`;
         }
-        if (entryDim) entryDim.style.opacity = Math.max(0.8 * (1 - p / 0.85), 0).toFixed(3);
-        if (forestScene) forestScene.style.opacity = (1 - Math.min(Math.max((p - 0.72) / 0.26, 0), 1)).toFixed(3);
-        document.body.classList.toggle("chrome-hidden", p < 0.92);
+        // hero grows from center + fades in as you go deeper; forest layer fades out
+        const hp = Math.min(Math.max((p - 0.3) / 0.5, 0), 1);
+        const he = hp * hp * (3 - 2 * hp);
+        if (entryHero) { entryHero.style.opacity = he.toFixed(3); entryHero.style.transform = `scale(${(0.45 + 0.55 * he).toFixed(3)})`; }
+        if (forestLayer) forestLayer.style.opacity = (1 - Math.min(Math.max((p - 0.4) / 0.5, 0), 1)).toFixed(3);
+        // nav + logo only once the hero is fully grown
+        document.body.classList.toggle("chrome-hidden", he < 0.98);
         if (forestProgress) forestProgress.style.width = (p * 100).toFixed(1) + "%";
       }
     }
