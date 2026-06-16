@@ -266,15 +266,18 @@ nav.hidden { transform: translateY(-110%); }
 }
 
 /* ============================================================ Hologram forest — fly deep into glowing woods */
-.forest-section { position: relative; height: 440vh; z-index: 1; }
+.forest-section { position: relative; height: 600vh; z-index: 1; }
 .forest-sticky {
   position: sticky; top: 0; height: 100vh; overflow: hidden;
-  background: transparent; /* the hero (below) is the backdrop */
+  background: #04060f; /* deep night behind the hero */
 }
 .forest-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 1; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
-.forest-layer { position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, #060a20 0%, #0a1232 34%, #14324a 68%, #0c2438 100%); will-change: opacity; }
-.forest-path { position: absolute; left: 0; right: 0; bottom: 0; height: 48vh; z-index: 1; pointer-events: none; filter: drop-shadow(0 0 10px rgba(52,217,195,0.4)); }
-.forest-path svg { width: 100%; height: 100%; display: block; }
+/* Cosmic-night → violet dusk → amber horizon → teal haze → dark foreground */
+.forest-layer { position: absolute; inset: 0; z-index: 2; will-change: opacity;
+  background: linear-gradient(180deg,
+    #0a0a1a 0%, #141033 28%, #2a1a3a 47%, #b9783a 59%,
+    #6a5560 68%, #2f4c5e 80%, #0e2733 90%, #060606 100%);
+}
 /* Hide site chrome while flying through the forest entry */
 nav, .chapters { transition: opacity 0.5s ease, visibility 0.5s; }
 body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -288,36 +291,57 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
     radial-gradient(1px 1px at 8% 30%, rgba(255,255,255,0.6), transparent),
     radial-gradient(1.5px 1.5px at 50% 6%, rgba(255,255,255,0.75), transparent);
 }
-.forest-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 36%;
+/* warm sunset glow on the horizon — the light you fly toward */
+.forest-horizon { position: absolute; left: 0; right: 0; top: 50%; height: 44%;
   background:
-    radial-gradient(60% 34% at 50% 100%, rgba(52,217,195,0.30), transparent 72%),
-    linear-gradient(180deg, transparent, rgba(12,46,58,0.7));
+    radial-gradient(46% 70% at 50% 18%, rgba(255,196,120,0.42), transparent 66%),
+    radial-gradient(70% 90% at 50% 6%, rgba(244,121,33,0.20), transparent 72%),
+    radial-gradient(40% 60% at 50% 0%, rgba(167,139,250,0.16), transparent 72%);
 }
-.forest-header { position: absolute; top: 96px; left: 48px; right: 48px; display: flex; justify-content: space-between; gap: 16px; z-index: 70; }
+.forest-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 40%;
+  background:
+    radial-gradient(60% 40% at 50% 100%, rgba(52,217,195,0.30), transparent 72%),
+    linear-gradient(180deg, transparent, rgba(10,40,52,0.72));
+}
+/* converging corridor of light leading the eye to the horizon */
+.forest-trail { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 88%; height: 50%; z-index: 1; pointer-events: none;
+  background: linear-gradient(to top, rgba(94,234,212,0.16), rgba(255,196,120,0.06) 55%, transparent 82%);
+  clip-path: polygon(47% 0, 53% 0, 100% 100%, 0 100%); filter: blur(2px); }
+/* holographic scanlines drifting up the scene */
+.forest-scanlines { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0.5; mix-blend-mode: screen;
+  background-image: repeating-linear-gradient(0deg, rgba(94,234,212,0.07) 0 1px, transparent 1px 4px);
+  animation: hfScan 8s linear infinite;
+}
+@keyframes hfScan { to { background-position: 0 -120px; } }
 .forest-scene { position: absolute; inset: 0; z-index: 3; perspective: 850px; transform-style: preserve-3d; }
 .hf-item { position: absolute; top: 50%; left: 50%; opacity: 0; will-change: transform, opacity; transform: translate(-50%,-50%); }
 .hf-item svg { display: block; overflow: visible; filter: drop-shadow(0 0 9px currentColor); }
+/* PNG flora: glow opaque pixels like the drawn flora does */
+.hf-item img, .hf-item .hf-png { display: block; filter: drop-shadow(0 0 10px currentColor); }
+.hf-png--tint { background-color: currentColor; -webkit-mask: var(--src) center / contain no-repeat; mask: var(--src) center / contain no-repeat; }
+/* light holographic veil for full-colour art PNGs */
+.hf-veil .hf-png { mix-blend-mode: screen; opacity: 0.92;
+  filter: drop-shadow(0 0 12px rgba(94,234,212,0.55)) drop-shadow(0 0 26px rgba(167,139,250,0.30)) brightness(1.06) saturate(1.05); }
+.hf-veil--soft .hf-png { mix-blend-mode: normal; opacity: 0.97;
+  filter: drop-shadow(0 0 10px rgba(94,234,212,0.4)) drop-shadow(0 0 22px rgba(167,139,250,0.22)); }
 .hf-holo { animation: holoFlicker 3.6s ease-in-out infinite; }
 @keyframes holoFlicker { 0%,100% { opacity: 1; } 46% { opacity: 0.74; } 52% { opacity: 0.95; } 78% { opacity: 0.84; } }
-.hf-fogblob { width: 64vw; height: 26vh; background: radial-gradient(50% 50% at 50% 50%, rgba(94,234,212,0.12), transparent 70%); }
-.forest-reveal {
-  position: absolute; inset: 0; z-index: 60; opacity: 0; will-change: opacity;
-  background:
-    linear-gradient(rgba(6,10,32,0.12), rgba(6,6,6,0.3)),
-    url("images/hero-bg.png") center / cover no-repeat;
-  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 9vh;
-}
-.forest-reveal__caption { color: var(--text); background: rgba(6,6,6,0.55); padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); backdrop-filter: blur(6px); }
-.forest-progress { z-index: 70; }
-.forest-progress div { background: #34d9c3; box-shadow: 0 0 10px #34d9c3; }
-@media (max-width: 700px) {
-  .forest-header { left: 24px; right: 24px; top: 84px; }
-}
+/* gentle wind sway — pivots from the base */
+.hf-sway { transform-box: fill-box; transform-origin: 50% 100%; animation: hfSway var(--sway, 6s) ease-in-out infinite; animation-delay: var(--swd, 0s); }
+@keyframes hfSway { 0%,100% { transform: rotate(-1.6deg); } 50% { transform: rotate(1.6deg); } }
+.hf-sway--soft { animation-name: hfSwaySoft; }
+@keyframes hfSwaySoft { 0%,100% { transform: rotate(-0.7deg) translateY(0); } 50% { transform: rotate(0.8deg) translateY(-2px); } }
+.hf-sway--hang { transform-origin: 50% 0%; animation-name: hfSwayHang; }
+@keyframes hfSwayHang { 0%,100% { transform: rotate(2.2deg); } 50% { transform: rotate(-2.2deg); } }
+.hf-drift { animation: hfDrift var(--drift, 26s) ease-in-out infinite alternate; animation-delay: var(--swd, 0s); }
+@keyframes hfDrift { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
+.hf-fogblob { width: 64vw; height: 26vh; background: radial-gradient(50% 50% at 50% 50%, rgba(94,234,212,0.14), transparent 70%); }
 @media (prefers-reduced-motion: reduce) {
   .forest-section { height: auto; }
-  .forest-sticky { position: static; height: 70vh; min-height: 480px; }
-  .forest-scene, .forest-progress { display: none; }
-  .forest-reveal { opacity: 1; }
+  .forest-sticky { position: static; height: 100vh; }
+  .forest-scene { display: none; }
+  .forest-sticky .hero { opacity: 1; }
+  .forest-layer { opacity: 0; }
 }
 
 /* Reduced-motion fallback: lay the plates out instead of stacking */
@@ -745,8 +769,11 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
       <!-- dim/forest layer: gradient bg + stars + holograms; covers the hero at first, fades to reveal it -->
       <div class="forest-layer" id="forestLayer" aria-hidden="true">
         <div class="forest-stars"></div>
+        <div class="forest-horizon"></div>
+        <div class="forest-trail"></div>
         <div class="forest-ground"></div>
         <div class="forest-scene" id="forestScene"></div>
+        <div class="forest-scanlines"></div>
       </div>
     </div>
   </section>
@@ -1479,42 +1506,278 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
   const forestProgress = document.getElementById("forestProgress");
   let forestItems = [];
   let forestGroups = 1;
+  let forestP = 0;
   if (forestSection && forestScene && !prefersReduced) {
-    const FC = ["#34d9c3", "#a78bfa", "#ff9642", "#f472b6"];
-    const pine = (c) => `<svg width="150" height="210" viewBox="0 0 150 210"><g class="hf-holo" fill="${c}" fill-opacity=".08" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M75 12 Q92 54 118 88 Q96 82 104 100 Q120 128 140 150 Q104 142 112 162 Q122 182 132 196 L18 196 Q28 182 38 162 Q46 142 10 150 Q30 128 46 100 Q54 82 32 88 Q58 54 75 12 Z"/><path d="M75 18 L75 196" stroke-width="1" stroke-opacity=".35"/><rect x="68" y="194" width="14" height="16" fill-opacity=".18"/></g></svg>`;
-    const tree = (c) => `<svg width="150" height="205" viewBox="0 0 150 205"><g class="hf-holo" fill="${c}" fill-opacity=".07" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M70 150 C62 124 58 122 44 119 C20 114 9 86 27 68 C13 48 36 22 60 33 C72 12 104 14 112 40 C140 40 150 70 128 86 C140 106 118 130 95 121 C82 124 80 128 82 150 Z"/><path d="M64 150 L64 198 M82 150 L82 198" stroke-width="2" stroke-opacity=".5"/><path d="M74 72 q-14 18 -28 24 M74 96 q16 12 32 12" fill="none" stroke-width="1" stroke-opacity=".3"/></g></svg>`;
-    const crystal = (c) => `<svg width="120" height="86" viewBox="0 0 120 86"><g class="hf-holo" fill="${c}" fill-opacity=".08" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M10 80 C0 60 16 40 40 42 C50 22 92 24 98 46 C118 50 116 76 98 80 Z"/><path d="M34 52 q16 -10 38 -4" fill="none" stroke-width="1" stroke-opacity=".3"/></g></svg>`;
-    const fern = (c) => `<svg width="120" height="112" viewBox="0 0 120 112"><g class="hf-holo" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round"><path d="M60 108 C56 70 40 44 16 28"/><path d="M60 108 C60 64 60 36 60 12"/><path d="M60 108 C66 68 86 42 106 26"/><path d="M44 70 q-12 -6 -20 -2 M50 50 q-12 -8 -22 -6 M56 32 q-10 -8 -20 -8" stroke-opacity=".5"/><path d="M76 70 q12 -6 20 -2 M70 50 q12 -8 22 -6 M64 32 q10 -8 20 -8" stroke-opacity=".5"/></g></svg>`;
-    const grass = (c) => `<svg width="80" height="64" viewBox="0 0 80 64"><g class="hf-holo" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-opacity=".7"><path d="M12 62 C8 38 4 28 0 18 M24 62 C24 36 24 22 20 8 M38 62 C40 34 46 22 56 12 M50 62 C50 40 54 30 62 20 M64 62 C66 42 70 34 78 26"/></g></svg>`;
-    const mush = (c) => `<svg width="48" height="58" viewBox="0 0 48 58"><g class="hf-holo" stroke="${c}" stroke-width="2" stroke-linejoin="round"><path d="M7 26 C7 6 41 6 41 26 Q24 32 7 26 Z" fill="${c}" fill-opacity=".12"/><path d="M18 28 C18 42 16 50 13 56 M30 28 C30 42 32 50 35 56" fill="none"/></g></svg>`;
-    const fly = (c) => `<svg width="18" height="18" viewBox="0 0 18 18"><circle class="tb a-twinkle" cx="9" cy="9" r="4.5" fill="${c}"/></svg>`;
-    const mountain = (c) => `<svg width="620" height="230" viewBox="0 0 620 230"><g class="hf-holo" fill="${c}" fill-opacity=".06" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M0 230 C70 156 112 124 172 152 C214 92 256 60 308 72 C350 42 412 64 442 116 C486 96 556 136 620 206 L620 230 Z"/><path d="M308 72 C300 104 292 126 274 154 M308 72 C320 104 330 126 348 154" fill="none" stroke-width="1" stroke-opacity=".3"/></g></svg>`;
-    const fog = () => `<div class="hf-fogblob"></div>`;
-    const portal = (c) => `<svg width="320" height="380" viewBox="0 0 320 380"><defs><radialGradient id="hfPortalGlow" cx="50%" cy="62%" r="60%"><stop offset="0%" stop-color="#ffd9a8" stop-opacity=".95"/><stop offset="45%" stop-color="#f47921" stop-opacity=".55"/><stop offset="100%" stop-color="#f47921" stop-opacity="0"/></radialGradient></defs><g class="hf-holo"><path d="M70 360 V170 Q70 60 160 60 Q250 60 250 170 V360 Z" fill="url(#hfPortalGlow)" stroke="${c}" stroke-width="5" stroke-linejoin="round"/><path d="M100 360 V180 Q100 95 160 95 Q220 95 220 180 V360" fill="none" stroke="#ffd9a8" stroke-width="2" opacity=".7"/><rect x="40" y="360" width="240" height="10" fill="${c}" fill-opacity=".35" stroke="${c}" stroke-width="1.5"/></g></svg>`;
+    const FC = ["#34d9c3", "#a78bfa", "#ff9642", "#ffd9a8"]; // teal, violet, amber, warm cream
+    // tiny seeded RNG so each plant looks the same every frame
+    function rng(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+    const lerp = (a, b, t) => a + (b - a) * t;
 
-    const tpl = { pine, tree, crystal, fern, fly, fog, portal, mountain, grass, mush };
-    // Each group = a cluster of trees/ground at one depth; you fly from group to group.
+    // BROADLEAF — recursive branching trunk with clustered organic foliage
+    function broadleaf(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 200, H = 280, baseX = 100, baseY = 272;
+      const branches = [], tips = [];
+      function grow(x, y, ang, len, w, depth) {
+        const ex = x + Math.sin(ang) * len, ey = y - Math.cos(ang) * len;
+        const mx = (x + ex) / 2 + (rand() - 0.5) * len * 0.12, my = (y + ey) / 2;
+        branches.push(`<path d="M${x.toFixed(1)} ${y.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke-width="${Math.max(1, w).toFixed(1)}"/>`);
+        if (depth <= 0) { tips.push([ex, ey, len]); return; }
+        const n = depth >= 3 ? 2 : (rand() < 0.55 ? 3 : 2);
+        for (let i = 0; i < n; i++) {
+          const spread = lerp(0.30, 0.62, rand());
+          const dir = n === 2 ? (i === 0 ? -1 : 1) : (i - (n - 1) / 2);
+          const na = ang + dir * spread + (rand() - 0.5) * 0.18;
+          grow(ex, ey, na, len * lerp(0.66, 0.78, rand()), w * 0.64, depth - 1);
+        }
+      }
+      grow(baseX, baseY, (rand() - 0.5) * 0.12, 74, 8, 4);
+      let leaves = "";
+      tips.forEach(([x, y]) => {
+        const blobs = 2 + ((rand() * 2) | 0), R = lerp(16, 24, rand());
+        for (let i = 0; i < blobs; i++) {
+          const cx = x + (rand() - 0.5) * R * 1.05, cy = y + (rand() - 0.5) * R * 0.85 - 5;
+          const rx = R * lerp(0.72, 1.0, rand()), ry = rx * lerp(0.78, 0.94, rand());
+          const rot = (rand() * 44 - 22).toFixed(1);
+          leaves += `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`;
+        }
+      });
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway" style="--sway:${(5 + rand() * 4).toFixed(1)}s;--swd:-${(rand() * 4).toFixed(1)}s"><g fill="none" stroke="${color}" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".95">${branches.join("")}</g><g fill="${color}" fill-opacity=".09" stroke="${color}" stroke-width="1.4" stroke-opacity=".82">${leaves}</g></g></g></svg>`;
+    }
+    // CONIFER — fir with layered drooping boughs + needle ticks
+    function conifer(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 160, H = 250, cx = 80, top = 22, base = 232, tiers = 7;
+      let boughs = "", needles = "";
+      for (let i = 0; i < tiers; i++) {
+        const t = i / (tiers - 1);
+        const y = lerp(top, base - 14, t) + (rand() - 0.5) * 4;
+        const half = lerp(12, 58, t) * lerp(0.92, 1.0, rand()), droop = lerp(10, 26, t);
+        boughs += `<path d="M${cx} ${y.toFixed(1)} Q${(cx - half * 0.55).toFixed(1)} ${(y + droop * 0.35).toFixed(1)} ${(cx - half).toFixed(1)} ${(y + droop).toFixed(1)}"/>`;
+        boughs += `<path d="M${cx} ${y.toFixed(1)} Q${(cx + half * 0.55).toFixed(1)} ${(y + droop * 0.35).toFixed(1)} ${(cx + half).toFixed(1)} ${(y + droop).toFixed(1)}"/>`;
+        const ticks = 2 + ((t * 3) | 0);
+        for (let k = 1; k <= ticks; k++) {
+          const f = k / (ticks + 1);
+          const lx = lerp(cx, cx - half, f), rx = lerp(cx, cx + half, f), ly = lerp(y, y + droop, f);
+          needles += `<path d="M${lx.toFixed(1)} ${ly.toFixed(1)} l${(-3 - f * 3).toFixed(1)} ${(5 + f * 4).toFixed(1)}"/>`;
+          needles += `<path d="M${rx.toFixed(1)} ${ly.toFixed(1)} l${(3 + f * 3).toFixed(1)} ${(5 + f * 4).toFixed(1)}"/>`;
+        }
+      }
+      const trunk = `<path d="M${cx} ${top} L${cx} ${base + 12}" stroke-width="2.4" stroke-opacity=".55"/><rect x="${cx - 6}" y="${base + 10}" width="12" height="14" fill="${color}" fill-opacity=".16"/>`;
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway hf-sway--soft" style="--sway:${(6 + rand() * 3).toFixed(1)}s;--swd:-${(rand() * 5).toFixed(1)}s"><g fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${trunk}${boughs}</g><g fill="none" stroke="${color}" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".45">${needles}</g></g></g></svg>`;
+    }
+    // SHRUB — low rounded bush from overlapping leaf clusters
+    function shrub(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 150, H = 110, base = 104;
+      let stems = "", leaves = "";
+      const clumps = 4 + ((rand() * 2) | 0);
+      for (let i = 0; i < clumps; i++) {
+        const x = lerp(28, 122, i / (clumps - 1)) + (rand() - 0.5) * 12, h = lerp(40, 78, rand());
+        stems += `<path d="M75 ${base} Q${((75 + x) / 2).toFixed(1)} ${(base - h * 0.5).toFixed(1)} ${x.toFixed(1)} ${(base - h).toFixed(1)}" stroke-width="2"/>`;
+        const R = lerp(16, 24, rand());
+        for (let k = 0; k < 3; k++) {
+          const cx = x + (rand() - 0.5) * R, cy = base - h + (rand() - 0.5) * R * 0.8;
+          leaves += `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(R * lerp(0.6, 0.95, rand())).toFixed(1)}" ry="${(R * lerp(0.5, 0.8, rand())).toFixed(1)}"/>`;
+        }
+      }
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway hf-sway--soft" style="--sway:${(5 + rand() * 3).toFixed(1)}s;--swd:-${(rand() * 4).toFixed(1)}s"><g fill="none" stroke="${color}" stroke-linecap="round" stroke-opacity=".85">${stems}</g><g fill="${color}" fill-opacity=".07" stroke="${color}" stroke-width="1.3" stroke-opacity=".75">${leaves}</g></g></g></svg>`;
+    }
+    // FERN — arching fronds with paired leaflets
+    function fern(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 150, H = 130, base = 124, cx = 75, fronds = 5;
+      let g = "";
+      for (let i = 0; i < fronds; i++) {
+        const t = i / (fronds - 1), dir = t < 0.5 ? -1 : (t > 0.5 ? 1 : 0);
+        const tipx = cx + dir * lerp(0, 60, Math.abs(t - 0.5) * 2), tipy = lerp(14, 40, Math.abs(t - 0.5) * 2);
+        const c1x = cx + dir * 22, c1y = base - 50;
+        g += `<path d="M${cx} ${base} C${c1x.toFixed(1)} ${c1y} ${tipx.toFixed(1)} ${(tipy + 30).toFixed(1)} ${tipx.toFixed(1)} ${tipy.toFixed(1)}" stroke-width="2"/>`;
+        for (let k = 1; k <= 5; k++) {
+          const f = k / 6, px = lerp(cx, tipx, f), py = lerp(base, tipy, f), ll = lerp(13, 4, f);
+          g += `<path d="M${px.toFixed(1)} ${py.toFixed(1)} q${(-6 - dir * 2).toFixed(1)} ${(-ll).toFixed(1)} ${(-10).toFixed(1)} ${(-ll * 0.4).toFixed(1)}" stroke-width="1.2" stroke-opacity=".55"/>`;
+          g += `<path d="M${px.toFixed(1)} ${py.toFixed(1)} q${(6 + dir * 2).toFixed(1)} ${(-ll).toFixed(1)} ${(10).toFixed(1)} ${(-ll * 0.4).toFixed(1)}" stroke-width="1.2" stroke-opacity=".55"/>`;
+        }
+      }
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway" style="--sway:${(4 + rand() * 3).toFixed(1)}s;--swd:-${(rand() * 3).toFixed(1)}s"><g fill="none" stroke="${color}" stroke-linecap="round">${g}</g></g></g></svg>`;
+    }
+    // GRASS / REEDS — fine blades leaning naturally
+    function grass(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 100, H = 80, base = 76, blades = 7;
+      let g = "";
+      for (let i = 0; i < blades; i++) {
+        const x = lerp(10, 90, i / (blades - 1)) + (rand() - 0.5) * 6, h = lerp(34, 66, rand()), lean = (rand() - 0.5) * 30;
+        g += `<path d="M${x.toFixed(1)} ${base} Q${(x + lean * 0.4).toFixed(1)} ${(base - h * 0.6).toFixed(1)} ${(x + lean).toFixed(1)} ${(base - h).toFixed(1)}" stroke-width="2"/>`;
+      }
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway" style="--sway:${(3 + rand() * 2).toFixed(1)}s;--swd:-${(rand() * 2).toFixed(1)}s"><g fill="none" stroke="${color}" stroke-linecap="round" stroke-opacity=".8">${g}</g></g></g></svg>`;
+    }
+    // FLOWER — slender stem with a small radiant bloom
+    function flower(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 60, H = 96, base = 92, cx = 30, top = 22, n = 6;
+      let petals = "";
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2, ex = cx + Math.cos(a) * 12, ey = top + Math.sin(a) * 12;
+        petals += `<ellipse cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" rx="6" ry="3.4" transform="rotate(${(a * 180 / Math.PI).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)})"/>`;
+      }
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway" style="--sway:${(3.5 + rand() * 2).toFixed(1)}s;--swd:-${(rand() * 3).toFixed(1)}s"><path d="M${cx} ${base} Q${cx + 6} ${(base - 30)} ${cx} ${top + 10}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/><g fill="${color}" fill-opacity=".10" stroke="${color}" stroke-width="1.3">${petals}</g><circle cx="${cx}" cy="${top}" r="4" fill="${color}" fill-opacity=".5"/></g></g></svg>`;
+    }
+    // MUSHROOM
+    function mush(color) {
+      return `<svg width="52" height="62" viewBox="0 0 52 62"><g class="hf-holo"><g class="hf-sway hf-sway--soft" style="--sway:5s"><g stroke="${color}" stroke-width="2" stroke-linejoin="round"><path d="M8 28 C8 7 44 7 44 28 Q26 35 8 28 Z" fill="${color}" fill-opacity=".12"/><circle cx="20" cy="20" r="2" fill="${color}" fill-opacity=".5" stroke="none"/><circle cx="31" cy="17" r="1.6" fill="${color}" fill-opacity=".5" stroke="none"/><path d="M19 30 C19 44 17 52 14 60 M33 30 C33 44 35 52 38 60" fill="none"/></g></g></g></svg>`;
+    }
+    function fly(color) { return `<svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="4.5" fill="${color}" style="animation:holoFlicker 1.8s ease-in-out infinite"/></svg>`; }
+    function fog() { return `<div class="hf-fogblob"></div>`; }
+    function mountain(color) {
+      return `<svg width="640" height="240" viewBox="0 0 640 240"><g class="hf-holo" fill="${color}" fill-opacity=".05" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M0 240 C70 160 120 124 178 156 C220 96 262 60 314 74 C356 44 418 66 448 120 C492 100 566 140 640 212 L640 240 Z"/><path d="M314 74 C306 108 298 130 280 158 M314 74 C326 108 336 130 354 158" fill="none" stroke-width="1" stroke-opacity=".3"/></g></svg>`;
+    }
+    // PALM — curved trunk with arching drooping fronds
+    function palm(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 220, H = 300, baseX = 110, baseY = 292;
+      const lean = (rand() - 0.5) * 50, topX = baseX + lean, topY = 78;
+      const trunk = `<path d="M${baseX} ${baseY} Q${(baseX + topX) / 2 + 14} ${(baseY + topY) / 2} ${topX} ${topY}" stroke-width="4" stroke-linecap="round"/>`;
+      let rings = "";
+      for (let k = 1; k <= 5; k++) { const f = k / 6, rx = lerp(baseX, topX, f), ry = lerp(baseY, topY, f); rings += `<path d="M${(rx - 5).toFixed(1)} ${ry.toFixed(1)} l10 -2" stroke-width="1.4" stroke-opacity=".5"/>`; }
+      let fronds = "";
+      const nf = 7;
+      for (let i = 0; i < nf; i++) {
+        const a = -Math.PI / 2 + (i - (nf - 1) / 2) * (Math.PI / (nf + 1)) + (rand() - 0.5) * 0.1;
+        const len = lerp(74, 104, rand());
+        const ex = topX + Math.cos(a) * len, ey = topY + Math.sin(a) * len + 18;
+        const mx = topX + Math.cos(a) * len * 0.5, my = topY + Math.sin(a) * len * 0.5 - 8;
+        fronds += `<path d="M${topX} ${topY} Q${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke-width="2"/>`;
+        for (let k = 1; k <= 5; k++) {
+          const f = k / 6, lx = lerp(topX, ex, f), ly = lerp(topY, ey, f), nrm = a + Math.PI / 2;
+          fronds += `<path d="M${lx.toFixed(1)} ${ly.toFixed(1)} l${(Math.cos(nrm) * 9).toFixed(1)} ${(Math.sin(nrm) * 9).toFixed(1)}" stroke-width="1.1" stroke-opacity=".5"/>`;
+          fronds += `<path d="M${lx.toFixed(1)} ${ly.toFixed(1)} l${(-Math.cos(nrm) * 9).toFixed(1)} ${(-Math.sin(nrm) * 9).toFixed(1)}" stroke-width="1.1" stroke-opacity=".5"/>`;
+        }
+      }
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway" style="--sway:${(5 + rand() * 3).toFixed(1)}s;--swd:-${(rand() * 4).toFixed(1)}s"><g fill="none" stroke="${color}" stroke-linejoin="round">${trunk}${rings}${fronds}</g></g></g></svg>`;
+    }
+    // VINE — hangs from the canopy, sways from the top
+    function vine(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 90, H = 320, segs = 7;
+      let x = 45, y = 0, path = `M45 0`;
+      const pts = [[45, 0]];
+      for (let i = 1; i <= segs; i++) {
+        const ny = (i / segs) * 304, nx = 45 + Math.sin(i * 1.1 + rand() * 6) * lerp(8, 26, rand());
+        path += ` Q${((x + nx) / 2 + (rand() - 0.5) * 8).toFixed(1)} ${(y + (ny - y) * 0.5).toFixed(1)} ${nx.toFixed(1)} ${ny.toFixed(1)}`;
+        pts.push([nx, ny]); x = nx; y = ny;
+      }
+      let leaves = "";
+      pts.slice(1).forEach(([px, py], i) => {
+        const side = i % 2 ? 1 : -1;
+        leaves += `<ellipse cx="${(px + side * 9).toFixed(1)}" cy="${py.toFixed(1)}" rx="9" ry="4.4" transform="rotate(${(side * 28).toFixed(1)} ${(px + side * 9).toFixed(1)} ${py.toFixed(1)})"/>`;
+      });
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-sway hf-sway--hang" style="--swd:-${(rand() * 4).toFixed(1)}s"><path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/><g fill="${color}" fill-opacity=".09" stroke="${color}" stroke-width="1.1" stroke-opacity=".75">${leaves}</g></g></g></svg>`;
+    }
+    // CLOUD — drifting holographic cloud near the horizon
+    function cloud(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const W = 320, H = 130;
+      const puffs = [[78, 78, 44], [140, 58, 56], [206, 64, 50], [256, 84, 38], [110, 92, 40], [186, 96, 42]];
+      let g = "";
+      puffs.forEach(([cx, cy, r]) => { g += `<ellipse cx="${cx}" cy="${cy}" rx="${(r * lerp(0.9, 1.1, rand())).toFixed(1)}" ry="${(r * 0.7).toFixed(1)}"/>`; });
+      g += `<path d="M40 104 Q160 118 286 104" fill="none" stroke-opacity=".5"/>`;
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="hf-holo"><g class="hf-drift" style="--drift:${(20 + rand() * 16).toFixed(0)}s;--swd:-${(rand() * 12).toFixed(0)}s"><g fill="${color}" fill-opacity=".06" stroke="${color}" stroke-width="1.6" stroke-opacity=".7">${g}</g></g></g></svg>`;
+    }
+    // MOON / PLANET — distant holographic bodies
+    function moon(color, seed) {
+      const rand = rng(seed || ((Math.random() * 1e6) | 0));
+      const r = 58;
+      let craters = "";
+      for (let i = 0; i < 4; i++) { craters += `<circle cx="${(60 + (rand() - 0.5) * 70).toFixed(1)}" cy="${(60 + (rand() - 0.5) * 70).toFixed(1)}" r="${(5 + rand() * 9).toFixed(1)}" fill="${color}" fill-opacity=".08"/>`; }
+      return `<svg width="160" height="160" viewBox="0 0 160 160"><g class="hf-holo"><circle cx="80" cy="80" r="${r}" fill="${color}" fill-opacity=".09" stroke="${color}" stroke-width="2"/><g stroke="${color}" stroke-width="1.4" stroke-opacity=".55">${craters}</g></g></svg>`;
+    }
+    function planet(color) {
+      return `<svg width="200" height="150" viewBox="0 0 200 150"><g class="hf-holo"><circle cx="100" cy="75" r="44" fill="${color}" fill-opacity=".10" stroke="${color}" stroke-width="2"/><ellipse cx="100" cy="75" rx="86" ry="24" fill="none" stroke="${color}" stroke-width="2" stroke-opacity=".7" transform="rotate(-18 100 75)"/></g></svg>`;
+    }
+
+    const tpl = { tree: broadleaf, oak: broadleaf, pine: conifer, fir: conifer, shrub, fern, grass, flower, mush, fly, fog, mountain, palm, vine, cloud, moon, planet };
+    // what each element stands on: 'b' = ground, 't' = hangs from above, 'c' = floats
+    const ANCHOR = { tree: 'b', oak: 'b', pine: 'b', fir: 'b', shrub: 'b', fern: 'b', grass: 'b', flower: 'b', mush: 'b', palm: 'b', mountain: 'c', vine: 't', cloud: 'c', moon: 'c', planet: 'c', sun: 'c', fly: 'c', fog: 'c' };
+
+    /* PNG flora — drop transparent art into assets/forest/ (uploaded to GitHub).
+       Missing files silently fall back to the drawn SVG flora, so this works
+       before the art lands. */
+    const HOLO_VEIL = true, VEIL_SOFT = false, PNG_ON = true;
+    const FDIR = 'assets/forest/';
+    const enc = (f) => FDIR + encodeURIComponent(f);
+    const PLANTS = ['plant.png','plant (1).png','plant (2).png','plant (3).png','plant (4).png','plant (5).png','plant (6).png','plant (7).png','plant (8).png','plant (9).png','plant (10).png','plant (11).png','plant (12).png','plant (13).png','plant (14).png','plant (15).png','plant (16).png','plant (17).png','plant (18).png','plant (19).png'];
+    const CLOUDS = ['cloud.png','cloud (1).png','cloud (2).png','cloud (3).png','cloud (4).png'];
+    const ORBS   = ['crystal.png','crystal (1).png','crystal (2).png','crystal (3).png','crystal (4).png','crystal (5).png'];
+    const PLANETS= ['planet.png','planet (1).png'];
+    const ISLES  = ['island.png','island (1).png','island (3).png','island (2).png','island (4).png'];
+    const POOL = PNG_ON ? {
+      palm:   { files: ['coconut.png'], w: 220, h: 297, mode: 'veil' },
+      tree:   { files: ['bush.png'],    w: 235, h: 301, mode: 'veil' },
+      pine:   { files: ['bush.png'],    w: 190, h: 244, mode: 'veil' },
+      vine:   { files: ['vine.png'],    w: 165, h: 272, mode: 'veil' },
+      shrub:  { files: PLANTS,          w: 156, h: 105, mode: 'veil' },
+      fern:   { files: PLANTS,          w: 150, h: 101, mode: 'veil' },
+      grass:  { files: PLANTS,          w: 130, h: 88,  mode: 'veil' },
+      flower: { files: PLANTS,          w: 140, h: 94,  mode: 'veil' },
+      mush:   { files: PLANTS,          w: 120, h: 81,  mode: 'veil' },
+      cloud:  { files: CLOUDS,          w: 320, h: 211, mode: 'asis' },
+      moon:   { files: ORBS,            w: 150, h: 150, mode: 'asis' },
+      planet: { files: PLANETS,         w: 200, h: 200, mode: 'asis' },
+      sun:    { files: ['sun.png'],     w: 240, h: 240, mode: 'asis' },
+      mountain:{ files: ISLES,          w: 168, h: 390, mode: 'asis' },
+    } : {};
+    const _poolIdx = {};
+    function pickReg(type) {
+      const p = POOL[type];
+      if (!p) return null;
+      const i = (_poolIdx[type] = (_poolIdx[type] || 0) + 1) - 1;
+      return { src: enc(p.files[i % p.files.length]), w: p.w, h: p.h, mode: p.mode };
+    }
+    function pngFlora(reg, flip) {
+      const w = reg.w || 200, h = reg.h || w;
+      const sway = (5 + Math.random() * 3).toFixed(1), swd = (Math.random() * 4).toFixed(1);
+      const fx = flip === -1 ? 'transform:scaleX(-1);' : '';
+      const onerr = ` onerror="this.closest('.hf-item')._fb&&this.closest('.hf-item')._fb()"`;
+      if ((reg.mode || 'asis') === 'tint') {
+        return `<div class="hf-holo" style="${fx}"><div class="hf-sway hf-png hf-png--tint" style="--src:url('${reg.src}');width:${w}px;height:${h}px;--sway:${sway}s;--swd:-${swd}s"></div></div>`;
+      }
+      return `<div class="hf-holo" style="${fx}"><img class="hf-sway hf-png" src="${reg.src}" style="width:${w}px;height:${h}px;--sway:${sway}s;--swd:-${swd}s" alt=""${onerr}></div>`;
+    }
+
+    /* Layout — clusters of flora at successive depths. [type, x%, y%, scale, colorIndex, flip?] */
+    const GY = 30; // shared ground line (below center) for everything that stands
     const groups = [
-      [ ["pine",-38,12,1.35,0], ["tree",-14,16,1.2,1], ["pine",8,10,1.3,0], ["tree",30,15,1.25,2], ["fern",-26,29,1.0,2], ["grass",18,31,1.1,1], ["mush",-4,30,0.9,3], ["fly",-10,-8,0.8,2], ["crystal",40,25,1.0,1] ],
-      [ ["tree",-32,14,1.3,1], ["pine",-6,9,1.35,3], ["tree",20,16,1.25,0], ["pine",40,13,1.3,1], ["fern",30,28,1.0,0], ["crystal",-22,24,1.0,2], ["grass",-40,31,1.0,1], ["mush",10,30,0.85,0], ["fly",6,-12,0.7,0] ],
-      [ ["pine",-42,13,1.4,2], ["tree",-18,16,1.3,0], ["pine",4,10,1.3,3], ["tree",34,14,1.25,1], ["fern",-34,28,1.1,3], ["mush",22,31,0.85,1], ["grass",-8,30,1.0,2], ["fog",0,10,1.2,0], ["fly",-4,-6,0.8,1] ],
-      [ ["tree",-36,12,1.3,2], ["pine",-12,15,1.35,0], ["tree",14,17,1.25,3], ["pine",38,11,1.3,2], ["crystal",26,25,1.05,0], ["fern",-20,29,1.0,1], ["grass",6,31,1.1,0], ["mush",-30,30,0.9,3], ["fly",2,-10,0.8,1] ],
-      [ ["pine",-28,13,1.35,1], ["tree",-2,16,1.3,2], ["pine",22,10,1.3,0], ["tree",-40,14,1.25,3], ["fern",34,28,1.0,2], ["mush",-14,30,0.9,0], ["grass",16,31,1.1,3], ["crystal",-6,24,1.0,1], ["fog",0,8,1.3,0] ],
-      [ ["tree",-22,15,1.3,0], ["pine",2,9,1.35,1], ["tree",28,16,1.25,2], ["pine",-38,12,1.3,3], ["fern",12,29,1.0,1], ["crystal",-16,25,1.0,3], ["grass",38,31,1.0,0], ["mush",6,30,0.85,2], ["fly",-2,-8,0.8,2] ],
-      [ ["pine",-16,13,1.4,2], ["tree",10,16,1.3,1], ["pine",34,11,1.3,0], ["tree",-44,15,1.25,3], ["fern",-28,28,1.0,0], ["grass",-2,31,1.1,2], ["mush",24,30,0.9,1], ["crystal",18,25,1.0,3], ["fog",0,9,1.4,0] ],
+      [ ["mountain",-47,-4,1.2,1,1], ["mountain",47,1,1.15,2,-1], ["palm",-20,GY,1.55,1], ["tree",20,GY,1.5,0], ["vine",-33,-44,1.1,0], ["vine",31,-44,1.0,1], ["fern",-8,GY+3,1.05,0], ["grass",9,GY+4,1.0,1], ["fly",0,-8,0.9,2] ],
+      [ ["sun",-37,-24,1.05,2], ["mountain",46,4,1.0,3,-1], ["tree",-19,GY,1.4,1], ["palm",19,GY,1.45,0], ["planet",35,-32,0.85,2], ["shrub",-8,GY+3,1.0,0], ["fern",10,GY+3,1.0,1], ["vine",-29,-46,1.05,1], ["fly",6,-10,0.85,2] ],
+      [ ["mountain",-46,2,1.05,0,1], ["planet",37,-26,0.95,2], ["tree",-17,GY,1.35,0], ["pine",17,GY,1.4,1], ["palm",41,GY,1.3,2,-1], ["shrub",-24,GY+2,0.95,1], ["flower",-7,GY+4,0.95,2], ["fern",9,GY+3,1.0,0], ["fly",-4,-8,0.9,0] ],
+      [ ["pine",-37,GY,1.3,0], ["tree",-15,GY,1.3,1], ["cloud",-28,-30,1.0,3], ["tree",15,GY,1.25,0], ["pine",37,GY,1.25,1], ["fern",-8,GY+3,0.95,0], ["grass",-22,GY+4,0.95,1], ["flower",9,GY+4,0.9,2], ["fly",2,-10,0.85,3] ],
+      [ ["pine",-31,GY,1.2,0], ["tree",-13,GY,1.2,1], ["cloud",30,-30,1.1,2], ["moon",-34,-26,0.9,0], ["pine",26,GY,1.15,0], ["tree",41,GY,1.1,1], ["fern",6,GY+3,0.9,0], ["shrub",18,GY+2,0.85,0], ["fly",10,-8,0.8,3] ],
+      [ ["cloud",-30,-30,1.0,3], ["moon",30,-28,0.95,0], ["tree",-31,GY,1.0,0], ["pine",10,GY,0.95,1], ["tree",32,GY,0.9,0], ["shrub",-15,GY+2,0.85,1], ["fern",17,GY+2,0.85,0], ["fog",0,3,1.4,0], ["fly",-8,-8,0.8,2] ],
+      [ ["cloud",26,-28,1.15,3], ["planet",-32,-30,0.7,2], ["moon",-12,-22,0.6,0], ["tree",-21,GY,0.82,0], ["pine",29,GY,0.8,1], ["cloud",-22,-14,0.95,2], ["tree",12,GY,0.74,0], ["fog",0,4,1.5,0], ["fly",6,-12,0.7,0] ],
+      [ ["cloud",-3,-24,1.25,3], ["cloud",34,-13,1.0,2], ["planet",30,-34,0.7,2], ["moon",-30,-30,0.7,0], ["pine",-37,GY,0.7,1], ["tree",27,GY,0.72,0], ["fog",0,6,1.7,0] ],
     ];
     forestGroups = groups.length;
     forestItems = [];
+    let seedN = 7;
     groups.forEach((group, L) => {
       group.forEach((s) => {
         const el = document.createElement("div");
         el.className = "hf-item";
         const color = FC[s[4]];
-        el.innerHTML = tpl[s[0]](color);
+        const reg = pickReg(s[0]);
+        if (reg) {
+          if (HOLO_VEIL && reg.mode === 'veil') el.classList.add(VEIL_SOFT ? 'hf-veil--soft' : 'hf-veil');
+          const drawnSeed = (seedN += 53);
+          el._fb = () => { el.classList.remove('hf-veil', 'hf-veil--soft'); el.innerHTML = (tpl[s[0]] || tpl.tree)(color, drawnSeed); };
+          el.innerHTML = pngFlora(reg, s[5]);
+        } else {
+          el.innerHTML = tpl[s[0]](color, (seedN += 53));
+        }
         el.style.color = color;
         el.style.zIndex = String((groups.length - L) * 10);
         forestScene.appendChild(el);
-        forestItems.push({ el, x: s[1], y: s[2], s: s[3] * 1.35, layer: L });
+        forestItems.push({ el, x: s[1], y: s[2], s: s[3] * 1.35, layer: L, anchor: ANCHOR[s[0]] || 'c' });
       });
     });
   }
@@ -1675,7 +1938,11 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
       const r = forestSection.getBoundingClientRect();
       if (r.top < vh && r.bottom > 0) {
         const total = forestSection.offsetHeight - vh;
-        const p = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
+        const pTarget = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
+        // damped follow → a smoother, more cinematic flight than raw scroll
+        forestP += (pTarget - forestP) * 0.085;
+        if (Math.abs(pTarget - forestP) < 0.0008) forestP = pTarget;
+        const p = forestP;
         const GAP = 520;
         const camZ = p * (forestGroups * GAP + 320);
         for (let i = 0; i < forestItems.length; i++) {
@@ -1688,9 +1955,10 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
           const spread = Math.min(2.4, Math.max(1.0, 1 + (z + 600) / 1300));
           const xo = (f.x / 100) * window.innerWidth * spread;
           const yo = (f.y / 100) * vh * spread;
+          const ay = f.anchor === 'b' ? '-100%' : f.anchor === 't' ? '0%' : '-50%';
           f.el.style.opacity = op.toFixed(3);
           f.el.style.transform =
-            `translate(-50%,-50%) translate3d(${xo.toFixed(1)}px,${yo.toFixed(1)}px,${z.toFixed(1)}px) scale(${f.s})`;
+            `translate(-50%,${ay}) translate3d(${xo.toFixed(1)}px,${yo.toFixed(1)}px,${z.toFixed(1)}px) scale(${f.s})`;
         }
         // hero grows from center + fades in as you go deeper; forest layer fades out
         const hp = Math.min(Math.max((p - 0.3) / 0.5, 0), 1);
@@ -1700,6 +1968,12 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
         // nav + logo only once the hero is fully grown
         document.body.classList.toggle("chrome-hidden", he < 0.98);
         if (forestProgress) forestProgress.style.width = (p * 100).toFixed(1) + "%";
+      } else if (r.bottom <= 0) {
+        // flown past the forest — settle state and make sure chrome is visible
+        forestP = 1;
+        if (entryHero) { entryHero.style.opacity = "1"; entryHero.style.transform = "none"; }
+        if (forestLayer) forestLayer.style.opacity = "0";
+        document.body.classList.remove("chrome-hidden");
       }
     }
 
@@ -1745,6 +2019,12 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
     requestAnimationFrame(tick);
   }
   if (!prefersReduced) requestAnimationFrame(tick);
+  else {
+    // reduced motion: skip the fly-through, show the hero + chrome straight away
+    document.body.classList.remove("chrome-hidden");
+    if (entryHero) { entryHero.style.opacity = "1"; entryHero.style.transform = "none"; }
+    if (forestLayer) forestLayer.style.opacity = "0";
+  }
 
   /* ============================================================
      Warp Zone — playable in place (desktop / keyboard)
