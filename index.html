@@ -336,6 +336,17 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
 .hf-drift { animation: hfDrift var(--drift, 26s) ease-in-out infinite alternate; animation-delay: var(--swd, 0s); }
 @keyframes hfDrift { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
 .hf-fogblob { width: 64vw; height: 26vh; background: radial-gradient(50% 50% at 50% 50%, rgba(94,234,212,0.14), transparent 70%); }
+/* Composed entry frame — the establishing shot; scales up + dissolves as you scroll */
+.forest-entry { position: absolute; inset: 0; z-index: 50; pointer-events: none; transform-origin: 50% 46%; will-change: opacity, transform; }
+.fe { position: absolute; filter: drop-shadow(0 0 16px rgba(94,234,212,0.40)) drop-shadow(0 0 34px rgba(167,139,250,0.26)); }
+img.fe, .fe img { display: block; }
+.fe.flip { transform: scaleX(-1); }
+.fe-sway  { animation: feSway var(--t, 6s) ease-in-out infinite; transform-origin: 50% 100%; }
+.fe-float { animation: feFloat var(--t, 8s) ease-in-out infinite; }
+.fe-drift { animation: feDrift var(--t, 26s) ease-in-out infinite alternate; }
+@keyframes feSway  { 0%,100% { transform: rotate(-1.3deg); } 50% { transform: rotate(1.3deg); } }
+@keyframes feFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+@keyframes feDrift { from { transform: translateX(-16px); } to { transform: translateX(16px); } }
 @media (prefers-reduced-motion: reduce) {
   .forest-section { height: auto; }
   .forest-sticky { position: static; height: 100vh; }
@@ -774,6 +785,36 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
         <div class="forest-ground"></div>
         <div class="forest-scene" id="forestScene"></div>
         <div class="forest-scanlines"></div>
+      </div>
+
+      <!-- Composed entry frame (the first establishing shot — flies open as you scroll) -->
+      <div class="forest-entry" id="forestEntry" aria-hidden="true">
+        <!-- TOP: cloud band -->
+        <img class="fe fe-drift" style="left:28vw; top:0; width:23vw; z-index:8;  --t:30s" src="assets/forest/cloud%20(3).png" alt="">
+        <img class="fe fe-drift" style="left:11vw; top:6vh; width:25vw; z-index:10; --t:26s" src="assets/forest/cloud%20(1).png" alt="">
+        <img class="fe fe-drift" style="left:37vw; top:3vh; width:30vw; z-index:11; --t:34s" src="assets/forest/cloud.png" alt="">
+        <img class="fe fe-drift" style="left:56vw; top:5vh; width:27vw; z-index:10; --t:28s" src="assets/forest/cloud%20(2).png" alt="">
+        <img class="fe fe-drift" style="left:70vw; top:10vh; width:21vw; z-index:9; --t:32s" src="assets/forest/cloud%20(4).png" alt="">
+
+        <!-- TOP: sun, planets & orbs -->
+        <img class="fe fe-float" style="left:22vw; top:3vh; width:12vw; z-index:12; --t:9s"  src="assets/forest/planet.png" alt="">
+        <img class="fe fe-float" style="left:44vw; top:7vh; width:17vw; z-index:13; --t:11s" src="assets/forest/sun.png" alt="">
+        <img class="fe fe-float" style="left:67vw; top:8vh; width:8vw;  z-index:13; --t:7s"  src="assets/forest/crystal%20(1).png" alt="">
+        <img class="fe fe-float" style="right:3vw; top:1vh; width:10vw; z-index:12; --t:10s" src="assets/forest/planet%20(1).png" alt="">
+        <img class="fe fe-float" style="right:1vw; top:9vh; width:5vw;  z-index:12; --t:8s"  src="assets/forest/crystal%20(2).png" alt="">
+        <img class="fe fe-float" style="left:15vw; top:11vh; width:4.5vw; z-index:12; --t:6.5s" src="assets/forest/crystal%20(3).png" alt="">
+
+        <!-- RIGHT: mirrored arch cliff behind, palms in front, plants -->
+        <span class="fe flip" style="right:-6vw; bottom:10vh; height:92vh; z-index:18;"><img class="fe-float" style="height:100%; --t:12s" src="assets/forest/island.png" alt=""></span>
+        <img class="fe fe-sway" style="right:-4vw; bottom:-3vh; height:82vh; z-index:21; --t:7s" src="assets/forest/coconut.png" alt="">
+        <span class="fe flip" style="right:13vw; bottom:-3vh; height:54vh; z-index:20;"><img class="fe-sway" style="height:100%; --t:8s" src="assets/forest/coconut.png" alt=""></span>
+        <img class="fe fe-sway" style="right:-1vw; bottom:-3vh; width:19vw; z-index:23; --t:5.5s" src="assets/forest/plant%20(3).png" alt="">
+        <img class="fe fe-sway" style="right:12vw; bottom:-4vh; width:14vw; z-index:24; --t:6s" src="assets/forest/plant%20(8).png" alt="">
+
+        <!-- LEFT: island arch + stairs, foreground plants -->
+        <img class="fe fe-float" style="left:-3vw; bottom:-3vh; height:106vh; z-index:20; --t:13s" src="assets/forest/island.png" alt="">
+        <img class="fe fe-sway" style="left:-2vw; bottom:-3vh; width:21vw; z-index:22; --t:5.5s" src="assets/forest/plant%20(5).png" alt="">
+        <img class="fe fe-sway" style="left:10vw; bottom:-4vh; width:15vw; z-index:23; --t:6.5s" src="assets/forest/plant%20(11).png" alt="">
       </div>
     </div>
   </section>
@@ -1504,6 +1545,7 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
   const forestLayer = document.getElementById("forestLayer");
   const entryHero = document.getElementById("entryHero");
   const forestProgress = document.getElementById("forestProgress");
+  const forestEntry = document.getElementById("forestEntry");
   let forestItems = [];
   let forestGroups = 1;
   let forestP = 0;
@@ -1969,6 +2011,15 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
         // nav + logo only once the hero is fully grown
         document.body.classList.toggle("chrome-hidden", he < 0.98);
         if (forestProgress) forestProgress.style.width = (p * 100).toFixed(1) + "%";
+        // composed entry frame: fly through the gateway over the first ~18% of scroll
+        if (forestEntry) {
+          const ep = Math.min(p / 0.18, 1);
+          forestEntry.style.display = ep >= 1 ? "none" : "block";
+          if (ep < 1) {
+            forestEntry.style.opacity = (1 - ep * ep).toFixed(3);
+            forestEntry.style.transform = `scale(${(1 + ep * 1.15).toFixed(3)})`;
+          }
+        }
       } else if (r.bottom <= 0) {
         // flown past the forest — settle state and make sure chrome is visible
         forestP = 1;
