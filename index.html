@@ -1549,6 +1549,7 @@ img.fe, .fe img { display: block; }
   let forestItems = [];
   let forestGroups = 1;
   let forestP = 0;
+  let forestSettled = false;
   if (forestSection && forestScene && !prefersReduced) {
     const FC = ["#34d9c3", "#a78bfa", "#ff9642", "#ffd9a8"]; // teal, violet, amber, warm cream
     // tiny seeded RNG so each plant looks the same every frame
@@ -1894,7 +1895,13 @@ img.fe, .fe img { display: block; }
       const max = document.documentElement.scrollHeight - vh;
       progress.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
     }
-    if (logoNav) logoNav.classList.toggle("scrolled", y > 120);
+    if (logoNav) {
+      // "Jerome Bustarga" through the forest + hero; flips to "It's Jerome's World"
+      // only once you scroll down past the hero into the content
+      const fr = forestSection ? forestSection.getBoundingClientRect() : null;
+      const pastHero = fr ? fr.bottom <= vh - 40 : y > 120;
+      logoNav.classList.toggle("scrolled", pastHero);
+    }
     if (nav) {
       const down = y > lastY && y > 500;
       if (down && !navHidden) { nav.classList.add("hidden"); navHidden = true; }
@@ -2010,6 +2017,13 @@ img.fe, .fe img { display: block; }
         if (forestLayer) forestLayer.style.opacity = (1 - Math.min(Math.max((p - 0.55) / 0.4, 0), 1)).toFixed(3);
         // nav + logo only once the hero is fully grown
         document.body.classList.toggle("chrome-hidden", he < 0.98);
+        // once the hero has fully arrived, briefly hold the scroll so the hero +
+        // nav + logo settle in before you continue into the content
+        if (!forestSettled && he >= 0.985) {
+          forestSettled = true;
+          document.body.classList.remove("chrome-hidden");
+          if (lenis && !prefersReduced) { lenis.stop(); setTimeout(() => { if (lenis) lenis.start(); }, 850); }
+        }
         if (forestProgress) forestProgress.style.width = (p * 100).toFixed(1) + "%";
         // composed entry frame: fly through the gateway over the first ~18% of scroll
         if (forestEntry) {
