@@ -266,10 +266,10 @@ nav.hidden { transform: translateY(-110%); }
 }
 
 /* ============================================================ Hologram forest — fly deep into glowing woods */
-.forest-section { position: relative; height: 600vh; z-index: 1; }
+.forest-section { position: relative; height: 680vh; z-index: 1; }
 .forest-sticky {
   position: sticky; top: 0; height: 100vh; overflow: hidden;
-  background: #04060f; /* deep night behind the hero */
+  background: transparent; /* the hero (below) is the backdrop */
 }
 .forest-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 1; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
 /* Cosmic-night → violet dusk → amber horizon → teal haze → dark foreground */
@@ -1960,11 +1960,12 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
           f.el.style.transform =
             `translate(-50%,${ay}) translate3d(${xo.toFixed(1)}px,${yo.toFixed(1)}px,${z.toFixed(1)}px) scale(${f.s})`;
         }
-        // hero grows from center + fades in as you go deeper; forest layer fades out
-        const hp = Math.min(Math.max((p - 0.3) / 0.5, 0), 1);
+        // fly the full forest first; near the end the forest dissolves while the
+        // hero grows in from center (original pacing: dissolve ~0.55, reveal ~0.6)
+        const hp = Math.min(Math.max((p - 0.6) / 0.35, 0), 1);
         const he = hp * hp * (3 - 2 * hp);
         if (entryHero) { entryHero.style.opacity = he.toFixed(3); entryHero.style.transform = `scale(${(0.45 + 0.55 * he).toFixed(3)})`; }
-        if (forestLayer) forestLayer.style.opacity = (1 - Math.min(Math.max((p - 0.4) / 0.5, 0), 1)).toFixed(3);
+        if (forestLayer) forestLayer.style.opacity = (1 - Math.min(Math.max((p - 0.55) / 0.4, 0), 1)).toFixed(3);
         // nav + logo only once the hero is fully grown
         document.body.classList.toggle("chrome-hidden", he < 0.98);
         if (forestProgress) forestProgress.style.width = (p * 100).toFixed(1) + "%";
