@@ -266,7 +266,7 @@ nav.hidden { transform: translateY(-110%); }
 }
 
 /* ============================================================ Hologram forest — fly deep into glowing woods */
-.forest-section { position: relative; height: 680vh; z-index: 1; }
+.forest-section { position: relative; height: 440vh; z-index: 1; }
 .forest-sticky {
   position: sticky; top: 0; height: 100vh; overflow: hidden;
   background: transparent; /* the hero (below) is the backdrop */
@@ -321,9 +321,9 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
 .hf-png--tint { background-color: currentColor; -webkit-mask: var(--src) center / contain no-repeat; mask: var(--src) center / contain no-repeat; }
 /* light holographic veil for full-colour art PNGs */
 .hf-veil .hf-png { mix-blend-mode: screen; opacity: 0.92;
-  filter: drop-shadow(0 0 12px rgba(94,234,212,0.55)) drop-shadow(0 0 26px rgba(167,139,250,0.30)) brightness(1.06) saturate(1.05); }
+  filter: drop-shadow(0 0 12px rgba(94,234,212,0.5)) brightness(1.06) saturate(1.05); }
 .hf-veil--soft .hf-png { mix-blend-mode: normal; opacity: 0.97;
-  filter: drop-shadow(0 0 10px rgba(94,234,212,0.4)) drop-shadow(0 0 22px rgba(167,139,250,0.22)); }
+  filter: drop-shadow(0 0 10px rgba(94,234,212,0.4)); }
 .hf-holo { animation: holoFlicker 3.6s ease-in-out infinite; }
 @keyframes holoFlicker { 0%,100% { opacity: 1; } 46% { opacity: 0.74; } 52% { opacity: 0.95; } 78% { opacity: 0.84; } }
 /* gentle wind sway — pivots from the base */
@@ -338,7 +338,7 @@ body.chrome-hidden nav, body.chrome-hidden .chapters { opacity: 0; visibility: h
 .hf-fogblob { width: 64vw; height: 26vh; background: radial-gradient(50% 50% at 50% 50%, rgba(94,234,212,0.14), transparent 70%); }
 /* Composed entry frame — the establishing shot; scales up + dissolves as you scroll */
 .forest-entry { position: absolute; inset: 0; z-index: 50; pointer-events: none; transform-origin: 50% 46%; will-change: opacity, transform; }
-.fe { position: absolute; filter: drop-shadow(0 0 16px rgba(94,234,212,0.40)) drop-shadow(0 0 34px rgba(167,139,250,0.26)); }
+.fe { position: absolute; filter: drop-shadow(0 0 18px rgba(94,234,212,0.34)); }
 img.fe, .fe img { display: block; }
 .fe.flip { transform: scaleX(-1); }
 .fe-sway  { animation: feSway var(--t, 6s) ease-in-out infinite; transform-origin: 50% 100%; }
@@ -353,6 +353,13 @@ img.fe, .fe img { display: block; }
   .forest-scene { display: none; }
   .forest-sticky .hero { opacity: 1; }
   .forest-layer { opacity: 0; }
+}
+/* Phones: the 3D fly-through is too heavy — show the hero directly, no forest */
+@media (max-width: 760px) {
+  .forest-section { height: 100vh; }
+  .forest-sticky { position: relative; height: 100vh; }
+  .forest-layer, .forest-entry, .forest-scene, .forest-scanlines, .forest-trail { display: none !important; }
+  .forest-sticky .hero { position: relative; opacity: 1 !important; transform: none !important; }
 }
 
 /* Reduced-motion fallback: lay the plates out instead of stacking */
@@ -811,8 +818,9 @@ img.fe, .fe img { display: block; }
         <img class="fe fe-sway" style="right:-1vw; bottom:-3vh; width:19vw; z-index:23; --t:5.5s" src="assets/forest/plant%20(3).png" alt="">
         <img class="fe fe-sway" style="right:12vw; bottom:-4vh; width:14vw; z-index:24; --t:6s" src="assets/forest/plant%20(8).png" alt="">
 
-        <!-- LEFT: island arch + stairs, foreground plants -->
+        <!-- LEFT: island arch + stairs, a foreground pillar, plants -->
         <img class="fe fe-float" style="left:-3vw; bottom:-3vh; height:106vh; z-index:20; --t:13s" src="assets/forest/island.png" alt="">
+        <img class="fe fe-float" style="left:5vw; bottom:-5vh; height:74vh; z-index:21; --t:15s" src="assets/forest/pillar%20(5).png" alt="">
         <img class="fe fe-sway" style="left:-2vw; bottom:-3vh; width:21vw; z-index:22; --t:5.5s" src="assets/forest/plant%20(5).png" alt="">
         <img class="fe fe-sway" style="left:10vw; bottom:-4vh; width:15vw; z-index:23; --t:6.5s" src="assets/forest/plant%20(11).png" alt="">
       </div>
@@ -1550,7 +1558,17 @@ img.fe, .fe img { display: block; }
   let forestGroups = 1;
   let forestP = 0;
   let forestSettled = false;
-  if (forestSection && forestScene && !prefersReduced) {
+  const forestMobile = window.matchMedia("(max-width: 760px)").matches;
+  if (forestSection && !forestScene) { /* no forest on this page */ }
+  else if (forestSection && (prefersReduced || forestMobile)) {
+    // Phones / reduced-motion: skip the heavy 3D fly-through. Drop the forest,
+    // reveal the hero + chrome straight away so the page is light and stable.
+    if (forestLayer) forestLayer.style.display = "none";
+    if (forestEntry) forestEntry.remove();
+    if (entryHero) { entryHero.style.opacity = "1"; entryHero.style.transform = "none"; }
+    document.body.classList.remove("chrome-hidden");
+  }
+  if (forestSection && forestScene && !prefersReduced && !forestMobile) {
     const FC = ["#34d9c3", "#a78bfa", "#ff9642", "#ffd9a8"]; // teal, violet, amber, warm cream
     // tiny seeded RNG so each plant looks the same every frame
     function rng(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
@@ -1790,14 +1808,12 @@ img.fe, .fe img { display: block; }
 
     /* Layout — clusters of flora at successive depths. [type, x%, y%, scale, colorIndex, flip?] */
     const GY = 30; // shared ground line (below center) for everything that stands
+    // trimmed to 5 depth layers (lighter, shorter flight) front → horizon
     const groups = [
-      [ ["mountain",-47,-4,1.2,1,1], ["mountain",47,1,1.15,2,-1], ["palm",-20,GY,1.55,1], ["tree",20,GY,1.5,0], ["vine",-33,-44,1.1,0], ["vine",31,-44,1.0,1], ["fern",-8,GY+3,1.05,0], ["grass",9,GY+4,1.0,1], ["fly",0,-8,0.9,2] ],
-      [ ["sun",-37,-24,1.05,2], ["mountain",46,4,1.0,3,-1], ["tree",-19,GY,1.4,1], ["palm",19,GY,1.45,0], ["planet",35,-32,0.85,2], ["shrub",-8,GY+3,1.0,0], ["fern",10,GY+3,1.0,1], ["vine",-29,-46,1.05,1], ["fly",6,-10,0.85,2] ],
-      [ ["mountain",-46,2,1.05,0,1], ["planet",37,-26,0.95,2], ["tree",-17,GY,1.35,0], ["pine",17,GY,1.4,1], ["palm",41,GY,1.3,2,-1], ["shrub",-24,GY+2,0.95,1], ["flower",-7,GY+4,0.95,2], ["fern",9,GY+3,1.0,0], ["fly",-4,-8,0.9,0] ],
-      [ ["pine",-37,GY,1.3,0], ["tree",-15,GY,1.3,1], ["cloud",-28,-30,1.0,3], ["tree",15,GY,1.25,0], ["pine",37,GY,1.25,1], ["fern",-8,GY+3,0.95,0], ["grass",-22,GY+4,0.95,1], ["flower",9,GY+4,0.9,2], ["fly",2,-10,0.85,3] ],
-      [ ["pine",-31,GY,1.2,0], ["tree",-13,GY,1.2,1], ["cloud",30,-30,1.1,2], ["moon",-34,-26,0.9,0], ["pine",26,GY,1.15,0], ["tree",41,GY,1.1,1], ["fern",6,GY+3,0.9,0], ["shrub",18,GY+2,0.85,0], ["fly",10,-8,0.8,3] ],
-      [ ["cloud",-30,-30,1.0,3], ["moon",30,-28,0.95,0], ["tree",-31,GY,1.0,0], ["pine",10,GY,0.95,1], ["tree",32,GY,0.9,0], ["shrub",-15,GY+2,0.85,1], ["fern",17,GY+2,0.85,0], ["fog",0,3,1.4,0], ["fly",-8,-8,0.8,2] ],
-      [ ["cloud",26,-28,1.15,3], ["planet",-32,-30,0.7,2], ["moon",-12,-22,0.6,0], ["tree",-21,GY,0.82,0], ["pine",29,GY,0.8,1], ["cloud",-22,-14,0.95,2], ["tree",12,GY,0.74,0], ["fog",0,4,1.5,0], ["fly",6,-12,0.7,0] ],
+      [ ["mountain",-47,-4,1.2,1,1], ["mountain",47,1,1.15,2,-1], ["palm",-20,GY,1.55,1], ["tree",20,GY,1.5,0], ["vine",-33,-44,1.1,0], ["fern",-8,GY+3,1.05,0], ["grass",9,GY+4,1.0,1], ["fly",0,-8,0.9,2] ],
+      [ ["sun",-37,-24,1.05,2], ["mountain",46,4,1.0,3,-1], ["tree",-19,GY,1.4,1], ["palm",19,GY,1.45,0], ["planet",35,-32,0.85,2], ["shrub",-8,GY+3,1.0,0], ["fern",10,GY+3,1.0,1], ["fly",6,-10,0.85,2] ],
+      [ ["pine",-37,GY,1.3,0], ["tree",-15,GY,1.3,1], ["cloud",-28,-30,1.0,3], ["tree",15,GY,1.25,0], ["pine",37,GY,1.25,1], ["fern",-8,GY+3,0.95,0], ["grass",-22,GY+4,0.95,1], ["fly",2,-10,0.85,3] ],
+      [ ["cloud",-30,-30,1.0,3], ["moon",30,-28,0.95,0], ["tree",-31,GY,1.0,0], ["pine",10,GY,0.95,1], ["tree",32,GY,0.9,0], ["shrub",-15,GY+2,0.85,1], ["fog",0,3,1.4,0], ["fly",-8,-8,0.8,2] ],
       [ ["cloud",-3,-24,1.25,3], ["cloud",34,-13,1.0,2], ["planet",30,-34,0.7,2], ["moon",-30,-30,0.7,0], ["pine",-37,GY,0.7,1], ["tree",27,GY,0.72,0], ["fog",0,6,1.7,0] ],
     ];
     forestGroups = groups.length;
