@@ -435,6 +435,41 @@ img.fe, .fe img { display: block; }
 .panel:hover .panel__go { background: var(--accent); border-color: var(--accent); color: #060606; transform: rotate(-45deg); }
 /* fallback media */
 .panel__media.img-fallback::after { content: attr(data-label); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 30px; color: rgba(244,121,33,0.5); background: linear-gradient(135deg, rgba(244,121,33,0.16), rgba(244,121,33,0.02)); }
+/* ============================================================ Web & UI/UX showcase */
+.webwork { max-width: var(--max); margin: 0 auto; padding: clamp(80px, 12vh, 150px) 48px; }
+.webwork__head { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; margin-bottom: 48px; }
+.webwork__head .label { display: block; margin-bottom: 18px; }
+.webwork__head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 7vw, 96px); line-height: 0.92; letter-spacing: -0.02em; }
+.webwork__head h2 em { color: var(--accent); font-style: italic; }
+.webwork__head p { color: var(--text-dim); font-size: 15px; max-width: 360px; margin-top: 14px; }
+.webwork__all { align-self: end; white-space: nowrap; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--accent); padding-bottom: 4px; transition: color 0.3s ease; }
+.webwork__all:hover { color: var(--accent); }
+.webwork__grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; grid-auto-flow: dense; }
+.ww-tile { position: relative; border-radius: 16px; overflow: hidden; background: var(--bg-soft); border: 1px solid var(--line); display: block; transition: border-color 0.3s ease; }
+.ww-tile:hover { border-color: rgba(244,121,33,0.4); }
+.ww-tile:nth-child(1) { grid-column: span 4; aspect-ratio: 16/10; }
+.ww-tile:nth-child(2) { grid-column: span 2; aspect-ratio: 4/5; }
+.ww-tile:nth-child(3) { grid-column: span 2; aspect-ratio: 4/5; }
+.ww-tile:nth-child(4) { grid-column: span 2; aspect-ratio: 4/5; }
+.ww-tile:nth-child(5) { grid-column: span 2; aspect-ratio: 4/5; }
+.ww-tile img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.6s var(--ease); }
+.ww-tile:hover img { transform: scale(1.05); }
+.ww-tile__cap { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 24px; background: linear-gradient(to top, rgba(6,6,6,0.92) 0%, rgba(6,6,6,0.35) 45%, transparent 66%); opacity: 0; transition: opacity 0.4s ease; }
+.ww-tile:hover .ww-tile__cap { opacity: 1; }
+.ww-tile__title { font-family: var(--serif); font-size: 22px; color: var(--text); margin-bottom: 4px; }
+.ww-tile__tag { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; }
+@media (hover: none) and (pointer: coarse) { .ww-tile__cap { opacity: 1; background: linear-gradient(to top, rgba(6,6,6,0.9) 0%, rgba(6,6,6,0.25) 55%, transparent 75%); } }
+@media (max-width: 900px) {
+  .webwork { padding-left: 24px; padding-right: 24px; }
+  .webwork__head { grid-template-columns: 1fr; }
+  .webwork__grid { grid-template-columns: repeat(2, 1fr); }
+  .ww-tile, .ww-tile:nth-child(n) { grid-column: span 1; aspect-ratio: 4/5; }
+  .ww-tile:nth-child(1) { grid-column: span 2; aspect-ratio: 16/10; }
+}
+@media (max-width: 600px) {
+  .webwork__grid { grid-template-columns: 1fr; }
+  .ww-tile, .ww-tile:nth-child(n) { grid-column: span 1; aspect-ratio: 4/5; }
+}
 /* ============================================================ Warpzone portal */
 .warp { max-width: var(--max); margin: 0 auto; min-height: 100vh; padding: clamp(100px, 14vh, 180px) 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; position: relative; }
 /* Full-bleed background image + scrim */
@@ -1015,6 +1050,40 @@ img.fe, .fe img { display: block; }
             <div class="panel__meta"><span class="panel__num">04</span><h3>Research</h3><span class="panel__tag">UX · Data</span><span class="panel__go"><i class="fa-solid fa-arrow-right"></i></span></div></div>
           </a>
         </div>
+      </div>
+    </section>
+
+    <!-- WEB & UI/UX — showcase on the homepage (deep-dives live on webdesign.html) -->
+    <section id="webwork" class="webwork">
+      <div class="webwork__head">
+        <div>
+          <span class="label reveal">(Web &amp; UI/UX)</span>
+          <h2 class="mask"><span>Designed &amp; <em>built.</em></span></h2>
+          <p class="reveal" style="--i:2">Responsive websites and interfaces — strategy, layout, prototyping, and the final build.</p>
+        </div>
+        <a href="webdesign.html" class="webwork__all reveal" style="--i:3" data-link>See all case studies →</a>
+      </div>
+      <div class="webwork__grid">
+        <a href="webdesign.html" class="ww-tile reveal" data-link>
+          <img src="images/aerotech-home.png" alt="AeroTech responsive website" loading="lazy">
+          <span class="ww-tile__cap"><span class="ww-tile__title">AeroTech</span><span class="ww-tile__tag">Web Design · UI/UX</span></span>
+        </a>
+        <a href="webdesign.html" class="ww-tile reveal" style="--i:1" data-link>
+          <img src="images/coco-web.png" alt="Coco website concept" loading="lazy">
+          <span class="ww-tile__cap"><span class="ww-tile__title">Coco</span><span class="ww-tile__tag">Web Design</span></span>
+        </a>
+        <a href="webdesign.html" class="ww-tile reveal" style="--i:2" data-link>
+          <img src="images/csdj1.png" alt="CSDJ brand and web" loading="lazy">
+          <span class="ww-tile__cap"><span class="ww-tile__title">CSDJ</span><span class="ww-tile__tag">Brand &amp; Web</span></span>
+        </a>
+        <a href="webdesign.html" class="ww-tile reveal" data-link>
+          <img src="images/amy-web.jpeg" alt="Amy website design" loading="lazy">
+          <span class="ww-tile__cap"><span class="ww-tile__title">Amy</span><span class="ww-tile__tag">Web Design</span></span>
+        </a>
+        <a href="webdesign.html" class="ww-tile reveal" style="--i:1" data-link>
+          <img src="images/cutespace.jpg" alt="CuteSpace interface concept" loading="lazy">
+          <span class="ww-tile__cap"><span class="ww-tile__title">CuteSpace</span><span class="ww-tile__tag">UI Design</span></span>
+        </a>
       </div>
     </section>
 
