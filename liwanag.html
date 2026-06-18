@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Liwanag — Interactive Prototype</title>
+  <meta name="description" content="Liwanag — a UX/UI prototype by Jerome Bustarga: a safety-first money app that intercepts scams and decodes predatory loans.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Schibsted+Grotesk:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0d1a12;
+      --bg-card: #132218;
+      --bg-elevated: #1a2d20;
+      --yellow: #ffd700;
+      --orange: #ff6b35;
+      --pink: #ff1493;
+      --cyan: #00e5cc;
+      --green-ok: #2ec27e;
+      --red: #ff3b3b;
+      --white: #ffffff;
+      --white-muted: rgba(255,255,255,0.7);
+      --white-dim: rgba(255,255,255,0.4);
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Schibsted Grotesk', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-body);
+      background: radial-gradient(120% 80% at 50% 0%, #14241a 0%, #0a0a0a 60%);
+      min-height: 100vh; min-height: 100dvh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem; color: #fff;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    a, button, .clickable { -webkit-tap-highlight-color: rgba(255, 215, 0, 0.2); }
+
+    .prototype-header { text-align: center; margin-bottom: 1.5rem; }
+    .prototype-title { font-family: var(--font-display); font-size: 1.5rem; color: #777; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+    .prototype-hint { font-size: 0.75rem; color: #555; }
+    .prototype-back { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 1.1rem; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #888; text-decoration: none; border: 1px solid #2a2a2a; padding: 8px 16px; border-radius: 100px; transition: all .25s ease; }
+    .prototype-back:hover { color: #fff; border-color: #444; }
+
+    .iphone-container { width: 100%; max-width: 375px; display: flex; justify-content: center; }
+    .iphone-frame {
+      width: 375px; height: 812px; background: #1a1a1a; border-radius: 55px; padding: 18px;
+      box-shadow: 0 0 0 3px #333, 0 50px 100px -20px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.05);
+      position: relative; transform-origin: top center;
+    }
+    .iphone-frame::before { content: ''; position: absolute; top: 18px; left: 50%; transform: translateX(-50%); width: 150px; height: 28px; background: #1a1a1a; border-radius: 0 0 20px 20px; z-index: 100; }
+    .iphone-frame::after { content: ''; position: absolute; top: 26px; left: 50%; transform: translateX(-50%); width: 80px; height: 6px; background: #333; border-radius: 10px; z-index: 101; }
+    .iphone-screen { width: 100%; height: 100%; background: var(--bg-dark); border-radius: 40px; overflow: hidden; position: relative; }
+    .screens-container { width: 100%; height: 100%; position: relative; }
+
+    /* App-like slide transitions */
+    .screen {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      transform: translateX(100%); opacity: 0; pointer-events: none;
+      transition: transform 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+    }
+    .screen.active { transform: translateX(0); opacity: 1; pointer-events: all; }
+    .screen.exit-left { transform: translateX(-26%); opacity: 0; }
+    .screen.exit-right { transform: translateX(100%); opacity: 0; }
+
+    .status-bar { padding: 14px 24px 10px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: var(--white); position: relative; z-index: 10; }
+    .pattern-stripe { height: 5px; background: repeating-linear-gradient(90deg, var(--orange) 0px, var(--orange) 10px, var(--yellow) 10px, var(--yellow) 20px, var(--cyan) 20px, var(--cyan) 30px, var(--pink) 30px, var(--pink) 40px); }
+    .screen-content { flex: 1; padding: 20px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; -webkit-overflow-scrolling: touch; }
+
+    .clickable { cursor: pointer; transition: all 0.15s ease; -webkit-user-select: none; user-select: none; }
+    .clickable:hover { opacity: 0.9; }
+    .clickable:active { transform: scale(0.98); opacity: 0.9; }
+    .shake { animation: shake 0.4s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+
+    /* ONBOARDING */
+    #screen-onboarding .screen-content { justify-content: center; align-items: center; text-align: center; }
+    .onboarding-logo { width: 80px; height: 80px; background: linear-gradient(135deg, var(--orange) 0%, var(--pink) 100%); border-radius: 22px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 12px 40px rgba(255, 107, 53, 0.4); font-size: 36px; }
+    .onboarding-title { font-family: var(--font-display); font-size: 58px; line-height: 0.9; margin-bottom: 8px; }
+    .onboarding-title span { color: var(--yellow); }
+    .onboarding-tagline { font-size: 14px; color: var(--white-muted); margin-bottom: 32px; }
+    .onboarding-features { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .onboarding-feature { display: flex; align-items: center; gap: 14px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); padding: 14px 16px; border-radius: 12px; text-align: left; }
+    .feature-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .feature-text { font-size: 14px; font-weight: 500; }
+    .onboarding-audio { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 13px; font-weight: 600; margin-bottom: 20px; padding: 10px 20px; border: 1px dashed var(--cyan); border-radius: 100px; }
+    .onboarding-audio.playing { background: rgba(0,229,204,0.12); }
+    .onboarding-start { width: 100%; background: var(--yellow); color: var(--bg-dark); border: none; padding: 16px; border-radius: 12px; font-family: var(--font-display); font-size: 22px; letter-spacing: 0.05em; }
+
+    /* HOME */
+    .home-header { margin-bottom: 20px; }
+    .home-greeting { font-size: 12px; color: var(--white-dim); text-transform: uppercase; letter-spacing: 0.15em; }
+    .home-name { font-family: var(--font-display); font-size: 44px; line-height: 1; }
+    .balance-card { background: linear-gradient(135deg, var(--orange) 0%, var(--pink) 100%); border-radius: 16px; padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; }
+    .balance-card::before { content: '₱'; position: absolute; right: -10px; bottom: -30px; font-family: var(--font-display); font-size: 140px; opacity: 0.15; line-height: 1; }
+    .balance-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.85; margin-bottom: 4px; }
+    .balance-amount { font-family: var(--font-display); font-size: 44px; margin-bottom: 16px; }
+    .balance-actions { display: flex; gap: 10px; }
+    .balance-btn { flex: 1; background: rgba(0,0,0,0.25); border: none; color: var(--white); padding: 14px; border-radius: 10px; font-family: var(--font-display); font-size: 16px; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .home-section-label { font-family: var(--font-display); font-size: 16px; letter-spacing: 0.1em; color: var(--white-dim); margin-bottom: 12px; }
+    .tools-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .tool-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .tool-item:hover { border-color: var(--yellow); }
+    .tool-left { display: flex; align-items: center; gap: 14px; }
+    .tool-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .tool-icon.shield { background: linear-gradient(135deg, var(--cyan) 0%, #00a99d 100%); }
+    .tool-icon.truth { background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%); }
+    .tool-name { font-family: var(--font-display); font-size: 22px; }
+    .tool-desc { font-size: 11px; color: var(--white-dim); }
+    .tool-arrow { color: var(--white-dim); font-size: 20px; }
+    .alert-banner { background: var(--red); margin: auto -20px -20px -20px; padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+    .alert-icon { font-size: 18px; flex-shrink: 0; }
+    .alert-text { flex: 1; font-size: 13px; font-weight: 600; }
+    .alert-arrow { font-size: 16px; flex-shrink: 0; }
+
+    .bottom-nav { background: var(--bg-card); border-top: 1px solid rgba(255,255,255,0.05); padding: 12px 16px 28px; display: flex; justify-content: space-around; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--white-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; background: none; border: none; min-width: 60px; padding: 8px; }
+    .nav-item.active { color: var(--yellow); }
+    .nav-icon { font-size: 22px; }
+
+    /* SEND */
+    .screen-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .back-btn { width: 44px; height: 44px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 20px; flex-shrink: 0; }
+    .screen-title { font-family: var(--font-display); font-size: 28px; }
+    .input-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--white-dim); margin-bottom: 8px; display: block; }
+    /* recipient chooser */
+    .recipient-chips { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .rchip { display: flex; align-items: center; gap: 12px; background: var(--bg-card); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px; text-align: left; color: var(--white); width: 100%; }
+    .rchip.selected { border-color: var(--yellow); background: var(--bg-elevated); }
+    .rchip-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+    .rchip-av.ok { background: rgba(46,194,126,0.2); color: var(--green-ok); }
+    .rchip-av.unk { background: rgba(255,59,59,0.18); color: var(--red); }
+    .rchip-name { font-size: 14px; font-weight: 600; }
+    .rchip-sub { font-size: 11px; color: var(--white-dim); }
+    .rchip-tag { margin-left: auto; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 8px; border-radius: 5px; flex-shrink: 0; }
+    .rchip-tag.ok { background: rgba(46,194,126,0.2); color: var(--green-ok); }
+    .rchip-tag.unk { background: rgba(255,59,59,0.18); color: var(--red); }
+    .amount-display { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; text-align: center; margin-bottom: 14px; }
+    .amount-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--white-dim); margin-bottom: 2px; }
+    .amount-value { font-family: var(--font-display); font-size: 46px; color: var(--yellow); }
+    .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-bottom: 16px; }
+    .keypad-btn { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; color: var(--white); font-family: var(--font-display); font-size: 24px; }
+    .keypad-btn:active { background: var(--bg-elevated); }
+    .send-btn { width: 100%; background: var(--yellow); color: var(--bg-dark); border: none; padding: 16px; border-radius: 12px; font-family: var(--font-display); font-size: 20px; margin-top: auto; }
+
+    /* WARNING */
+    .recipient-card, .amount-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+    .recipient-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--white-dim); margin-bottom: 10px; }
+    .recipient-info { display: flex; align-items: center; gap: 14px; }
+    .recipient-avatar { width: 50px; height: 50px; background: rgba(255,59,59,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .recipient-name { font-family: var(--font-display); font-size: 20px; }
+    .recipient-status { font-size: 12px; color: var(--red); text-transform: uppercase; }
+    .amount-card { text-align: center; }
+    .warning-card { background: rgba(255,59,59,0.1); border: 2px solid var(--red); border-radius: 14px; padding: 16px; flex: 1; display: flex; flex-direction: column; }
+    .warning-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .warning-icon { font-size: 20px; }
+    .warning-title { font-family: var(--font-display); font-size: 24px; color: var(--red); }
+    .warning-list { list-style: none; margin-bottom: 16px; }
+    .warning-list li { font-size: 13px; padding: 10px 0; border-bottom: 1px solid rgba(255,59,59,0.2); display: flex; align-items: center; gap: 10px; }
+    .warning-list li:last-child { border-bottom: none; }
+    .warning-list li::before { content: '⚠'; font-size: 12px; flex-shrink: 0; }
+    .warning-question { font-family: var(--font-display); font-size: 22px; text-align: center; margin-bottom: 16px; }
+    .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+    .btn-cancel { background: var(--white); color: var(--bg-dark); border: none; padding: 16px; border-radius: 12px; font-family: var(--font-display); font-size: 20px; }
+    .btn-proceed { background: transparent; color: var(--white-dim); border: none; padding: 12px; font-size: 13px; text-decoration: underline; }
+
+    /* RESULT screens (success / safe) */
+    .result { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .result-badge { width: 96px; height: 96px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 46px; margin-bottom: 22px; animation: pop 0.5s cubic-bezier(0.2,1.3,0.5,1); }
+    .result-badge.ok { background: rgba(46,194,126,0.18); border: 2px solid var(--green-ok); }
+    .result-badge.safe { background: rgba(0,229,204,0.16); border: 2px solid var(--cyan); }
+    @keyframes pop { 0%{transform:scale(0.4);opacity:0} 100%{transform:scale(1);opacity:1} }
+    .result-title { font-family: var(--font-display); font-size: 38px; line-height: 0.95; margin-bottom: 10px; }
+    .result-sub { font-size: 14px; color: var(--white-muted); max-width: 240px; margin-bottom: 8px; }
+    .result-amount { font-family: var(--font-display); font-size: 30px; color: var(--yellow); margin: 8px 0 4px; }
+    .result-cta { width: 100%; background: var(--yellow); color: var(--bg-dark); border: none; padding: 16px; border-radius: 12px; font-family: var(--font-display); font-size: 20px; margin-top: auto; }
+
+    /* LOAN DECODER */
+    .decoder-intro { font-size: 14px; color: var(--white-muted); margin-bottom: 20px; }
+    .comparison-cards { display: flex; flex-direction: column; gap: 12px; }
+    .loan-card { border-radius: 14px; padding: 16px; }
+    .loan-card.predatory { background: rgba(255,59,59,0.1); border: 1px solid rgba(255,59,59,0.3); }
+    .loan-card.fair { background: rgba(0,229,204,0.1); border: 1px solid rgba(0,229,204,0.3); }
+    .loan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .loan-label { font-family: var(--font-display); font-size: 16px; }
+    .loan-card.predatory .loan-label { color: var(--red); }
+    .loan-card.fair .loan-label { color: var(--cyan); }
+    .loan-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 5px 10px; border-radius: 4px; }
+    .loan-card.predatory .loan-tag { background: var(--red); color: var(--white); }
+    .loan-card.fair .loan-tag { background: var(--cyan); color: var(--bg-dark); }
+    .loan-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; }
+    .loan-row-label { color: var(--white-muted); }
+    .loan-row-value { font-weight: 600; }
+    .loan-total { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 8px; padding-top: 8px; }
+    .loan-card.predatory .loan-total .loan-row-value { font-family: var(--font-display); font-size: 22px; color: var(--red); }
+    .loan-card.fair .loan-total .loan-row-value { font-family: var(--font-display); font-size: 22px; color: var(--cyan); }
+    .versus { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--white-dim); padding: 8px 0; }
+    .savings-card { background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%); border-radius: 14px; padding: 20px; text-align: center; margin-top: 12px; }
+    .savings-label { font-size: 13px; color: rgba(0,0,0,0.6); margin-bottom: 4px; }
+    .savings-amount { font-family: var(--font-display); font-size: 40px; color: var(--bg-dark); }
+
+    /* CONTACTS */
+    .contacts-intro { font-size: 14px; color: var(--white-muted); margin-bottom: 20px; }
+    .contact-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .contact-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+    .contact-item.verified { border-color: rgba(0,229,204,0.3); }
+    .contact-avatar { width: 48px; height: 48px; background: linear-gradient(135deg, var(--pink) 0%, var(--orange) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; flex-shrink: 0; }
+    .contact-info { flex: 1; min-width: 0; }
+    .contact-name { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+    .contact-relation { font-size: 11px; color: var(--white-dim); }
+    .contact-status { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; border-radius: 4px; flex-shrink: 0; }
+    .contact-status.verified { background: rgba(0,229,204,0.2); color: var(--cyan); }
+    .contact-status.pending { background: rgba(255,215,0,0.2); color: var(--yellow); }
+    .add-contact-btn { width: 100%; background: transparent; border: 2px dashed rgba(255,255,255,0.2); color: var(--white-muted); padding: 16px; border-radius: 14px; font-family: var(--font-display); font-size: 18px; }
+
+    /* indicator */
+    .screen-indicator { margin-top: 1.5rem; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 0 1rem; }
+    .indicator-dot { width: 10px; height: 10px; border-radius: 50%; background: #333; cursor: pointer; transition: all 0.2s ease; border: none; padding: 0; }
+    .indicator-dot.active { background: var(--yellow); width: 28px; border-radius: 5px; }
+    .indicator-dot:hover { background: #555; }
+    .indicator-dot.active:hover { background: var(--yellow); }
+
+    @media (max-width: 420px) {
+      body { padding: 1rem 0.5rem; justify-content: flex-start; }
+      .iphone-container { max-width: 100%; padding: 0 0.25rem; }
+      .iphone-frame { width: 100%; max-width: 340px; height: auto; aspect-ratio: 375 / 812; padding: 14px; border-radius: 45px; }
+      .iphone-frame::before { top: 14px; width: 120px; height: 22px; border-radius: 0 0 16px 16px; }
+      .iphone-frame::after { top: 20px; width: 60px; height: 5px; }
+      .iphone-screen { border-radius: 32px; }
+      .screen-content { padding: 14px; }
+      .onboarding-title { font-size: 44px; }
+      .home-name { font-size: 36px; }
+      .balance-amount { font-size: 36px; }
+      .amount-value { font-size: 38px; }
+      .keypad-btn { padding: 13px; font-size: 20px; }
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .clickable:hover { opacity: 1; }
+      .clickable:active { opacity: 0.85; transform: scale(0.97); }
+      .tool-item:hover { border-color: rgba(255,255,255,0.05); }
+      .tool-item:active { border-color: var(--yellow); }
+    }
+    @supports (padding: max(0px)) {
+      body { padding-left: max(0.5rem, env(safe-area-inset-left)); padding-right: max(0.5rem, env(safe-area-inset-right)); padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .screen { transition: opacity 0.2s ease; transform: none; }
+      .screen.exit-left, .screen.exit-right { transform: none; }
+      .result-badge { animation: none; }
+    }
+    .clickable:focus-visible, button:focus-visible, .indicator-dot:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+
+  <div class="prototype-header">
+    <a class="prototype-back" href="webdesign.html">← Back to portfolio</a>
+    <h1 class="prototype-title">LIWANAG — INTERACTIVE PROTOTYPE</h1>
+    <p class="prototype-hint">Tap to navigate · type an amount · try sending to a trusted vs. unknown number</p>
+  </div>
+
+  <div class="iphone-container">
+    <div class="iphone-frame">
+      <div class="iphone-screen">
+        <div class="screens-container">
+
+          <!-- ONBOARDING -->
+          <div class="screen active" id="screen-onboarding">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="onboarding-logo">💡</div>
+              <h1 class="onboarding-title">LIWA<span>NAG</span></h1>
+              <p class="onboarding-tagline">Protect your money. No hidden fees.</p>
+              <div class="onboarding-features">
+                <div class="onboarding-feature"><div class="feature-icon">📤</div><span class="feature-text">Send money safely</span></div>
+                <div class="onboarding-feature"><div class="feature-icon">🛡️</div><span class="feature-text">Scam warnings before you pay</span></div>
+                <div class="onboarding-feature"><div class="feature-icon">🔍</div><span class="feature-text">See the true cost of any loan</span></div>
+              </div>
+              <div class="onboarding-audio clickable" role="button" tabindex="0" onclick="toggleAudio(this)"><span>🔊</span> <span class="audio-label">Listen to this</span></div>
+              <button class="onboarding-start clickable" onclick="goTo('screen-home')">GET STARTED</button>
+            </div>
+          </div>
+
+          <!-- HOME -->
+          <div class="screen" id="screen-home">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="home-header"><p class="home-greeting">Good morning</p><h1 class="home-name">MARIA</h1></div>
+              <div class="balance-card">
+                <p class="balance-label">Your Balance</p>
+                <p class="balance-amount">₱12,450</p>
+                <div class="balance-actions">
+                  <button class="balance-btn clickable" onclick="openSend()">📤 SEND</button>
+                  <button class="balance-btn clickable">📥 RECEIVE</button>
+                </div>
+              </div>
+              <p class="home-section-label">TOOLS</p>
+              <div class="tools-list">
+                <div class="tool-item clickable" onclick="goTo('screen-contacts')" role="button" tabindex="0">
+                  <div class="tool-left"><div class="tool-icon shield">🛡️</div><div><p class="tool-name">SHIELD</p><p class="tool-desc">Your trusted contacts</p></div></div>
+                  <span class="tool-arrow">→</span>
+                </div>
+                <div class="tool-item clickable" onclick="goTo('screen-decoder')" role="button" tabindex="0">
+                  <div class="tool-left"><div class="tool-icon truth">🔍</div><div><p class="tool-name">TRUTH</p><p class="tool-desc">Decode loan terms</p></div></div>
+                  <span class="tool-arrow">→</span>
+                </div>
+              </div>
+              <div class="alert-banner clickable" role="button" tabindex="0" onclick="goTo('screen-decoder')">
+                <span class="alert-icon">🚨</span>
+                <span class="alert-text">New scam: "Free load" stealing PINs</span>
+                <span class="alert-arrow">→</span>
+              </div>
+            </div>
+            <nav class="bottom-nav">
+              <button class="nav-item active clickable"><span class="nav-icon">🏠</span>Home</button>
+              <button class="nav-item clickable" onclick="openSend()"><span class="nav-icon">📤</span>Send</button>
+              <button class="nav-item clickable" onclick="goTo('screen-contacts')"><span class="nav-icon">👤</span>Account</button>
+            </nav>
+          </div>
+
+          <!-- SEND -->
+          <div class="screen" id="screen-send">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-home','back')" aria-label="Go back">←</button><h1 class="screen-title">SEND MONEY</h1></div>
+              <label class="input-label">Send to</label>
+              <div class="recipient-chips">
+                <button class="rchip selected clickable" data-trusted="1" data-name="Juan Reyes" data-sub="Son · Trusted contact" onclick="pickRecipient(this)">
+                  <span class="rchip-av ok">JR</span><span><span class="rchip-name">Juan Reyes</span><br><span class="rchip-sub">Son · verified</span></span><span class="rchip-tag ok">Trusted</span>
+                </button>
+                <button class="rchip clickable" data-trusted="0" data-name="+63 917 *** 4821" data-sub="Unknown number" onclick="pickRecipient(this)">
+                  <span class="rchip-av unk">?</span><span><span class="rchip-name">+63 917 *** 4821</span><br><span class="rchip-sub">Not in your contacts</span></span><span class="rchip-tag unk">Unknown</span>
+                </button>
+              </div>
+              <div class="amount-display">
+                <p class="amount-label">Amount</p>
+                <p class="amount-value" data-amount>₱0</p>
+              </div>
+              <div class="keypad">
+                <button class="keypad-btn clickable" onclick="press('1')">1</button>
+                <button class="keypad-btn clickable" onclick="press('2')">2</button>
+                <button class="keypad-btn clickable" onclick="press('3')">3</button>
+                <button class="keypad-btn clickable" onclick="press('4')">4</button>
+                <button class="keypad-btn clickable" onclick="press('5')">5</button>
+                <button class="keypad-btn clickable" onclick="press('6')">6</button>
+                <button class="keypad-btn clickable" onclick="press('7')">7</button>
+                <button class="keypad-btn clickable" onclick="press('8')">8</button>
+                <button class="keypad-btn clickable" onclick="press('9')">9</button>
+                <button class="keypad-btn clickable" onclick="press('00')">00</button>
+                <button class="keypad-btn clickable" onclick="press('0')">0</button>
+                <button class="keypad-btn clickable" onclick="press('del')">⌫</button>
+              </div>
+              <button class="send-btn clickable" id="sendContinue" onclick="continueSend()">CONTINUE</button>
+            </div>
+          </div>
+
+          <!-- WARNING -->
+          <div class="screen" id="screen-warning">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-send','back')" aria-label="Go back">←</button><h1 class="screen-title">HOLD ON</h1></div>
+              <div class="recipient-card">
+                <p class="recipient-label">Sending to</p>
+                <div class="recipient-info"><div class="recipient-avatar">?</div><div><p class="recipient-name" data-warn-name>+63 917 *** 4821</p><p class="recipient-status">Unknown contact</p></div></div>
+              </div>
+              <div class="amount-card"><p class="amount-label">Amount</p><p class="amount-value" data-amount>₱0</p></div>
+              <div class="warning-card">
+                <div class="warning-header"><span class="warning-icon">🚨</span><span class="warning-title">WAIT</span></div>
+                <ul class="warning-list">
+                  <li>You've never sent to this number</li>
+                  <li>Large amount to an unknown person</li>
+                  <li>Matches a known scam pattern</li>
+                </ul>
+                <p class="warning-question">DO YOU REALLY KNOW THIS PERSON?</p>
+                <div class="action-buttons">
+                  <button class="btn-cancel clickable" onclick="goTo('screen-safe')">🚫 DON'T SEND</button>
+                  <button class="btn-proceed clickable" onclick="goSuccess()">I know them, send anyway</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUCCESS -->
+          <div class="screen" id="screen-success">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="result">
+                <div class="result-badge ok">✓</div>
+                <h1 class="result-title">MONEY SENT</h1>
+                <p class="result-amount" data-amount>₱0</p>
+                <p class="result-sub">Sent to <strong data-success-name>Juan Reyes</strong> — safe and on its way.</p>
+              </div>
+              <button class="result-cta clickable" onclick="goTo('screen-home','back')">DONE</button>
+            </div>
+          </div>
+
+          <!-- SAFE (scam avoided) -->
+          <div class="screen" id="screen-safe">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="result">
+                <div class="result-badge safe">🛡️</div>
+                <h1 class="result-title">YOU STAYED<br>PROTECTED</h1>
+                <p class="result-sub">Smart move. Liwanag stopped a payment to an unknown number that matched a scam pattern.</p>
+                <p class="result-amount" data-amount>₱0</p>
+                <p class="result-sub">kept safe in your wallet.</p>
+              </div>
+              <button class="result-cta clickable" onclick="goTo('screen-home','back')">BACK HOME</button>
+            </div>
+          </div>
+
+          <!-- LOAN DECODER -->
+          <div class="screen" id="screen-decoder">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-home','back')" aria-label="Go back">←</button><h1 class="screen-title">TRUTH</h1></div>
+              <p class="decoder-intro">We read the fine print and found the real cost of your loan offer.</p>
+              <div class="comparison-cards">
+                <div class="loan-card predatory">
+                  <div class="loan-header"><span class="loan-label">🚩 THEIR OFFER</span><span class="loan-tag">Predatory</span></div>
+                  <div class="loan-row"><span class="loan-row-label">Borrowed</span><span class="loan-row-value">₱5,000</span></div>
+                  <div class="loan-row"><span class="loan-row-label">"Processing fee"</span><span class="loan-row-value">₱750</span></div>
+                  <div class="loan-row"><span class="loan-row-label">"Service charge"</span><span class="loan-row-value">₱500</span></div>
+                  <div class="loan-row"><span class="loan-row-label">Interest (6 mo.)</span><span class="loan-row-value">₱1,800</span></div>
+                  <div class="loan-row loan-total"><span class="loan-row-label">You pay back</span><span class="loan-row-value">₱8,050</span></div>
+                </div>
+                <p class="versus">— VS —</p>
+                <div class="loan-card fair">
+                  <div class="loan-header"><span class="loan-label">✓ FAIR TERMS</span><span class="loan-tag">Transparent</span></div>
+                  <div class="loan-row"><span class="loan-row-label">Borrowed</span><span class="loan-row-value">₱5,000</span></div>
+                  <div class="loan-row"><span class="loan-row-label">Interest (6 mo.)</span><span class="loan-row-value">₱600</span></div>
+                  <div class="loan-row loan-total"><span class="loan-row-label">You pay back</span><span class="loan-row-value">₱5,600</span></div>
+                </div>
+                <div class="savings-card"><p class="savings-label">You would save</p><p class="savings-amount">₱2,450</p></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTACTS -->
+          <div class="screen" id="screen-contacts">
+            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="pattern-stripe"></div>
+            <div class="screen-content">
+              <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-home','back')" aria-label="Go back">←</button><h1 class="screen-title">FAMILY</h1></div>
+              <p class="contacts-intro">People you trust. Transfers to them skip the warning screens.</p>
+              <div class="contact-list">
+                <div class="contact-item verified clickable" role="button" tabindex="0"><div class="contact-avatar">JR</div><div class="contact-info"><p class="contact-name">Juan Reyes</p><p class="contact-relation">Son</p></div><span class="contact-status verified">Verified</span></div>
+                <div class="contact-item verified clickable" role="button" tabindex="0"><div class="contact-avatar">AR</div><div class="contact-info"><p class="contact-name">Ana Reyes</p><p class="contact-relation">Daughter</p></div><span class="contact-status verified">Verified</span></div>
+                <div class="contact-item clickable" role="button" tabindex="0"><div class="contact-avatar">PS</div><div class="contact-info"><p class="contact-name">Pedro Santos</p><p class="contact-relation">Neighbor</p></div><span class="contact-status pending">Pending</span></div>
+              </div>
+              <button class="add-contact-btn clickable">+ ADD TRUSTED CONTACT</button>
+            </div>
+            <nav class="bottom-nav">
+              <button class="nav-item clickable" onclick="goTo('screen-home','back')"><span class="nav-icon">🏠</span>Home</button>
+              <button class="nav-item clickable" onclick="openSend()"><span class="nav-icon">📤</span>Send</button>
+              <button class="nav-item active clickable"><span class="nav-icon">👤</span>Account</button>
+            </nav>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-indicator" role="tablist" aria-label="Screen navigation">
+    <button class="indicator-dot active" onclick="goTo('screen-onboarding')" aria-label="Onboarding" role="tab"></button>
+    <button class="indicator-dot" onclick="goTo('screen-home')" aria-label="Home" role="tab"></button>
+    <button class="indicator-dot" onclick="openSend()" aria-label="Send" role="tab"></button>
+    <button class="indicator-dot" onclick="goTo('screen-decoder')" aria-label="Loan decoder" role="tab"></button>
+    <button class="indicator-dot" onclick="goTo('screen-contacts')" aria-label="Contacts" role="tab"></button>
+  </div>
+
+  <script>
+    const indicatorMap = ['screen-onboarding', 'screen-home', 'screen-send', 'screen-decoder', 'screen-contacts'];
+    const order = ['screen-onboarding','screen-home','screen-send','screen-warning','screen-success','screen-safe','screen-decoder','screen-contacts'];
+
+    const state = { amount: 0, trusted: true, name: 'Juan Reyes' };
+
+    function updateIndicators(id) {
+      document.querySelectorAll('.indicator-dot').forEach((dot, i) => {
+        const on = indicatorMap[i] === id;
+        dot.classList.toggle('active', on);
+        dot.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
+
+    function goTo(id, dir) {
+      const cur = document.querySelector('.screen.active');
+      const next = document.getElementById(id);
+      if (!next || cur === next) return;
+      if (cur) { cur.classList.remove('active'); cur.classList.add(dir === 'back' ? 'exit-right' : 'exit-left'); }
+      next.classList.remove('exit-left', 'exit-right');
+      void next.offsetWidth; // reflow so the transition plays
+      next.classList.add('active');
+      window.clearTimeout(goTo._t);
+      goTo._t = window.setTimeout(() => {
+        document.querySelectorAll('.screen.exit-left, .screen.exit-right').forEach((s) => s.classList.remove('exit-left', 'exit-right'));
+      }, 420);
+      updateIndicators(id);
+    }
+
+    function renderAmount() {
+      const txt = '₱' + state.amount.toLocaleString('en-US');
+      document.querySelectorAll('[data-amount]').forEach((el) => { el.textContent = txt; });
+    }
+
+    function press(k) {
+      if (k === 'del') state.amount = Math.floor(state.amount / 10);
+      else if (k === '00') state.amount = Math.min(state.amount * 100, 9999999);
+      else state.amount = Math.min(state.amount * 10 + parseInt(k, 10), 9999999);
+      renderAmount();
+    }
+
+    function pickRecipient(btn) {
+      document.querySelectorAll('.rchip').forEach((c) => c.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.trusted = btn.dataset.trusted === '1';
+      state.name = btn.dataset.name;
+    }
+
+    function openSend() {
+      state.amount = 0;
+      renderAmount();
+      goTo('screen-send');
+    }
+
+    function continueSend() {
+      const btn = document.getElementById('sendContinue');
+      if (state.amount <= 0) { btn.classList.add('shake'); setTimeout(() => btn.classList.remove('shake'), 420); return; }
+      // The core UX: trusted contacts send instantly; unknown + sizeable amount triggers the scam check
+      if (!state.trusted && state.amount >= 3000) {
+        document.querySelectorAll('[data-warn-name]').forEach((el) => el.textContent = state.name);
+        goTo('screen-warning');
+      } else {
+        goSuccess();
+      }
+    }
+
+    function goSuccess() {
+      document.querySelectorAll('[data-success-name]').forEach((el) => el.textContent = state.name);
+      renderAmount();
+      goTo('screen-success');
+    }
+
+    function toggleAudio(el) {
+      const playing = el.classList.toggle('playing');
+      el.querySelector('.audio-label').textContent = playing ? 'Playing…' : 'Listen to this';
+      if (playing) setTimeout(() => { el.classList.remove('playing'); el.querySelector('.audio-label').textContent = 'Listen to this'; }, 2600);
+    }
+
+    // keyboard support for clickable divs
+    document.querySelectorAll('.clickable[role="button"]').forEach((el) => {
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
+    });
+
+    // physical keyboard number entry on the send screen
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('screen-send').classList.contains('active')) return;
+      if (e.key >= '0' && e.key <= '9') press(e.key);
+      else if (e.key === 'Backspace') press('del');
+      else if (e.key === 'Enter') continueSend();
+    });
+
+    // swipe between the main screens
+    let tsx = 0;
+    const sc = document.querySelector('.screens-container');
+    sc.addEventListener('touchstart', (e) => { tsx = e.changedTouches[0].screenX; }, { passive: true });
+    sc.addEventListener('touchend', (e) => {
+      const diff = tsx - e.changedTouches[0].screenX;
+      if (Math.abs(diff) < 80) return;
+      const cur = document.querySelector('.screen.active');
+      const i = order.indexOf(cur ? cur.id : '');
+      if (diff > 0 && i < order.length - 1) goTo(order[i + 1]);
+      else if (diff < 0 && i > 0) goTo(order[i - 1], 'back');
+    }, { passive: true });
+
+    renderAmount();
+  </script>
+</body>
+</html>

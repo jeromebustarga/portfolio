@@ -77,6 +77,15 @@
   .story-row .story-image { margin: 0; }
   @media (max-width: 700px) { .story-row { grid-template-columns: 1fr; } }
 
+  /* Interactive prototype launch + embed (UX/UI case studies) */
+  .proto-block { text-align: center; margin: 8px 0 36px; }
+  .proto-launch { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 22px; padding: 13px 26px; background: var(--accent); color: #060606; border-radius: 100px; font-weight: 600; font-size: 14px; letter-spacing: 0.02em; text-decoration: none; transition: filter 0.25s ease, transform 0.25s var(--ease); }
+  .proto-launch:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  .proto-embed { width: 100%; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: #0a0a0a; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+  .proto-embed iframe { width: 100%; height: 900px; border: 0; display: block; }
+  .proto-caption { font-size: 12px; color: var(--text-faint); margin-top: 12px; }
+  @media (max-width: 700px) { .proto-embed iframe { height: 720px; } }
+
   /* Intro wipe on first load (auto, no click) */
   .intro-wipe { position: fixed; inset: 0; z-index: 9500; background: var(--bg); display: flex; align-items: center; justify-content: center; transform: translateY(0); animation: introUp 0.9s 0.6s var(--ease) forwards; }
   .intro-wipe img { width: 70px; height: auto; filter: drop-shadow(0 0 26px rgba(244,121,33,0.7)); animation: introLogo 0.9s ease forwards; }
@@ -239,6 +248,27 @@
 /* ---- Web Design: project data + modal ---- */
 const projects = [
   {
+    id: 0,
+    title: "Liwanag — Anti-Scam Money App",
+    category: "UX/UI · Mobile App",
+    year: "2024",
+    image: "images/liwanag-thumb.png",
+    prototype: "liwanag.html",
+    images: ["images/liwanag-thumb.png"],
+    description: `
+    <h3>The problem</h3>
+    <p>Scams and predatory lenders disproportionately target people who are new to digital money — overseas-worker families, seniors, first-time smartphone users. Most wallet apps optimize for <em>speed</em>, which is exactly what makes a scam transfer so easy to complete.</p>
+    <h3>The idea</h3>
+    <p>Liwanag (Filipino for <strong>light</strong>) is a money app that puts <strong>safety before speed</strong> — adding a moment of friction exactly where it matters, and removing it where things are safe.</p>
+    <h3>Key flows</h3>
+    <p><strong>Safe send.</strong> Sending to a verified family member goes through instantly. Sending a large amount to an unknown number triggers a full-screen <em>"WAIT — do you really know this person?"</em> interception that surfaces the red flags before any money moves.</p>
+    <p><strong>Loan TRUTH decoder.</strong> A loan offer is broken down to its real cost — hidden "processing" and "service" fees included — right next to fair terms, so the borrower sees exactly what they'd save.</p>
+    <p><strong>Trusted contacts.</strong> Family is verified once, so everyday transfers stay fast while strangers stay gated.</p>
+    <h3>Craft</h3>
+    <p>Designed and built as a fully interactive prototype — real screen-to-screen flows, a working amount keypad, branching scam logic, and accessibility touches (focus states, reduced-motion, safe-area insets, high-contrast). Try it below.</p>`,
+    tools: ["UX Design", "UI Design", "Interaction Design", "Prototyping", "Mobile"]
+  },
+  {
     id: 1,
     title: "AeroTech — Responsive Website",
     category: "Web Design · UI/UX",
@@ -378,9 +408,15 @@ const modalContent = document.getElementById("modalContent");
 const modalClose = document.getElementById("modalClose");
 
 function openModal(item) {
-  const isCaseStudy = item.images && item.images.length > 1;
+  const isCaseStudy = item.prototype || (item.images && item.images.length > 1);
   modalContent.classList.toggle("is-case-study", isCaseStudy);
   if (isCaseStudy) {
+    const protoBlock = item.prototype ? `
+        <div class="proto-block">
+          <a class="proto-launch" href="${item.prototype}" target="_blank" rel="noopener">▶ Launch interactive prototype</a>
+          <div class="proto-embed"><iframe src="${item.prototype}" title="${item.title} — interactive prototype" loading="lazy"></iframe></div>
+          <p class="proto-caption">Live, clickable prototype — tap through the flows above or open it full-screen.</p>
+        </div>` : "";
     modalContent.innerHTML = `
       <div class="modal-case-study">
         <div class="modal-header">
@@ -389,6 +425,7 @@ function openModal(item) {
           <div class="modal-year">${item.year}</div>
         </div>
         <div class="modal-story">${item.description}</div>
+        ${protoBlock}
         <div class="modal-tools">
           <h4>Tools &amp; Methods</h4>
           <div class="tool-tags">${item.tools.map((t) => `<span class="tool-tag">${t}</span>`).join("")}</div>
