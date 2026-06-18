@@ -29,7 +29,7 @@
     html { -webkit-text-size-adjust: 100%; }
     body {
       font-family: var(--font-body);
-      background: radial-gradient(120% 80% at 50% 0%, #14241a 0%, #0a0a0a 60%);
+      background: radial-gradient(130% 90% at 50% 0%, #123524 0%, #0a1c12 45%, #06120c 100%);
       min-height: 100vh; min-height: 100dvh;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 2rem; color: #fff;
@@ -54,7 +54,7 @@
     .iphone-frame::after { content: ''; position: absolute; right: -3px; top: 198px; width: 3px; height: 64px; background: #2a2a2c; border-radius: 0 2px 2px 0; }
     .iphone-screen { width: 100%; height: 100%; background: var(--bg-dark); border-radius: 44px; overflow: hidden; position: relative; }
     /* Dynamic Island + home indicator */
-    .dynamic-island { position: absolute; top: 13px; left: 50%; transform: translateX(-50%); width: 120px; height: 34px; background: #000; border-radius: 20px; z-index: 200; }
+    .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 125px; height: 35px; background: #000; border-radius: 20px; z-index: 200; box-shadow: inset 0 0 1px rgba(255,255,255,0.15); }
     .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 132px; height: 5px; background: rgba(255,255,255,0.4); border-radius: 3px; z-index: 200; }
     .screens-container { width: 100%; height: 100%; position: relative; }
 
@@ -68,7 +68,10 @@
     .screen.exit-left { transform: translateX(-26%); opacity: 0; }
     .screen.exit-right { transform: translateX(100%); opacity: 0; }
 
-    .status-bar { padding: 19px 30px 8px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: var(--white); position: relative; z-index: 10; }
+    .status-bar { height: 54px; padding: 0 30px 7px; display: flex; align-items: flex-end; justify-content: space-between; font-size: 15px; font-weight: 600; color: var(--white); position: relative; z-index: 10; }
+    .sb-time { letter-spacing: 0.01em; }
+    .sb-icons { display: inline-flex; align-items: center; gap: 6px; }
+    .sb-icons svg { display: block; }
     .pattern-stripe { height: 5px; background: repeating-linear-gradient(90deg, var(--orange) 0px, var(--orange) 10px, var(--yellow) 10px, var(--yellow) 20px, var(--cyan) 20px, var(--cyan) 30px, var(--pink) 30px, var(--pink) 40px); }
     .screen-content { flex: 1; padding: 20px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; -webkit-overflow-scrolling: touch; }
 
@@ -274,7 +277,7 @@
 
           <!-- ONBOARDING -->
           <div class="screen active" id="screen-onboarding">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="onboarding-logo">💡</div>
@@ -292,7 +295,7 @@
 
           <!-- HOME -->
           <div class="screen" id="screen-home">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="home-header"><p class="home-greeting">Good morning</p><h1 class="home-name">MARIA</h1></div>
@@ -330,7 +333,7 @@
 
           <!-- SEND -->
           <div class="screen" id="screen-send">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-home','back')" aria-label="Go back">←</button><h1 class="screen-title">SEND MONEY</h1></div>
@@ -367,7 +370,7 @@
 
           <!-- WARNING -->
           <div class="screen" id="screen-warning">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-send','back')" aria-label="Go back">←</button><h1 class="screen-title">HOLD ON</h1></div>
@@ -394,7 +397,7 @@
 
           <!-- SUCCESS -->
           <div class="screen" id="screen-success">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="result">
@@ -409,7 +412,7 @@
 
           <!-- SAFE (scam avoided) -->
           <div class="screen" id="screen-safe">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="result">
@@ -425,7 +428,7 @@
 
           <!-- LOAN DECODER -->
           <div class="screen" id="screen-decoder">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-home','back')" aria-label="Go back">←</button><h1 class="screen-title">TRUTH</h1></div>
@@ -453,7 +456,7 @@
 
           <!-- CONTACTS -->
           <div class="screen" id="screen-contacts">
-            <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="status-bar"><span class="sb-time">9:41</span><span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.2c2.6 0 5 1 6.8 2.7l-1.5 1.5C12.4 5 10.5 4.2 8.5 4.2S4.6 5 3.2 6.4L1.7 4.9C3.5 3.2 5.9 2.2 8.5 2.2zm0 3.7c1.4 0 2.6.5 3.6 1.4l-1.5 1.5c-.5-.5-1.3-.9-2.1-.9s-1.6.4-2.1.9L4.9 7.3c1-.9 2.2-1.4 3.6-1.4zm0 3.5l1.5 1.5-1.5 1.5L7 10.9z"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.6" y="1.3" width="21" height="9.4" rx="2.6" stroke="currentColor" stroke-opacity="0.5"/><rect x="2.4" y="3.1" width="15.5" height="5.8" rx="1.2" fill="currentColor"/><rect x="23" y="4.3" width="1.6" height="3.4" rx="0.8" fill="currentColor" fill-opacity="0.5"/></svg></span></div>
             <div class="pattern-stripe"></div>
             <div class="screen-content">
               <div class="screen-header"><button class="back-btn clickable" onclick="goTo('screen-home','back')" aria-label="Go back">←</button><h1 class="screen-title">FAMILY</h1></div>
