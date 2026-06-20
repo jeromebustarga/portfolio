@@ -265,6 +265,21 @@ nav.hidden { transform: translateY(-110%); }
   .tunnel-progress { display: none; }
 }
 
+/* ============================================================ Scroll-scrub intro video */
+.scrub-section { position: relative; height: 420vh; z-index: 1; }
+.scrub-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #000; }
+.scrub-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; }
+.scrub-veil { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; will-change: opacity;
+  background: radial-gradient(120% 95% at 50% 42%, transparent 0%, rgba(6,6,6,0.45) 62%, rgba(6,6,6,0.9) 100%); }
+.scrub-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 3; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
+@media (max-width: 760px) { .scrub-section { height: 300vh; } }
+@media (prefers-reduced-motion: reduce) {
+  .scrub-section { height: auto; }
+  .scrub-sticky { position: static; height: 100vh; }
+  .scrub-sticky .hero { opacity: 1; }
+  .scrub-veil { opacity: 0.9; }
+}
+
 /* ============================================================ Hologram forest — fly deep into glowing woods */
 .forest-section { position: relative; height: 440vh; z-index: 1; }
 .forest-sticky {
@@ -789,75 +804,22 @@ img.fe, .fe img { display: block; }
 </nav>
 
 <main id="top">
-  <!-- ENTRY: the hero is the backdrop; the hologram forest flies in front and clears as you scroll deeper -->
-  <section class="forest-section" id="forest">
-    <div class="forest-sticky">
-      <!-- HERO backdrop -->
+  <!-- ENTRY: scroll-scrubbed 3D motion intro (illustration → 3D animation); hero reveals at the end -->
+  <section class="scrub-section" id="scrub">
+    <div class="scrub-sticky">
+      <video class="scrub-video" id="scrubVideo" muted loop playsinline preload="auto" poster="videos/hero-scroll-poster.jpg" aria-hidden="true">
+        <source src="videos/hero-scroll.mp4" type="video/mp4">
+      </video>
+      <div class="scrub-veil" id="scrubVeil" aria-hidden="true"></div>
+      <!-- HERO (reveals over the final frame) -->
       <div class="hero" id="entryHero">
-        <div class="hero-deco" aria-hidden="true">
-          <span class="deco" style="top:20%;left:9%">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><path class="tb a-spin" d="M32 3 L37 24 L58 16 L42 32 L58 48 L37 40 L32 61 L27 40 L6 48 L22 32 L6 16 L27 24 Z" fill="#f47921"/></svg>
-          </span>
-          <span class="deco" style="top:26%;right:8%">
-            <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle class="tb a-pulse" cx="26" cy="26" r="18" stroke="#f47921" stroke-width="6"/></svg>
-          </span>
-          <span class="deco" style="bottom:24%;left:13%">
-            <svg width="76" height="30" viewBox="0 0 76 30" fill="none"><path class="a-dash" d="M3 15 Q14 3 25 15 T47 15 T69 15" stroke="rgba(244,241,234,.55)" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
-          </span>
-          <span class="deco" style="bottom:30%;right:14%">
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path class="tb a-bob" d="M22 5 L39 37 L5 37 Z" stroke="rgba(244,241,234,.5)" stroke-width="4" stroke-linejoin="round" fill="none"/></svg>
-          </span>
-          <span class="deco" style="top:14%;right:30%">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle class="tb a-twinkle" cx="11" cy="11" r="6" fill="#ff9642"/></svg>
-          </span>
-        </div>
         <div class="hero__eyebrow reveal"><span>Developer</span><span class="sep">/</span><span>Designer</span><span class="sep">/</span><span>San Diego, CA</span></div>
         <h1 class="hero__title">
           <span class="line mask"><span>Jerome's</span></span>
           <span class="line mask outline"><span>World<em class="dot-orange">.</em></span></span>
         </h1>
-        <p class="hero__sub reveal" style="--i:2">A multidisciplinary maker crafting digital experiences that blend code &amp; craft. Move your cursor — you bring the light.</p>
+        <p class="hero__sub reveal" style="--i:2">A multidisciplinary maker crafting digital experiences that blend code &amp; craft.</p>
         <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
-      </div>
-      <!-- dim/forest layer: gradient bg + stars + holograms; covers the hero at first, fades to reveal it -->
-      <div class="forest-layer" id="forestLayer" aria-hidden="true">
-        <div class="forest-stars"></div>
-        <div class="forest-horizon"></div>
-        <div class="forest-trail"></div>
-        <div class="forest-ground"></div>
-        <div class="forest-scene" id="forestScene"></div>
-        <div class="forest-scanlines"></div>
-      </div>
-
-      <!-- Composed entry frame (the first establishing shot — flies open as you scroll) -->
-      <div class="forest-entry" id="forestEntry" aria-hidden="true">
-        <!-- TOP: cloud band -->
-        <img class="fe fe-drift" style="left:28vw; top:0; width:23vw; z-index:8;  --t:30s" src="assets/forest/cloud%20(3).png" alt="">
-        <img class="fe fe-drift" style="left:11vw; top:6vh; width:25vw; z-index:10; --t:26s" src="assets/forest/cloud%20(1).png" alt="">
-        <img class="fe fe-drift" style="left:37vw; top:3vh; width:30vw; z-index:11; --t:34s" src="assets/forest/cloud.png" alt="">
-        <img class="fe fe-drift" style="left:56vw; top:5vh; width:27vw; z-index:10; --t:28s" src="assets/forest/cloud%20(2).png" alt="">
-        <img class="fe fe-drift" style="left:70vw; top:10vh; width:21vw; z-index:9; --t:32s" src="assets/forest/cloud%20(4).png" alt="">
-
-        <!-- TOP: sun, planets & orbs -->
-        <img class="fe fe-float" style="left:22vw; top:3vh; width:12vw; z-index:12; --t:9s"  src="assets/forest/planet.png" alt="">
-        <img class="fe fe-float" style="left:44vw; top:7vh; width:17vw; z-index:13; --t:11s" src="assets/forest/sun.png" alt="">
-        <img class="fe fe-float" style="left:67vw; top:8vh; width:8vw;  z-index:13; --t:7s"  src="assets/forest/crystal%20(1).png" alt="">
-        <img class="fe fe-float" style="right:3vw; top:1vh; width:10vw; z-index:12; --t:10s" src="assets/forest/planet%20(1).png" alt="">
-        <img class="fe fe-float" style="right:1vw; top:9vh; width:5vw;  z-index:12; --t:8s"  src="assets/forest/crystal%20(2).png" alt="">
-        <img class="fe fe-float" style="left:15vw; top:11vh; width:4.5vw; z-index:12; --t:6.5s" src="assets/forest/crystal%20(3).png" alt="">
-
-        <!-- RIGHT: mirrored arch cliff behind, palms in front, plants -->
-        <span class="fe flip" style="right:-6vw; bottom:10vh; height:92vh; z-index:18;"><img class="fe-float" style="height:100%; --t:12s" src="assets/forest/island.png" alt=""></span>
-        <img class="fe fe-sway" style="right:-4vw; bottom:-3vh; height:82vh; z-index:21; --t:7s" src="assets/forest/coconut.png" alt="">
-        <span class="fe flip" style="right:13vw; bottom:-3vh; height:54vh; z-index:20;"><img class="fe-sway" style="height:100%; --t:8s" src="assets/forest/coconut.png" alt=""></span>
-        <img class="fe fe-sway" style="right:-1vw; bottom:-3vh; width:19vw; z-index:23; --t:5.5s" src="assets/forest/plant%20(3).png" alt="">
-        <img class="fe fe-sway" style="right:12vw; bottom:-4vh; width:14vw; z-index:24; --t:6s" src="assets/forest/plant%20(8).png" alt="">
-
-        <!-- LEFT: island arch + stairs, a foreground pillar, plants -->
-        <img class="fe fe-float" style="left:-3vw; bottom:-3vh; height:106vh; z-index:20; --t:13s" src="assets/forest/island.png" alt="">
-        <img class="fe fe-float" style="left:5vw; bottom:-5vh; height:74vh; z-index:21; --t:15s" src="assets/forest/pillar%20(5).png" alt="">
-        <img class="fe fe-sway" style="left:-2vw; bottom:-3vh; width:21vw; z-index:22; --t:5.5s" src="assets/forest/plant%20(5).png" alt="">
-        <img class="fe fe-sway" style="left:10vw; bottom:-4vh; width:15vw; z-index:23; --t:6.5s" src="assets/forest/plant%20(11).png" alt="">
       </div>
     </div>
   </section>
@@ -1623,6 +1585,28 @@ img.fe, .fe img { display: block; }
   const entryHero = document.getElementById("entryHero");
   const forestProgress = document.getElementById("forestProgress");
   const forestEntry = document.getElementById("forestEntry");
+
+  /* Scroll-scrub intro video */
+  const scrubSection = document.querySelector(".scrub-section");
+  const scrubVideo = document.getElementById("scrubVideo");
+  const scrubVeil = document.getElementById("scrubVeil");
+  let scrubDur = 0, scrubReady = false, scrubP = 0;
+  const scrubMobile = window.matchMedia("(max-width: 760px)").matches || isTouch;
+  if (scrubVideo) {
+    const setDur = () => { if (scrubVideo.duration && isFinite(scrubVideo.duration)) { scrubDur = scrubVideo.duration; scrubReady = true; } };
+    scrubVideo.addEventListener("loadedmetadata", setDur);
+    setDur();
+    if (prefersReduced) {
+      if (entryHero) entryHero.style.opacity = "1";
+      if (scrubVeil) scrubVeil.style.opacity = "0.9";
+      document.body.classList.remove("chrome-hidden");
+    } else if (scrubMobile) {
+      // phones: scrubbing is janky — let it loop as a light background instead
+      scrubVideo.play().catch(() => {});
+    } else {
+      scrubVideo.pause();
+    }
+  }
   let forestItems = [];
   let forestGroups = 1;
   let forestP = 0;
@@ -1983,7 +1967,8 @@ img.fe, .fe img { display: block; }
     if (logoNav) {
       // "Jerome Bustarga" through the forest + hero; flips to "It's Jerome's World"
       // only once you scroll down past the hero into the content
-      const fr = forestSection ? forestSection.getBoundingClientRect() : null;
+      const intro = scrubSection || forestSection;
+      const fr = intro ? intro.getBoundingClientRect() : null;
       const pastHero = fr ? fr.bottom <= vh - 40 : y > 120;
       logoNav.classList.toggle("scrolled", pastHero);
     }
@@ -2065,6 +2050,31 @@ img.fe, .fe img { display: block; }
             `translate3d(calc(-50% + ${xo.toFixed(1)}px), calc(-50% + ${yo.toFixed(1)}px), ${z.toFixed(1)}px)`;
         }
         if (tunnelProgress) tunnelProgress.style.width = (p * 100).toFixed(1) + "%";
+      }
+    }
+
+    if (scrubSection && scrubVideo && !prefersReduced) {
+      const r = scrubSection.getBoundingClientRect();
+      const total = scrubSection.offsetHeight - vh;
+      const pTarget = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
+      scrubP += (pTarget - scrubP) * 0.14;
+      if (Math.abs(pTarget - scrubP) < 0.0004) scrubP = pTarget;
+      if (r.top < vh && r.bottom > 0) {
+        // scrub the video frame to scroll position (desktop); phones let it loop
+        if (scrubReady && !scrubMobile) {
+          const t = Math.min(scrubP * scrubDur, scrubDur - 0.04);
+          if (Math.abs((scrubVideo.currentTime || 0) - t) > 0.012) { try { scrubVideo.currentTime = t; } catch (e) {} }
+        }
+        // hero + chrome reveal over the final stretch
+        const hp = Math.min(Math.max((scrubP - 0.82) / 0.16, 0), 1);
+        const he = hp * hp * (3 - 2 * hp);
+        if (entryHero) { entryHero.style.opacity = he.toFixed(3); entryHero.style.transform = `scale(${(0.94 + 0.06 * he).toFixed(3)})`; }
+        if (scrubVeil) scrubVeil.style.opacity = (he * 0.92).toFixed(3);
+        document.body.classList.toggle("chrome-hidden", he < 0.98);
+      } else if (r.bottom <= 0) {
+        if (entryHero) { entryHero.style.opacity = "1"; entryHero.style.transform = "none"; }
+        if (scrubVeil) scrubVeil.style.opacity = "0.92";
+        document.body.classList.remove("chrome-hidden");
       }
     }
 
