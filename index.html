@@ -272,6 +272,14 @@ nav.hidden { transform: translateY(-110%); }
 .scrub-veil { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; will-change: opacity;
   background: radial-gradient(120% 95% at 50% 42%, transparent 0%, rgba(6,6,6,0.45) 62%, rgba(6,6,6,0.9) 100%); }
 .scrub-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 3; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
+/* scroll-synced caption overlays */
+.scrub-caps { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.scrub-cap { position: absolute; left: 50%; bottom: 13vh; transform: translateX(-50%) translateY(18px); width: min(88vw, 700px); text-align: center; opacity: 0; will-change: opacity, transform; }
+.scrub-cap .sc-label { display: inline-block; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; text-shadow: 0 2px 18px rgba(0,0,0,0.7); }
+.scrub-cap .sc-title { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 7vw, 88px); line-height: 0.94; letter-spacing: -0.02em; color: var(--text); text-shadow: 0 4px 32px rgba(0,0,0,0.65); }
+.scrub-cap .sc-link { display: inline-block; margin-top: 20px; font-size: 14px; color: var(--text); border: 1px solid rgba(255,255,255,0.25); padding: 11px 24px; border-radius: 100px; pointer-events: auto; background: rgba(6,6,6,0.35); backdrop-filter: blur(6px); transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.scrub-cap .sc-link:hover { background: var(--accent); border-color: var(--accent); color: #060606; }
+@media (max-width: 760px) { .scrub-cap { bottom: 16vh; } }
 @media (max-width: 760px) { .scrub-section { height: 300vh; } }
 @media (prefers-reduced-motion: reduce) {
   .scrub-section { height: auto; }
@@ -811,6 +819,28 @@ img.fe, .fe img { display: block; }
         <source src="videos/hero-scroll.mp4" type="video/mp4">
       </video>
       <div class="scrub-veil" id="scrubVeil" aria-hidden="true"></div>
+      <!-- Scroll-synced captions: each appears over its part of the animation -->
+      <div class="scrub-caps" id="scrubCaps">
+        <div class="scrub-cap" data-in="0" data-out="0.14">
+          <span class="sc-label">Developer / Designer</span>
+          <h2 class="sc-title">Step inside<br>my head.</h2>
+        </div>
+        <div class="scrub-cap" data-in="0.28" data-out="0.45">
+          <span class="sc-label">The analytical eye</span>
+          <h2 class="sc-title">I build.</h2>
+          <a class="sc-link" href="webdesign.html" data-link>Web Design &amp; UI/UX →</a>
+        </div>
+        <div class="scrub-cap" data-in="0.49" data-out="0.65">
+          <span class="sc-label">The creative eye</span>
+          <h2 class="sc-title">I create.</h2>
+          <a class="sc-link" href="illustrations.html" data-link>Illustrations →</a>
+        </div>
+        <div class="scrub-cap" data-in="0.68" data-out="0.80">
+          <span class="sc-label">Where they meet</span>
+          <h2 class="sc-title">Code × Craft.</h2>
+          <a class="sc-link" href="#work" data-link>See the work →</a>
+        </div>
+      </div>
       <!-- HERO (reveals over the final frame) -->
       <div class="hero" id="entryHero">
         <div class="hero__eyebrow reveal"><span>Developer</span><span class="sep">/</span><span>Designer</span><span class="sep">/</span><span>San Diego, CA</span></div>
@@ -1590,6 +1620,8 @@ img.fe, .fe img { display: block; }
   const scrubSection = document.querySelector(".scrub-section");
   const scrubVideo = document.getElementById("scrubVideo");
   const scrubVeil = document.getElementById("scrubVeil");
+  const scrubCaps = document.getElementById("scrubCaps");
+  const scrubCapEls = scrubCaps ? Array.from(scrubCaps.querySelectorAll(".scrub-cap")) : [];
   let scrubDur = 0, scrubReady = false, scrubP = 0;
   const scrubMobile = window.matchMedia("(max-width: 760px)").matches || isTouch;
   if (scrubVideo) {
@@ -2065,13 +2097,25 @@ img.fe, .fe img { display: block; }
           const t = Math.min(scrubP * scrubDur, scrubDur - 0.04);
           if (Math.abs((scrubVideo.currentTime || 0) - t) > 0.012) { try { scrubVideo.currentTime = t; } catch (e) {} }
         }
+        // scroll-synced captions fade in/out over their ranges
+        for (let i = 0; i < scrubCapEls.length; i++) {
+          const c = scrubCapEls[i];
+          const a = parseFloat(c.dataset.in) || 0, b = parseFloat(c.dataset.out) || 1, fd = 0.05;
+          let o = 0;
+          if (scrubP > a - fd && scrubP < b + fd) {
+            o = Math.max(0, Math.min(1, Math.min((scrubP - (a - fd)) / fd, ((b + fd) - scrubP) / fd)));
+          }
+          c.style.opacity = o.toFixed(3);
+          c.style.transform = `translateX(-50%) translateY(${((1 - o) * 18).toFixed(1)}px)`;
+        }
         // hero + chrome reveal over the final stretch
         const hp = Math.min(Math.max((scrubP - 0.82) / 0.16, 0), 1);
         const he = hp * hp * (3 - 2 * hp);
         if (entryHero) { entryHero.style.opacity = he.toFixed(3); entryHero.style.transform = `scale(${(0.94 + 0.06 * he).toFixed(3)})`; }
-        if (scrubVeil) scrubVeil.style.opacity = (he * 0.92).toFixed(3);
+        if (scrubVeil) scrubVeil.style.opacity = Math.max(he * 0.92, 0.28).toFixed(3);
         document.body.classList.toggle("chrome-hidden", he < 0.98);
       } else if (r.bottom <= 0) {
+        for (const c of scrubCapEls) c.style.opacity = "0";
         if (entryHero) { entryHero.style.opacity = "1"; entryHero.style.transform = "none"; }
         if (scrubVeil) scrubVeil.style.opacity = "0.92";
         document.body.classList.remove("chrome-hidden");
