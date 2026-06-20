@@ -268,12 +268,28 @@ nav.hidden { transform: translateY(-110%); }
 /* ============================================================ Scroll-scrub intro video */
 .scrub-section { position: relative; height: 420vh; z-index: 1; }
 .scrub-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #000; }
-.scrub-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; }
+.scrub-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; will-change: opacity; }
 .scrub-veil { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; will-change: opacity;
   background: radial-gradient(120% 95% at 50% 42%, transparent 0%, rgba(6,6,6,0.45) 62%, rgba(6,6,6,0.9) 100%); }
-.scrub-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 3; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
+/* hero background image — fades in as the video fades out at the end of the scrub */
+.scrub-hero-bg { position: absolute; inset: 0; z-index: 3; opacity: 0; will-change: opacity;
+  background: #f1e3cf url("images/hero-portrait.png") center center / cover no-repeat; }
+.scrub-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 5; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
+/* hero text restyled for the light portrait background, placed in the empty right area */
+.scrub-sticky .hero { justify-content: center; align-items: flex-end; text-align: right; padding: 120px 7vw 96px; }
+.scrub-sticky .hero__eyebrow { justify-content: flex-end; color: #2a3c54; }
+.scrub-sticky .hero__title { color: #122844; }
+.scrub-sticky .hero__sub { color: #41526a; margin-left: auto; margin-right: 0; }
+.scrub-sticky .hero__scroll { color: #41526a; }
+.scrub-sticky .hero__scroll i { background: rgba(18,40,68,0.25); }
+@media (max-width: 760px) {
+  .scrub-sticky .hero { align-items: center; text-align: center; padding: 120px 24px 96px; }
+  .scrub-sticky .hero__eyebrow { justify-content: center; }
+  .scrub-sticky .hero__sub { margin: 32px auto 40px; }
+  .scrub-hero-bg { background-position: 28% center; }
+}
 /* scroll-synced caption overlays */
-.scrub-caps { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.scrub-caps { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
 .scrub-cap { position: absolute; left: 50%; bottom: 13vh; transform: translateX(-50%) translateY(18px); width: min(88vw, 700px); text-align: center; opacity: 0; will-change: opacity, transform; }
 .scrub-cap .sc-label { display: inline-block; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; text-shadow: 0 2px 18px rgba(0,0,0,0.7); }
 .scrub-cap .sc-title { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 7vw, 88px); line-height: 0.94; letter-spacing: -0.02em; color: var(--text); text-shadow: 0 4px 32px rgba(0,0,0,0.65); }
@@ -819,6 +835,7 @@ img.fe, .fe img { display: block; }
         <source src="videos/hero-scroll.mp4" type="video/mp4">
       </video>
       <div class="scrub-veil" id="scrubVeil" aria-hidden="true"></div>
+      <div class="scrub-hero-bg" id="scrubHeroBg" aria-hidden="true"></div>
       <!-- Scroll-synced captions: each appears over its part of the animation -->
       <div class="scrub-caps" id="scrubCaps">
         <div class="scrub-cap" data-in="0" data-out="0.14">
@@ -1620,6 +1637,7 @@ img.fe, .fe img { display: block; }
   const scrubSection = document.querySelector(".scrub-section");
   const scrubVideo = document.getElementById("scrubVideo");
   const scrubVeil = document.getElementById("scrubVeil");
+  const scrubHeroBg = document.getElementById("scrubHeroBg");
   const scrubCaps = document.getElementById("scrubCaps");
   const scrubCapEls = scrubCaps ? Array.from(scrubCaps.querySelectorAll(".scrub-cap")) : [];
   let scrubDur = 0, scrubReady = false, scrubP = 0;
@@ -1630,7 +1648,9 @@ img.fe, .fe img { display: block; }
     setDur();
     if (prefersReduced) {
       if (entryHero) entryHero.style.opacity = "1";
-      if (scrubVeil) scrubVeil.style.opacity = "0.9";
+      if (scrubHeroBg) scrubHeroBg.style.opacity = "1";
+      scrubVideo.style.opacity = "0";
+      if (scrubVeil) scrubVeil.style.opacity = "0";
       document.body.classList.remove("chrome-hidden");
     } else if (scrubMobile) {
       // phones: scrubbing is janky — let it loop as a light background instead
@@ -2108,16 +2128,21 @@ img.fe, .fe img { display: block; }
           c.style.opacity = o.toFixed(3);
           c.style.transform = `translateX(-50%) translateY(${((1 - o) * 18).toFixed(1)}px)`;
         }
-        // hero + chrome reveal over the final stretch
+        // end stretch: video fades out, portrait hero image + text fade in
         const hp = Math.min(Math.max((scrubP - 0.82) / 0.16, 0), 1);
         const he = hp * hp * (3 - 2 * hp);
-        if (entryHero) { entryHero.style.opacity = he.toFixed(3); entryHero.style.transform = `scale(${(0.94 + 0.06 * he).toFixed(3)})`; }
-        if (scrubVeil) scrubVeil.style.opacity = Math.max(he * 0.92, 0.28).toFixed(3);
+        if (entryHero) { entryHero.style.opacity = he.toFixed(3); entryHero.style.transform = `scale(${(0.96 + 0.04 * he).toFixed(3)})`; }
+        if (scrubHeroBg) scrubHeroBg.style.opacity = he.toFixed(3);
+        if (scrubVideo) scrubVideo.style.opacity = (1 - he).toFixed(3);
+        // dark veil only while scrubbing the video (caption legibility); clears for the light hero image
+        if (scrubVeil) scrubVeil.style.opacity = (0.3 * (1 - he)).toFixed(3);
         document.body.classList.toggle("chrome-hidden", he < 0.98);
       } else if (r.bottom <= 0) {
         for (const c of scrubCapEls) c.style.opacity = "0";
         if (entryHero) { entryHero.style.opacity = "1"; entryHero.style.transform = "none"; }
-        if (scrubVeil) scrubVeil.style.opacity = "0.92";
+        if (scrubHeroBg) scrubHeroBg.style.opacity = "1";
+        if (scrubVideo) scrubVideo.style.opacity = "0";
+        if (scrubVeil) scrubVeil.style.opacity = "0";
         document.body.classList.remove("chrome-hidden");
       }
     }
