@@ -1641,11 +1641,14 @@ img.fe, .fe img { display: block; }
   const scrubCaps = document.getElementById("scrubCaps");
   const scrubCapEls = scrubCaps ? Array.from(scrubCaps.querySelectorAll(".scrub-cap")) : [];
   let scrubDur = 0, scrubReady = false, scrubP = 0;
+  let scrubSeeking = false, scrubTarget = -1;
   const scrubMobile = window.matchMedia("(max-width: 760px)").matches || isTouch;
   if (scrubVideo) {
     const setDur = () => { if (scrubVideo.duration && isFinite(scrubVideo.duration)) { scrubDur = scrubVideo.duration; scrubReady = true; } };
     scrubVideo.addEventListener("loadedmetadata", setDur);
     setDur();
+    // seek-guard: only request a new frame once the previous seek has landed (kills scrub jank)
+    scrubVideo.addEventListener("seeked", () => { scrubSeeking = false; });
     if (prefersReduced) {
       if (entryHero) entryHero.style.opacity = "1";
       if (scrubHeroBg) scrubHeroBg.style.opacity = "1";
@@ -2114,8 +2117,12 @@ img.fe, .fe img { display: block; }
       if (r.top < vh && r.bottom > 0) {
         // scrub the video frame to scroll position (desktop); phones let it loop
         if (scrubReady && !scrubMobile) {
-          const t = Math.min(scrubP * scrubDur, scrubDur - 0.04);
-          if (Math.abs((scrubVideo.currentTime || 0) - t) > 0.012) { try { scrubVideo.currentTime = t; } catch (e) {} }
+          scrubTarget = Math.min(scrubP * scrubDur, scrubDur - 0.04);
+          if (!scrubSeeking && Math.abs((scrubVideo.currentTime || 0) - scrubTarget) > 0.02) {
+            scrubSeeking = true;
+            if (scrubVideo.fastSeek) scrubVideo.fastSeek(scrubTarget);
+            else scrubVideo.currentTime = scrubTarget;
+          }
         }
         // scroll-synced captions fade in/out over their ranges
         for (let i = 0; i < scrubCapEls.length; i++) {
