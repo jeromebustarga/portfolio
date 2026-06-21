@@ -272,6 +272,7 @@ nav.hidden { transform: translateY(-110%); }
 .scrub-section { position: relative; height: 420vh; z-index: 1; }
 .scrub-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #000; }
 .scrub-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; will-change: opacity; }
+.scrub-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: none; will-change: opacity; }
 .scrub-veil { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; will-change: opacity;
   background: radial-gradient(120% 95% at 50% 42%, transparent 0%, rgba(6,6,6,0.45) 62%, rgba(6,6,6,0.9) 100%); }
 /* hero background image — fades in as the video fades out at the end of the scrub */
@@ -834,6 +835,7 @@ img.fe, .fe img { display: block; }
   <!-- ENTRY: scroll-scrubbed 3D motion intro (illustration → 3D animation); hero reveals at the end -->
   <section class="scrub-section" id="scrub">
     <div class="scrub-sticky">
+      <canvas class="scrub-canvas" id="scrubCanvas" aria-hidden="true"></canvas>
       <video class="scrub-video" id="scrubVideo" muted loop playsinline preload="auto" poster="videos/hero-scroll-poster.jpg" aria-hidden="true">
         <source src="videos/hero-scroll.mp4" type="video/mp4">
       </video>
@@ -1636,22 +1638,56 @@ img.fe, .fe img { display: block; }
   const forestProgress = document.getElementById("forestProgress");
   const forestEntry = document.getElementById("forestEntry");
 
-  /* Scroll-scrub intro video */
+  /* Scroll-scrub intro: image-sequence on canvas (desktop, seamless) / looping video (phones) */
   const scrubSection = document.querySelector(".scrub-section");
   const scrubVideo = document.getElementById("scrubVideo");
+  const scrubCanvas = document.getElementById("scrubCanvas");
   const scrubVeil = document.getElementById("scrubVeil");
   const scrubHeroBg = document.getElementById("scrubHeroBg");
   const scrubCaps = document.getElementById("scrubCaps");
   const scrubCapEls = scrubCaps ? Array.from(scrubCaps.querySelectorAll(".scrub-cap")) : [];
-  let scrubDur = 0, scrubReady = false, scrubP = 0;
-  let scrubSeeking = false, scrubTarget = -1;
+  let scrubP = 0;
   const scrubMobile = window.matchMedia("(max-width: 760px)").matches || isTouch;
-  if (scrubVideo) {
-    const setDur = () => { if (scrubVideo.duration && isFinite(scrubVideo.duration)) { scrubDur = scrubVideo.duration; scrubReady = true; } };
-    scrubVideo.addEventListener("loadedmetadata", setDur);
-    setDur();
-    // seek-guard: only request a new frame once the previous seek has landed (kills scrub jank)
-    scrubVideo.addEventListener("seeked", () => { scrubSeeking = false; });
+  const useSeq = !!scrubCanvas && !prefersReduced && !scrubMobile;
+
+  // image-sequence state + helpers
+  const SEQ_FRAMES = 241;
+  const seqImgs = []; let seqLastIdx = -1, sctx = null;
+  function seqSize() {
+    if (!scrubCanvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    scrubCanvas.width = Math.round(window.innerWidth * dpr);
+    scrubCanvas.height = Math.round(window.innerHeight * dpr);
+  }
+  function seqDraw(img) {
+    if (!sctx || !img || !img.complete || !img.naturalWidth) return;
+    const cw = scrubCanvas.width, ch = scrubCanvas.height;
+    const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
+    let dw, dh, dx, dy;
+    if (cr > ir) { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }   // cover (fill, no bars)
+    else { dh = ch; dw = ch * ir; dy = 0; dx = (cw - dw) / 2; }
+    sctx.drawImage(img, dx, dy, dw, dh);
+  }
+  function seqShow(idx) {
+    const img = seqImgs[idx];
+    if (img && img.complete && img.naturalWidth) { seqDraw(img); return; }
+    for (let j = idx; j >= 0; j--) { const c = seqImgs[j]; if (c && c.complete && c.naturalWidth) { seqDraw(c); return; } }
+  }
+  if (useSeq) {
+    scrubVideo.style.display = "none";
+    scrubCanvas.style.display = "block";
+    sctx = scrubCanvas.getContext("2d");
+    seqSize();
+    const pad = (n) => String(n).padStart(4, "0");
+    for (let i = 1; i <= SEQ_FRAMES; i++) {
+      const img = new Image();
+      if (i === 1) img.onload = () => seqShow(0);
+      img.src = "frames/f-" + pad(i) + ".webp";
+      seqImgs.push(img);
+    }
+    window.addEventListener("resize", () => { seqSize(); seqLastIdx = -1; seqShow(Math.round(scrubP * (SEQ_FRAMES - 1))); });
+  } else if (scrubVideo) {
+    if (scrubCanvas) scrubCanvas.style.display = "none";
     if (prefersReduced) {
       if (entryHero) entryHero.style.opacity = "1";
       if (scrubHeroBg) scrubHeroBg.style.opacity = "1";
@@ -1659,10 +1695,7 @@ img.fe, .fe img { display: block; }
       if (scrubVeil) scrubVeil.style.opacity = "0";
       document.body.classList.remove("chrome-hidden");
     } else if (scrubMobile) {
-      // phones: scrubbing is janky — let it loop as a light background instead
-      scrubVideo.play().catch(() => {});
-    } else {
-      scrubVideo.pause();
+      scrubVideo.play().catch(() => {});  // phones: loop as a light background
     }
   }
   let forestItems = [];
@@ -2111,21 +2144,17 @@ img.fe, .fe img { display: block; }
       }
     }
 
-    if (scrubSection && scrubVideo && !prefersReduced) {
+    if (scrubSection && (scrubVideo || scrubCanvas) && !prefersReduced) {
       const r = scrubSection.getBoundingClientRect();
       const total = scrubSection.offsetHeight - vh;
       const pTarget = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
-      scrubP += (pTarget - scrubP) * 0.14;
+      scrubP += (pTarget - scrubP) * 0.16;
       if (Math.abs(pTarget - scrubP) < 0.0004) scrubP = pTarget;
       if (r.top < vh && r.bottom > 0) {
-        // scrub the video frame to scroll position (desktop); phones let it loop
-        if (scrubReady && !scrubMobile) {
-          scrubTarget = Math.min(scrubP * scrubDur, scrubDur - 0.04);
-          if (!scrubSeeking && Math.abs((scrubVideo.currentTime || 0) - scrubTarget) > 0.02) {
-            scrubSeeking = true;
-            if (scrubVideo.fastSeek) scrubVideo.fastSeek(scrubTarget);
-            else scrubVideo.currentTime = scrubTarget;
-          }
+        // draw the exact frame for this scroll position — no video seeking = seamless
+        if (useSeq) {
+          const idx = Math.round(scrubP * (SEQ_FRAMES - 1));
+          if (idx !== seqLastIdx) { seqShow(idx); seqLastIdx = idx; }
         }
         // scroll-synced captions fade in/out over their ranges
         for (let i = 0; i < scrubCapEls.length; i++) {
@@ -2143,14 +2172,17 @@ img.fe, .fe img { display: block; }
         const he = hp * hp * (3 - 2 * hp);
         if (entryHero) { entryHero.style.opacity = he.toFixed(3); entryHero.style.transform = `scale(${(0.96 + 0.04 * he).toFixed(3)})`; }
         if (scrubHeroBg) scrubHeroBg.style.opacity = he.toFixed(3);
-        if (scrubVideo) scrubVideo.style.opacity = (1 - he).toFixed(3);
-        // dark veil only while scrubbing the video (caption legibility); clears for the light hero image
+        const bgFade = (1 - he).toFixed(3);
+        if (scrubCanvas) scrubCanvas.style.opacity = bgFade;
+        if (scrubVideo) scrubVideo.style.opacity = bgFade;
+        // dark veil only while the motion plays (caption legibility); clears for the light hero image
         if (scrubVeil) scrubVeil.style.opacity = (0.3 * (1 - he)).toFixed(3);
         document.body.classList.toggle("chrome-hidden", he < 0.98);
       } else if (r.bottom <= 0) {
         for (const c of scrubCapEls) c.style.opacity = "0";
         if (entryHero) { entryHero.style.opacity = "1"; entryHero.style.transform = "none"; }
         if (scrubHeroBg) scrubHeroBg.style.opacity = "1";
+        if (scrubCanvas) scrubCanvas.style.opacity = "0";
         if (scrubVideo) scrubVideo.style.opacity = "0";
         if (scrubVeil) scrubVeil.style.opacity = "0";
         document.body.classList.remove("chrome-hidden");
