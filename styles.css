@@ -17,6 +17,9 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { background: var(--bg); }
+/* hide the browser scrollbar (scrolling still works) */
+html { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; display: none; }
 body {
   font-family: var(--sans); color: var(--text); line-height: 1.55; font-weight: 300;
   overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
