@@ -57,6 +57,15 @@ body.cursor-ready .cursor-light { opacity: 1; }
 
 /* ============================================================ Preloader */
 .preloader { position: fixed; inset: 0; z-index: 11000; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; transition: opacity 0.6s var(--ease), visibility 0.6s; }
+/* Under-construction notice */
+.uc-notice { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(140%); z-index: 10050; display: flex; align-items: center; gap: 14px; max-width: min(92vw, 460px); padding: 14px 16px 14px 18px; background: rgba(13,13,13,0.9); border: 1px solid var(--line); border-radius: 16px; backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: transform 0.6s var(--ease), opacity 0.6s var(--ease); opacity: 0; }
+.uc-notice.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.uc-notice__icon { font-size: 20px; flex-shrink: 0; }
+.uc-notice__text { font-size: 13px; line-height: 1.5; color: var(--text); }
+.uc-notice__text strong { color: var(--accent); font-weight: 500; }
+.uc-notice__close { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,0.04); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.3s var(--ease); }
+.uc-notice__close:hover { background: var(--accent); border-color: var(--accent); color: #060606; transform: rotate(90deg); }
+@media (max-width: 600px) { .uc-notice { bottom: 16px; } }
 .preloader.done { opacity: 0; visibility: hidden; }
 .preloader__enter { background: none; border: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 22px; color: inherit; }
 .preloader__bulb { position: relative; display: grid; place-items: center; transition: transform 0.4s var(--ease); }
@@ -2554,6 +2563,25 @@ img.fe, .fe img { display: block; }
       }
     }
   }
+})();
+</script>
+<!-- Under-construction notice -->
+<div class="uc-notice" id="ucNotice" role="status">
+  <span class="uc-notice__icon" aria-hidden="true">🚧</span>
+  <span class="uc-notice__text"><strong>Under construction.</strong> This site is a work in progress — some sections aren't finished yet. Thanks for stopping by!</span>
+  <button class="uc-notice__close" id="ucClose" type="button" aria-label="Dismiss notice"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<script>
+(function () {
+  var n = document.getElementById("ucNotice"), c = document.getElementById("ucClose");
+  if (!n || !c) return;
+  if (sessionStorage.getItem("ucDismissed") === "1") { n.remove(); return; }
+  setTimeout(function () { n.classList.add("show"); }, 2200);
+  c.addEventListener("click", function () {
+    n.classList.remove("show");
+    sessionStorage.setItem("ucDismissed", "1");
+    setTimeout(function () { n.remove(); }, 600);
+  });
 })();
 </script>
 </body>
