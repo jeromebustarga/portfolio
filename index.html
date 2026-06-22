@@ -2157,8 +2157,8 @@ img.fe, .fe img { display: block; }
       const r = scrubSection.getBoundingClientRect();
       const total = scrubSection.offsetHeight - vh;
       const pTarget = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
-      scrubP += (pTarget - scrubP) * 0.16;
-      if (Math.abs(pTarget - scrubP) < 0.0004) scrubP = pTarget;
+      scrubP += (pTarget - scrubP) * 0.25;
+      if (Math.abs(pTarget - scrubP) < 0.0003) scrubP = pTarget;
       if (r.top < vh && r.bottom > 0) {
         // draw the exact frame for this scroll position — no video seeking = seamless
         if (useSeq) {
