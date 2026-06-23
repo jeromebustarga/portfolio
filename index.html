@@ -289,27 +289,40 @@ nav.hidden { transform: translateY(-110%); }
   background: #f1e3cf url("images/jerome-hero.png") center center / cover no-repeat; }
 .scrub-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 5; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
 /* hero text restyled for the light portrait background, placed in the empty right area */
-.scrub-sticky .hero { justify-content: center; align-items: flex-end; text-align: right; padding: 120px 7vw 96px; }
-.scrub-sticky .hero__eyebrow { justify-content: flex-end; color: #2a3c54; }
+.scrub-sticky .hero { justify-content: center; align-items: flex-end; text-align: center; padding: 120px 7vw 96px; }
+.scrub-sticky .hero__eyebrow { justify-content: center; color: #2a3c54; }
 .scrub-sticky .hero__title { color: #122844; }
-.scrub-sticky .hero__sub { color: #41526a; margin-left: auto; margin-right: 0; }
+.scrub-sticky .hero__sub { color: #41526a; }
 .scrub-sticky .hero__scroll { color: #41526a; }
 .scrub-sticky .hero__scroll i { background: rgba(18,40,68,0.25); }
+.scrub-sticky .about__cta { align-self: flex-end; margin-top: 6px; color: #122844; border-color: rgba(18,40,68,0.3); }
+.scrub-sticky .about__cta:hover { background: var(--accent); border-color: var(--accent); color: #060606; }
 @media (max-width: 760px) {
-  .scrub-sticky .hero { align-items: center; text-align: center; padding: 120px 24px 96px; }
-  .scrub-sticky .hero__eyebrow { justify-content: center; }
-  .scrub-sticky .hero__sub { margin: 32px auto 40px; }
+  .scrub-sticky .hero { align-items: center; padding: 120px 24px 96px; }
+  .scrub-sticky .about__cta { align-self: center; }
   .scrub-hero-bg { background-position: 28% center; }
 }
-/* scroll-synced caption overlays */
+/* scroll-synced captions — boxed & scattered */
 .scrub-caps { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
-.scrub-cap { position: absolute; left: 50%; bottom: 13vh; transform: translateX(-50%) translateY(18px); width: min(88vw, 700px); text-align: center; opacity: 0; will-change: opacity, transform; }
-.scrub-cap .sc-label { display: inline-block; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; text-shadow: 0 2px 18px rgba(0,0,0,0.7); }
-.scrub-cap .sc-title { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 7vw, 88px); line-height: 0.94; letter-spacing: -0.02em; color: var(--text); text-shadow: 0 4px 32px rgba(0,0,0,0.65); }
-.scrub-cap .sc-link { display: inline-block; margin-top: 20px; font-size: 14px; color: var(--text); border: 1px solid rgba(255,255,255,0.25); padding: 11px 24px; border-radius: 100px; pointer-events: auto; background: rgba(6,6,6,0.35); backdrop-filter: blur(6px); transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.scrub-cap { position: absolute; width: min(86vw, 420px); opacity: 0; will-change: opacity; }
+.scrub-cap .sc-box { background: rgba(10,12,16,0.6); border: 1px solid rgba(255,255,255,0.14); border-radius: 16px; padding: 20px 22px; backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0,0,0,0.45); transform: translateY(14px); }
+.scrub-cap .sc-label { display: inline-block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.scrub-cap .sc-title { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4vw, 52px); line-height: 0.98; letter-spacing: -0.01em; color: var(--text); }
+.scrub-cap .sc-desc { font-size: 15px; line-height: 1.6; color: var(--text); }
+.scrub-cap .sc-stats { margin-top: 12px; font-size: 13px; letter-spacing: 0.02em; color: var(--text-dim); }
+.scrub-cap .sc-link { display: inline-block; margin-top: 16px; font-size: 13px; color: var(--text); border: 1px solid rgba(255,255,255,0.28); padding: 10px 20px; border-radius: 100px; pointer-events: auto; transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease); }
 .scrub-cap .sc-link:hover { background: var(--accent); border-color: var(--accent); color: #060606; }
-@media (max-width: 760px) { .scrub-cap { bottom: 16vh; } }
-@media (max-width: 760px) { .scrub-section { height: 300vh; } }
+.scrub-cap--tl { top: 13vh; left: 5vw; }
+.scrub-cap--tr { top: 13vh; right: 5vw; }
+.scrub-cap--ml { top: 36%; left: 5vw; }
+.scrub-cap--mr { top: 36%; right: 5vw; }
+.scrub-cap--bc { left: 50%; bottom: 12vh; transform: translateX(-50%); width: min(86vw, 460px); text-align: center; }
+@media (max-width: 760px) {
+  .scrub-section { height: 320vh; }
+  .scrub-cap, .scrub-cap--tl, .scrub-cap--tr, .scrub-cap--ml, .scrub-cap--mr, .scrub-cap--bc {
+    left: 50%; right: auto; top: auto; bottom: 15vh; transform: translateX(-50%); width: min(90vw, 380px); text-align: center;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .scrub-section { height: auto; }
   .scrub-sticky { position: static; height: 100vh; }
@@ -811,11 +824,10 @@ img.fe, .fe img { display: block; }
   <a href="#top" data-chapter="top"><span class="chapters__num">01</span><span class="chapters__dot"></span><span class="chapters__label">Light</span></a>
   <a href="#archive" data-chapter="archive"><span class="chapters__num">02</span><span class="chapters__dot"></span><span class="chapters__label">Archive</span></a>
   <a href="#motion" data-chapter="motion"><span class="chapters__num">03</span><span class="chapters__dot"></span><span class="chapters__label">Motion</span></a>
-  <a href="#about" data-chapter="about"><span class="chapters__num">04</span><span class="chapters__dot"></span><span class="chapters__label">About</span></a>
-  <a href="#work" data-chapter="work"><span class="chapters__num">05</span><span class="chapters__dot"></span><span class="chapters__label">Work</span></a>
-  <a href="#warpzone" data-chapter="warpzone"><span class="chapters__num">06</span><span class="chapters__dot"></span><span class="chapters__label">Warp Zone</span></a>
-  <a href="#skills" data-chapter="skills"><span class="chapters__num">07</span><span class="chapters__dot"></span><span class="chapters__label">Skills</span></a>
-  <a href="#contact" data-chapter="contact"><span class="chapters__num">08</span><span class="chapters__dot"></span><span class="chapters__label">Contact</span></a>
+  <a href="#work" data-chapter="work"><span class="chapters__num">04</span><span class="chapters__dot"></span><span class="chapters__label">Work</span></a>
+  <a href="#warpzone" data-chapter="warpzone"><span class="chapters__num">05</span><span class="chapters__dot"></span><span class="chapters__label">Warp Zone</span></a>
+  <a href="#skills" data-chapter="skills"><span class="chapters__num">06</span><span class="chapters__dot"></span><span class="chapters__label">Skills</span></a>
+  <a href="#contact" data-chapter="contact"><span class="chapters__num">07</span><span class="chapters__dot"></span><span class="chapters__label">Contact</span></a>
 </aside>
 
 <!-- Scroll progress -->
@@ -832,7 +844,7 @@ img.fe, .fe img { display: block; }
   <div class="nav-right">
     <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#about" data-link>About</a></li>
+      <li><a href="about.html" data-link>About</a></li>
       <li><a href="#work" data-link>Work</a></li>
       <li><a href="#skills" data-link>Skills</a></li>
       <li><a href="#contact" data-link>Contact</a></li>
@@ -850,26 +862,40 @@ img.fe, .fe img { display: block; }
       </video>
       <div class="scrub-veil" id="scrubVeil" aria-hidden="true"></div>
       <div class="scrub-hero-bg" id="scrubHeroBg" aria-hidden="true"></div>
-      <!-- Scroll-synced captions: each appears over its part of the animation -->
+      <!-- Scroll-synced captions: boxed, scattered across the viewport per beat -->
       <div class="scrub-caps" id="scrubCaps">
-        <div class="scrub-cap" data-in="0" data-out="0.14">
-          <span class="sc-label">Developer / Designer</span>
-          <h2 class="sc-title">Step inside<br>my head.</h2>
+        <div class="scrub-cap scrub-cap--tl" data-in="0" data-out="0.15">
+          <div class="sc-box">
+            <span class="sc-label">Developer / Designer</span>
+            <h2 class="sc-title">Step inside my head,<br>and see my world.</h2>
+          </div>
         </div>
-        <div class="scrub-cap" data-in="0.28" data-out="0.45">
-          <span class="sc-label">The analytical eye</span>
-          <h2 class="sc-title">I build.</h2>
-          <a class="sc-link" href="webdesign.html" data-link>Web Design &amp; UI/UX →</a>
+        <div class="scrub-cap scrub-cap--tr" data-in="0.17" data-out="0.30">
+          <div class="sc-box">
+            <span class="sc-label">About</span>
+            <p class="sc-desc">I'm Jerome — a multidisciplinary maker based in San Diego, working across brand, illustration, motion &amp; full-stack web.</p>
+          </div>
         </div>
-        <div class="scrub-cap" data-in="0.49" data-out="0.65">
-          <span class="sc-label">The creative eye</span>
-          <h2 class="sc-title">I create.</h2>
-          <a class="sc-link" href="illustrations.html" data-link>Illustrations →</a>
+        <div class="scrub-cap scrub-cap--ml" data-in="0.32" data-out="0.47">
+          <div class="sc-box">
+            <span class="sc-label">The left brain</span>
+            <h2 class="sc-title">A developer<br>who codes.</h2>
+            <a class="sc-link" href="webdesign.html" data-link>Web Design &amp; UI/UX →</a>
+          </div>
         </div>
-        <div class="scrub-cap" data-in="0.68" data-out="0.80">
-          <span class="sc-label">Where they meet</span>
-          <h2 class="sc-title">Code × Craft.</h2>
-          <a class="sc-link" href="#work" data-link>See the work →</a>
+        <div class="scrub-cap scrub-cap--mr" data-in="0.50" data-out="0.65">
+          <div class="sc-box">
+            <span class="sc-label">The right brain</span>
+            <h2 class="sc-title">A designer<br>who creates.</h2>
+            <a class="sc-link" href="illustrations.html" data-link>Illustrations →</a>
+          </div>
+        </div>
+        <div class="scrub-cap scrub-cap--bc" data-in="0.68" data-out="0.81">
+          <div class="sc-box">
+            <span class="sc-label">Where they meet</span>
+            <h2 class="sc-title">Code × Craft.</h2>
+            <p class="sc-stats">50 projects · 6 years making · 8 disciplines</p>
+          </div>
         </div>
       </div>
       <!-- HERO (reveals over the final frame) -->
@@ -880,6 +906,7 @@ img.fe, .fe img { display: block; }
           <span class="line mask outline"><span>World<em class="dot-orange">.</em></span></span>
         </h1>
         <p class="hero__sub reveal" style="--i:2">A multidisciplinary maker crafting digital experiences that blend code &amp; craft.</p>
+        <a href="about.html" class="about__cta reveal" style="--i:3" data-link data-magnetic><span>Get to know me more</span> <i class="fa-solid fa-arrow-right"></i></a>
         <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
       </div>
     </div>
@@ -937,61 +964,7 @@ img.fe, .fe img { display: block; }
       </div>
     </section>
 
-    <!-- ABOUT + STATS -->
-    <section id="about" class="about">
-      <div class="about__grid">
-        <div class="about__lead">
-          <span class="label reveal">(About)</span>
-          <h2 class="about__statement">
-            <span class="mask"><span>A designer who codes.</span></span>
-            <span class="mask"><span>A developer who <em>designs.</em></span></span>
-          </h2>
-          <a href="about.html" class="about__cta reveal" style="--i:1" data-link data-magnetic>
-            <span>Get to know me more</span> <i class="fa-solid fa-arrow-right"></i>
-          </a>
-
-          <!-- Motion decor: designer-who-codes scene -->
-          <div class="about-scene reveal" style="--i:2" aria-hidden="true">
-            <div class="deco-tilt">
-            <svg viewBox="0 0 420 300" fill="none">
-              <!-- gear -->
-              <g class="tb a-spin" style="animation-duration:16s">
-                <path d="M210 60 l10 25 a82 82 0 0 1 28 12 l26 -8 15 25 -19 19 a82 82 0 0 1 0 30 l19 19 -15 25 -26 -8 a82 82 0 0 1 -28 12 l-10 25 -30 0 -10 -25 a82 82 0 0 1 -28 -12 l-26 8 -15 -25 19 -19 a82 82 0 0 1 0 -30 l-19 -19 15 -25 26 8 a82 82 0 0 1 28 -12 l10 -25Z" fill="#f47921" opacity=".92"/>
-                <circle cx="195" cy="180" r="42" fill="#0d0d0d"/>
-              </g>
-              <!-- pen orbiting the gear -->
-              <g class="tb a-spin-r" style="animation-duration:10s">
-                <g transform="translate(195 180)">
-                  <g transform="translate(118 0) rotate(45)">
-                    <rect x="-7" y="-32" width="14" height="46" rx="5" fill="#f4f1ea"/>
-                    <path d="M-7 14 L0 32 L7 14Z" fill="#f47921"/>
-                  </g>
-                </g>
-              </g>
-              <!-- code brackets -->
-              <g class="tb a-bob"><text x="42" y="92" font-family="'DM Sans',monospace" font-weight="600" font-size="42" fill="#ff9642">&lt;/&gt;</text></g>
-              <!-- swatches -->
-              <g class="tb a-bob2">
-                <rect x="328" y="64" width="28" height="28" rx="7" fill="#f47921" transform="rotate(12 342 78)"/>
-                <rect x="348" y="88" width="28" height="28" rx="7" fill="#f4f1ea" opacity=".85" transform="rotate(-9 362 102)"/>
-              </g>
-              <!-- sparkles -->
-              <path class="tb a-twinkle" d="M70 220 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5Z" fill="#ff9642"/>
-              <path class="tb a-twinkle" style="animation-delay:.9s" d="M352 210 l4 11 11 4 -11 4 -4 11 -4 -11 -11 -4 11 -4Z" fill="rgba(244,241,234,.7)"/>
-            </svg>
-            </div>
-          </div>
-        </div>
-        <div class="about__body">
-          <p class="reveal">I'm Jerome — a multidisciplinary creative based in San Diego. I work across the full spectrum: brand identity, illustration, motion, and full-stack web development, turning ideas into experiences that feel considered down to the last detail.</p>
-          <div class="stats">
-            <div class="stat reveal" style="--i:0"><strong data-count="50">0</strong><span>Projects shipped</span></div>
-            <div class="stat reveal" style="--i:1"><strong data-count="6">0</strong><span>Years making</span></div>
-            <div class="stat reveal" style="--i:2"><strong data-count="8">0</strong><span>Disciplines</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- (About moved into the scroll-scrub intro captions) -->
 
     <!-- COLLAGE — pieces fly in one by one as you scroll -->
     <section class="collage-section" id="collage">
@@ -2165,7 +2138,7 @@ img.fe, .fe img { display: block; }
           const idx = Math.round(scrubP * (SEQ_FRAMES - 1));
           if (idx !== seqLastIdx) { seqShow(idx); seqLastIdx = idx; }
         }
-        // scroll-synced captions fade in/out over their ranges
+        // scroll-synced captions fade in/out over their ranges (box slides, cap fades)
         for (let i = 0; i < scrubCapEls.length; i++) {
           const c = scrubCapEls[i];
           const a = parseFloat(c.dataset.in) || 0, b = parseFloat(c.dataset.out) || 1, fd = 0.05;
@@ -2174,7 +2147,8 @@ img.fe, .fe img { display: block; }
             o = Math.max(0, Math.min(1, Math.min((scrubP - (a - fd)) / fd, ((b + fd) - scrubP) / fd)));
           }
           c.style.opacity = o.toFixed(3);
-          c.style.transform = `translateX(-50%) translateY(${((1 - o) * 18).toFixed(1)}px)`;
+          const box = c.firstElementChild;
+          if (box) box.style.transform = `translateY(${((1 - o) * 14).toFixed(1)}px)`;
         }
         // end stretch: video fades out, portrait hero image + text fade in
         const hp = Math.min(Math.max((scrubP - 0.82) / 0.16, 0), 1);
