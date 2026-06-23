@@ -289,17 +289,16 @@ nav.hidden { transform: translateY(-110%); }
   background: #f1e3cf url("images/jerome-hero.png") center center / cover no-repeat; }
 .scrub-sticky .hero { position: absolute; inset: 0; min-height: 0; z-index: 5; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
 /* hero text restyled for the light portrait background, placed in the empty right area */
-.scrub-sticky .hero { justify-content: center; align-items: flex-end; text-align: center; padding: 120px 7vw 96px; }
+.scrub-sticky .hero { justify-content: center; align-items: center; text-align: center; padding: 120px 6vw 96px; padding-left: clamp(24px, 42vw, 760px); }
 .scrub-sticky .hero__eyebrow { justify-content: center; color: #2a3c54; }
-.scrub-sticky .hero__title { color: #122844; }
+.scrub-sticky .hero__title { color: #122844; font-size: clamp(52px, 7.5vw, 120px); }
 .scrub-sticky .hero__sub { color: #41526a; }
 .scrub-sticky .hero__scroll { color: #41526a; }
 .scrub-sticky .hero__scroll i { background: rgba(18,40,68,0.25); }
-.scrub-sticky .about__cta { align-self: flex-end; margin-top: 6px; color: #122844; border-color: rgba(18,40,68,0.3); }
+.scrub-sticky .about__cta { align-self: center; margin-top: 6px; color: #122844; border-color: rgba(18,40,68,0.3); }
 .scrub-sticky .about__cta:hover { background: var(--accent); border-color: var(--accent); color: #060606; }
 @media (max-width: 760px) {
   .scrub-sticky .hero { align-items: center; padding: 120px 24px 96px; }
-  .scrub-sticky .about__cta { align-self: center; }
   .scrub-hero-bg { background-position: 28% center; }
 }
 /* scroll-synced captions — boxed & scattered */
@@ -312,7 +311,7 @@ nav.hidden { transform: translateY(-110%); }
 .scrub-cap .sc-stats { margin-top: 12px; font-size: 13px; letter-spacing: 0.02em; color: var(--text-dim); }
 .scrub-cap .sc-link { display: inline-block; margin-top: 16px; font-size: 13px; color: var(--text); border: 1px solid rgba(255,255,255,0.28); padding: 10px 20px; border-radius: 100px; pointer-events: auto; transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease); }
 .scrub-cap .sc-link:hover { background: var(--accent); border-color: var(--accent); color: #060606; }
-.scrub-cap--tl { top: 13vh; left: 5vw; }
+.scrub-cap--tl { top: 50vh; left: 5vw; }
 .scrub-cap--tr { top: 13vh; right: 5vw; }
 .scrub-cap--ml { top: 36%; left: 5vw; }
 .scrub-cap--mr { top: 36%; right: 5vw; }
@@ -873,28 +872,28 @@ img.fe, .fe img { display: block; }
         <div class="scrub-cap scrub-cap--tr" data-in="0.17" data-out="0.30">
           <div class="sc-box">
             <span class="sc-label">About</span>
-            <p class="sc-desc">I'm Jerome — a multidisciplinary maker based in San Diego, working across brand, illustration, motion &amp; full-stack web.</p>
+            <p class="sc-desc">I'm Jerome — a multidisciplinary maker based in San Diego. I work across brand, illustration, motion, and full-stack web, turning ideas into things that feel considered down to the last detail.</p>
           </div>
         </div>
         <div class="scrub-cap scrub-cap--ml" data-in="0.32" data-out="0.47">
           <div class="sc-box">
             <span class="sc-label">The left brain</span>
             <h2 class="sc-title">A developer<br>who codes.</h2>
-            <a class="sc-link" href="webdesign.html" data-link>Web Design &amp; UI/UX →</a>
+            <p class="sc-desc">Full-stack web, UI/UX, and the logic that makes ideas actually work.</p>
           </div>
         </div>
         <div class="scrub-cap scrub-cap--mr" data-in="0.50" data-out="0.65">
           <div class="sc-box">
             <span class="sc-label">The right brain</span>
             <h2 class="sc-title">A designer<br>who creates.</h2>
-            <a class="sc-link" href="illustrations.html" data-link>Illustrations →</a>
+            <p class="sc-desc">Brand, illustration, and motion that make things feel alive.</p>
           </div>
         </div>
         <div class="scrub-cap scrub-cap--bc" data-in="0.68" data-out="0.81">
           <div class="sc-box">
             <span class="sc-label">Where they meet</span>
             <h2 class="sc-title">Code × Craft.</h2>
-            <p class="sc-stats">50 projects · 6 years making · 8 disciplines</p>
+            <p class="sc-desc">Two halves of how I think — working as one.</p>
           </div>
         </div>
       </div>
