@@ -462,6 +462,25 @@ img.fe, .fe img { display: block; }
 .stat strong .plus { color: var(--accent); }
 .stat span { font-size: 12px; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 10px; display: block; }
 
+/* ============================================================ Disciplines overview */
+.disciplines { max-width: var(--max); margin: 0 auto; padding: clamp(80px, 12vh, 150px) 24px; }
+.disc-head { text-align: center; margin-bottom: 46px; }
+.disc-head .label { display: inline-block; margin-bottom: 16px; }
+.disc-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 7vw, 96px); line-height: 0.92; letter-spacing: -0.02em; }
+.disc-head h2 em { color: var(--accent); font-style: italic; }
+.disc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.disc-card { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 28px 24px 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--bg-soft); min-height: 240px; transition: border-color 0.35s var(--ease), transform 0.35s var(--ease), background 0.35s; }
+.disc-card:hover { border-color: rgba(244,121,33,0.45); transform: translateY(-4px); background: #121212; }
+.disc-card__num { font-family: var(--serif); font-size: 14px; color: var(--accent); }
+.disc-card__icon { font-size: 26px; color: var(--text); margin: 8px 0; transition: color 0.35s; }
+.disc-card:hover .disc-card__icon { color: var(--accent); }
+.disc-card h3 { font-family: var(--serif); font-weight: 400; font-size: 25px; letter-spacing: -0.01em; }
+.disc-card p { font-size: 13px; line-height: 1.55; color: var(--text-dim); }
+.disc-card__go { margin-top: auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--text); transition: all 0.35s var(--ease); }
+.disc-card:hover .disc-card__go { background: var(--accent); border-color: var(--accent); color: #060606; transform: rotate(-45deg); }
+@media (max-width: 900px) { .disc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .disc-grid { grid-template-columns: 1fr; } .disc-card { min-height: 0; } }
+
 /* ============================================================ Work — pinned horizontal */
 .work { position: relative; height: 340vh; }
 .work__sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; overflow: hidden; }
@@ -921,6 +940,44 @@ img.fe, .fe img { display: block; }
         <div class="veil-row veil-row--accent" aria-hidden="true"><div class="veil-row__track"><span>It's Jerome's World <b>✦</b> It's Jerome's World <b>✦</b> </span><span>It's Jerome's World <b>✦</b> It's Jerome's World <b>✦</b> </span></div></div>
         <div class="veil-row" aria-hidden="true"><div class="veil-row__track"><span><em>Illustration</em> <b>✦</b> Branding <b>✦</b> Development <b>✦</b> Design <b>✦</b> </span><span><em>Illustration</em> <b>✦</b> Branding <b>✦</b> Development <b>✦</b> Design <b>✦</b> </span></div></div>
         <div class="veil-row" aria-hidden="true"><div class="veil-row__track"><span>Photography <b>✦</b> Motion <b>✦</b> Data <b>✦</b> <em>Digital humanities</em> <b>✦</b> </span><span>Photography <b>✦</b> Motion <b>✦</b> Data <b>✦</b> <em>Digital humanities</em> <b>✦</b> </span></div></div>
+      </div>
+    </section>
+
+    <!-- DISCIPLINES OVERVIEW — the four crafts, each a doorway into its gallery -->
+    <section class="disciplines" id="disciplines">
+      <div class="disc-head">
+        <span class="label reveal">(What I do)</span>
+        <h2 class="reveal" style="--i:1">Four crafts,<br><em>one maker.</em></h2>
+      </div>
+      <div class="disc-grid">
+        <a class="disc-card reveal" href="#work" data-link style="--i:0">
+          <span class="disc-card__num">01</span>
+          <i class="fa-solid fa-laptop-code disc-card__icon"></i>
+          <h3>Web Design</h3>
+          <p>Responsive websites &amp; interfaces — designed and built.</p>
+          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a class="disc-card reveal" href="webdesign.html" data-link style="--i:1">
+          <span class="disc-card__num">02</span>
+          <i class="fa-solid fa-mobile-screen-button disc-card__icon"></i>
+          <h3>UI / UX</h3>
+          <p>Product thinking — flows, prototypes &amp; interfaces.</p>
+          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a class="disc-card reveal" href="#motion" data-link style="--i:2">
+          <span class="disc-card__num">03</span>
+          <i class="fa-solid fa-film disc-card__icon"></i>
+          <h3>Motion Graphics</h3>
+          <p>Animation &amp; motion that brings ideas to life.</p>
+          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a class="disc-card reveal" href="illustrations.html" data-link style="--i:3">
+          <span class="disc-card__num">04</span>
+          <i class="fa-solid fa-palette disc-card__icon"></i>
+          <h3>Graphic Design</h3>
+          <p>Illustration, branding &amp; packaging with character.</p>
+          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
       </div>
     </section>
 
