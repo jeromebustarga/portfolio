@@ -2620,10 +2620,10 @@ img.fe, .fe img { display: block; }
 (function () {
   var n = document.getElementById("ucNotice");
   if (!n) return;
-  if (sessionStorage.getItem("ucDismissed") === "1") { n.remove(); return; }
+  if (sessionStorage.getItem("ucDismissed_v2") === "1") { n.remove(); return; }
   function close() {
     n.classList.remove("show");
-    sessionStorage.setItem("ucDismissed", "1");
+    sessionStorage.setItem("ucDismissed_v2", "1");
     setTimeout(function () { n.remove(); }, 600);
   }
   setTimeout(function () { n.classList.add("show"); }, 700);
