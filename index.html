@@ -217,16 +217,26 @@ nav.hidden { transform: translateY(-110%); }
 .veil-row__track b { color: var(--accent); font-size: 0.45em; vertical-align: middle; margin: 0 0.3em; font-weight: 400; }
 .veil-row__track em { color: var(--text); font-style: italic; }
 .veil-row--accent .veil-row__track span { color: var(--accent); }
+/* "What I do" revealed by the parting marquee */
+.veil-reveal { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 86px 24px; opacity: 0; transform: scale(1.08); will-change: transform, opacity; pointer-events: none; }
+.veil-reveal .disc-head { margin-bottom: 0; }
+.veil-reveal .disc-grid { width: 100%; max-width: var(--max); }
+.veil-reveal .disc-card { min-height: 200px; }
 @media (max-width: 700px) {
   .veil-section { height: 240vh; }
   .veil-photo { inset: 16% 7%; }
+  .veil-reveal { gap: 20px; padding: 70px 18px; }
+  .veil-reveal .disc-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .veil-reveal .disc-card { min-height: 0; padding: 16px 14px; gap: 4px; }
+  .veil-reveal .disc-card p { display: none; }
+  .veil-reveal .disc-card h3 { font-size: 19px; }
+  .veil-reveal .disc-card__go { width: 34px; height: 34px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .veil-section { height: auto; }
   .veil-sticky { position: static; height: auto; padding: 80px 0; }
-  .veil-photo { position: relative; inset: auto; width: min(80vw, 520px); aspect-ratio: 3/4; margin: 0 auto 30px; opacity: 1; transform: none; }
+  .veil-reveal { position: static; opacity: 1; transform: none; pointer-events: auto; padding: 60px 24px; }
   .veil-row { display: none; }
-  .veil-caption { position: static; transform: none; opacity: 1; text-align: center; }
 }
 
 /* ============================================================ Shared meta label */
@@ -935,49 +945,48 @@ img.fe, .fe img { display: block; }
     <!-- VEIL MARQUEE — 5 layers part to the sides, photo reveals -->
     <section class="veil-section" id="veil">
       <div class="veil-sticky">
+        <!-- the marquee parts to reveal "What I do" (like Plate 00 did) -->
+        <div class="veil-reveal" id="disciplines">
+          <div class="disc-head">
+            <span class="label">(What I do)</span>
+            <h2>Four crafts, <em>one maker.</em></h2>
+          </div>
+          <div class="disc-grid">
+            <a class="disc-card" href="#work" data-link>
+              <span class="disc-card__num">01</span>
+              <i class="fa-solid fa-laptop-code disc-card__icon"></i>
+              <h3>Web Design</h3>
+              <p>Responsive websites &amp; interfaces — designed and built.</p>
+              <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+            <a class="disc-card" href="webdesign.html" data-link>
+              <span class="disc-card__num">02</span>
+              <i class="fa-solid fa-mobile-screen-button disc-card__icon"></i>
+              <h3>UI / UX</h3>
+              <p>Product thinking — flows, prototypes &amp; interfaces.</p>
+              <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+            <a class="disc-card" href="#motion" data-link>
+              <span class="disc-card__num">03</span>
+              <i class="fa-solid fa-film disc-card__icon"></i>
+              <h3>Motion Graphics</h3>
+              <p>Animation &amp; motion that brings ideas to life.</p>
+              <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+            <a class="disc-card" href="illustrations.html" data-link>
+              <span class="disc-card__num">04</span>
+              <i class="fa-solid fa-palette disc-card__icon"></i>
+              <h3>Graphic Design</h3>
+              <p>Illustration, branding &amp; packaging with character.</p>
+              <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+          </div>
+        </div>
         <div class="veil-row" aria-hidden="true"><div class="veil-row__track"><span>Development <b>✦</b> Design <b>✦</b> Illustration <b>✦</b> Branding <b>✦</b> </span><span>Development <b>✦</b> Design <b>✦</b> Illustration <b>✦</b> Branding <b>✦</b> </span></div></div>
         <div class="veil-row" aria-hidden="true"><div class="veil-row__track"><span>Motion <b>✦</b> Photography <b>✦</b> <em>Code &amp; craft</em> <b>✦</b> Motion <b>✦</b> Photography <b>✦</b> </span><span>Motion <b>✦</b> Photography <b>✦</b> <em>Code &amp; craft</em> <b>✦</b> Motion <b>✦</b> Photography <b>✦</b> </span></div></div>
         <div class="veil-row veil-row--accent" aria-hidden="true"><div class="veil-row__track"><span>It's Jerome's World <b>✦</b> It's Jerome's World <b>✦</b> </span><span>It's Jerome's World <b>✦</b> It's Jerome's World <b>✦</b> </span></div></div>
         <div class="veil-row" aria-hidden="true"><div class="veil-row__track"><span><em>Illustration</em> <b>✦</b> Branding <b>✦</b> Development <b>✦</b> Design <b>✦</b> </span><span><em>Illustration</em> <b>✦</b> Branding <b>✦</b> Development <b>✦</b> Design <b>✦</b> </span></div></div>
         <div class="veil-row" aria-hidden="true"><div class="veil-row__track"><span>Photography <b>✦</b> Motion <b>✦</b> Data <b>✦</b> <em>Digital humanities</em> <b>✦</b> </span><span>Photography <b>✦</b> Motion <b>✦</b> Data <b>✦</b> <em>Digital humanities</em> <b>✦</b> </span></div></div>
-      </div>
-    </section>
-
-    <!-- DISCIPLINES OVERVIEW — the four crafts, each a doorway into its gallery -->
-    <section class="disciplines" id="disciplines">
-      <div class="disc-head">
-        <span class="label reveal">(What I do)</span>
-        <h2 class="reveal" style="--i:1">Four crafts,<br><em>one maker.</em></h2>
-      </div>
-      <div class="disc-grid">
-        <a class="disc-card reveal" href="#work" data-link style="--i:0">
-          <span class="disc-card__num">01</span>
-          <i class="fa-solid fa-laptop-code disc-card__icon"></i>
-          <h3>Web Design</h3>
-          <p>Responsive websites &amp; interfaces — designed and built.</p>
-          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
-        </a>
-        <a class="disc-card reveal" href="webdesign.html" data-link style="--i:1">
-          <span class="disc-card__num">02</span>
-          <i class="fa-solid fa-mobile-screen-button disc-card__icon"></i>
-          <h3>UI / UX</h3>
-          <p>Product thinking — flows, prototypes &amp; interfaces.</p>
-          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
-        </a>
-        <a class="disc-card reveal" href="#motion" data-link style="--i:2">
-          <span class="disc-card__num">03</span>
-          <i class="fa-solid fa-film disc-card__icon"></i>
-          <h3>Motion Graphics</h3>
-          <p>Animation &amp; motion that brings ideas to life.</p>
-          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
-        </a>
-        <a class="disc-card reveal" href="illustrations.html" data-link style="--i:3">
-          <span class="disc-card__num">04</span>
-          <i class="fa-solid fa-palette disc-card__icon"></i>
-          <h3>Graphic Design</h3>
-          <p>Illustration, branding &amp; packaging with character.</p>
-          <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
-        </a>
       </div>
     </section>
 
@@ -2045,7 +2054,7 @@ img.fe, .fe img { display: block; }
 
   /* Veil marquee: 5 layers, alternating directions */
   const veilSection = document.getElementById("veil");
-  const veilPhoto = veilSection ? veilSection.querySelector(".veil-photo") : null;
+  const veilPhoto = veilSection ? veilSection.querySelector(".veil-reveal") : null;
   const veilCaption = veilSection ? veilSection.querySelector(".veil-caption") : null;
   const veilRows = veilSection
     ? Array.from(veilSection.querySelectorAll(".veil-row")).map((el, i) => ({
@@ -2121,10 +2130,11 @@ img.fe, .fe img { display: block; }
           row.el.style.opacity = (1 - e * 0.3).toFixed(3);
         }
         if (veilPhoto) {
-          const pp = Math.min(Math.max((p - 0.15) / 0.55, 0), 1);
+          const pp = Math.min(Math.max((p - 0.12) / 0.5, 0), 1);
           const pe = pp * pp * (3 - 2 * pp);
           veilPhoto.style.opacity = pe.toFixed(3);
-          veilPhoto.style.transform = `scale(${(1.18 - 0.18 * pe).toFixed(3)})`;
+          veilPhoto.style.transform = `scale(${(1.08 - 0.08 * pe).toFixed(3)})`;
+          veilPhoto.style.pointerEvents = pe > 0.55 ? "auto" : "none";
         }
         if (veilCaption) {
           veilCaption.style.opacity = Math.min(Math.max((p - 0.72) / 0.22, 0), 1).toFixed(3);
