@@ -298,6 +298,9 @@ nav.hidden { transform: translateY(-110%); }
 .scrub-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #000; }
 .scrub-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; will-change: opacity; }
 .scrub-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: none; will-change: opacity; }
+.scrub-loader { position: absolute; left: 50%; bottom: 7vh; transform: translateX(-50%); z-index: 6; width: min(46vw, 240px); height: 2px; background: rgba(255,255,255,0.16); border-radius: 2px; overflow: hidden; transition: opacity 0.6s ease; }
+.scrub-loader.done { opacity: 0; pointer-events: none; }
+.scrub-loader > i { display: block; height: 100%; width: 0; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: width 0.2s linear; }
 .scrub-veil { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; will-change: opacity;
   background: radial-gradient(120% 95% at 50% 42%, transparent 0%, rgba(6,6,6,0.45) 62%, rgba(6,6,6,0.9) 100%); }
 /* hero background image — fades in as the video fades out at the end of the scrub */
@@ -891,6 +894,7 @@ img.fe, .fe img { display: block; }
   <section class="scrub-section" id="scrub">
     <div class="scrub-sticky">
       <canvas class="scrub-canvas" id="scrubCanvas" aria-hidden="true"></canvas>
+      <div class="scrub-loader" id="scrubLoader" aria-hidden="true"><i></i></div>
       <video class="scrub-video" id="scrubVideo" muted loop playsinline preload="auto" poster="videos/hero-scroll-poster.jpg" aria-hidden="true">
         <source src="videos/hero-scroll.mp4" type="video/mp4">
       </video>
@@ -1696,41 +1700,64 @@ img.fe, .fe img { display: block; }
   const scrubMobile = window.matchMedia("(max-width: 760px)").matches || isTouch;
   const useSeq = !!scrubCanvas && !prefersReduced && !scrubMobile;
 
-  // image-sequence state + helpers
+  // image-sequence: pre-decode every frame to an ImageBitmap so drawing is a pure
+  // GPU blit (no decoding mid-scroll = no stutter)
   const SEQ_FRAMES = 241;
-  const seqImgs = []; let seqLastIdx = -1, sctx = null;
+  const seqBmps = new Array(SEQ_FRAMES).fill(null);
+  let seqDecoded = 0, seqLastIdx = -1, sctx = null;
+  const scrubLoader = document.getElementById("scrubLoader");
+  const scrubLoaderBar = scrubLoader ? scrubLoader.querySelector("i") : null;
   function seqSize() {
     if (!scrubCanvas) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     scrubCanvas.width = Math.round(window.innerWidth * dpr);
     scrubCanvas.height = Math.round(window.innerHeight * dpr);
   }
-  function seqDraw(img) {
-    if (!sctx || !img || !img.complete || !img.naturalWidth) return;
+  function seqDraw(bmp) {
+    if (!sctx || !bmp) return;
+    const iw = bmp.naturalWidth || bmp.width, ih = bmp.naturalHeight || bmp.height;
+    if (!iw || !ih) return;
     const cw = scrubCanvas.width, ch = scrubCanvas.height;
-    const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
+    const ir = iw / ih, cr = cw / ch;
     let dw, dh, dx, dy;
     if (cr > ir) { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }   // cover (fill, no bars)
     else { dh = ch; dw = ch * ir; dy = 0; dx = (cw - dw) / 2; }
-    sctx.drawImage(img, dx, dy, dw, dh);
+    sctx.drawImage(bmp, dx, dy, dw, dh);
   }
   function seqShow(idx) {
-    const img = seqImgs[idx];
-    if (img && img.complete && img.naturalWidth) { seqDraw(img); return; }
-    for (let j = idx; j >= 0; j--) { const c = seqImgs[j]; if (c && c.complete && c.naturalWidth) { seqDraw(c); return; } }
+    if (seqBmps[idx]) { seqDraw(seqBmps[idx]); return; }
+    for (let j = idx; j >= 0; j--) { if (seqBmps[j]) { seqDraw(seqBmps[j]); return; } }
+    for (let j = idx + 1; j < SEQ_FRAMES; j++) { if (seqBmps[j]) { seqDraw(seqBmps[j]); return; } }
+  }
+  async function seqLoad() {
+    const pad = (n) => String(n).padStart(4, "0");
+    const hasBitmap = typeof createImageBitmap === "function";
+    let next = 0;
+    async function worker() {
+      while (next < SEQ_FRAMES) {
+        const idx = next++;
+        try {
+          if (hasBitmap) {
+            const resp = await fetch("frames/f-" + pad(idx + 1) + ".webp");
+            seqBmps[idx] = await createImageBitmap(await resp.blob());
+          } else {
+            seqBmps[idx] = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = "frames/f-" + pad(idx + 1) + ".webp"; });
+          }
+        } catch (e) {}
+        seqDecoded++;
+        seqShow(seqLastIdx >= 0 ? seqLastIdx : 0);
+        if (scrubLoaderBar) scrubLoaderBar.style.width = Math.round((seqDecoded / SEQ_FRAMES) * 100) + "%";
+        if (seqDecoded >= SEQ_FRAMES && scrubLoader) scrubLoader.classList.add("done");
+      }
+    }
+    await Promise.all(Array.from({ length: 6 }, worker));
   }
   if (useSeq) {
     scrubVideo.style.display = "none";
     scrubCanvas.style.display = "block";
     sctx = scrubCanvas.getContext("2d");
     seqSize();
-    const pad = (n) => String(n).padStart(4, "0");
-    for (let i = 1; i <= SEQ_FRAMES; i++) {
-      const img = new Image();
-      if (i === 1) img.onload = () => seqShow(0);
-      img.src = "frames/f-" + pad(i) + ".webp";
-      seqImgs.push(img);
-    }
+    seqLoad();
     window.addEventListener("resize", () => { seqSize(); seqLastIdx = -1; seqShow(Math.round(scrubP * (SEQ_FRAMES - 1))); });
   } else if (scrubVideo) {
     if (scrubCanvas) scrubCanvas.style.display = "none";
