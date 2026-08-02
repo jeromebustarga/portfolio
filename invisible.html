@@ -259,7 +259,9 @@ body.embed-mode .hero{min-height:auto}
 .pf-nav .pf-links a{opacity:.82;transition:opacity .25s,color .25s;}
 .pf-nav .pf-links a:hover{opacity:1;color:#f47921;}
 @media(max-width:600px){.pf-nav{padding:11px 16px;}.pf-nav .pf-links{gap:14px;}.pf-nav .pf-logo span{display:none;}}
+body.pf-embed .pf-nav{display:none!important;}
 </style>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('pf-embed');</script>
 <nav class="pf-nav">
   <a class="pf-logo" href="index.html"><img src="images/logo.png?v=26" alt=""><span>It's Jerome's World</span></a>
   <div class="pf-links"><a href="index.html">Home</a><a href="index.html#archive">Work</a><a href="about.html">About</a></div>

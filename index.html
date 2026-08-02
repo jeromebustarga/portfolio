@@ -260,6 +260,12 @@ nav.hidden { transform: translateY(-110%); }
 .stack-img img { width: 100%; height: 100%; object-fit: cover; }
 a.stack-img { cursor: pointer; transition: border-color 0.3s var(--ease); }
 a.stack-img:hover { border-color: rgba(244,121,33,0.6); }
+/* Graphic-design project popup (iframe modal) */
+.gd-modal { position: fixed; inset: 0; z-index: 12000; background: rgba(6,6,6,0.92); opacity: 0; visibility: hidden; transition: opacity 0.4s var(--ease), visibility 0.4s; }
+.gd-modal.active { opacity: 1; visibility: visible; }
+.gd-modal iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+.gd-close { position: fixed; top: 18px; right: 18px; z-index: 12010; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); background: rgba(6,6,6,0.6); backdrop-filter: blur(8px); color: #fff; font-size: 24px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--ease); }
+.gd-close:hover { background: var(--accent); border-color: var(--accent); color: #060606; transform: rotate(90deg); }
 .stack-img::after { content: attr(data-caption); position: absolute; left: 12px; bottom: 12px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); background: rgba(6,6,6,0.5); padding: 4px 8px; border-radius: 4px; backdrop-filter: blur(4px); }
 .s1 { z-index: 1; } .s2 { z-index: 2; } .s3 { z-index: 3; } .s4 { z-index: 4; }
 .stack-progress { width: min(320px, 60vw); height: 2px; background: var(--line); }
@@ -1081,10 +1087,10 @@ img.fe, .fe img { display: block; }
           <span class="meta">↓ Scroll to spread the plates</span>
         </div>
         <div class="stack-container">
-          <a href="wolfbird.html" data-link class="stack-img s1" data-x="-340" data-y="-90" data-rot="-14" data-caption="Wolf Bird · Packaging"><img src="images/hero-cans.png" alt="Canadian Wolf Bird packaging"></a>
-          <a href="lakukahekahe.html" data-link class="stack-img s2" data-x="-115" data-y="-30" data-rot="-5" data-caption="Lā Kūkahekahe · Graphic"><img src="images/LaKukahekahe_Poster.png" alt="Lā Kūkahekahe poster"></a>
-          <a href="typhoons.html" data-link class="stack-img s3" data-x="115" data-y="-30" data-rot="5" data-caption="Typhoons · Infographic"><img src="images/IllustratedInfographics_ContinuousGraphic_JeromeBustarga.png" alt="Lifecycle of Typhoons infographic"></a>
-          <a href="invisible.html" data-link class="stack-img s4" data-x="340" data-y="-90" data-rot="14" data-caption="Invisible · Book Design"><img src="images/book-cover.png" alt="Invisible by Design book cover"></a>
+          <a href="wolfbird.html" data-gd data-link class="stack-img s1" data-x="-340" data-y="-90" data-rot="-14" data-caption="Wolf Bird · Packaging"><img src="images/hero-cans.png" alt="Canadian Wolf Bird packaging"></a>
+          <a href="lakukahekahe.html" data-gd data-link class="stack-img s2" data-x="-115" data-y="-30" data-rot="-5" data-caption="Lā Kūkahekahe · Graphic"><img src="images/LaKukahekahe_Poster.png" alt="Lā Kūkahekahe poster"></a>
+          <a href="typhoons.html" data-gd data-link class="stack-img s3" data-x="115" data-y="-30" data-rot="5" data-caption="Typhoons · Infographic"><img src="images/IllustratedInfographics_ContinuousGraphic_JeromeBustarga.png" alt="Lifecycle of Typhoons infographic"></a>
+          <a href="invisible.html" data-gd data-link class="stack-img s4" data-x="340" data-y="-90" data-rot="14" data-caption="Invisible · Book Design"><img src="images/book-cover.png" alt="Invisible by Design book cover"></a>
         </div>
         <div class="stack-progress"><div class="stack-progress-fill" id="stackProgress"></div></div>
       </div>
@@ -2641,6 +2647,33 @@ img.fe, .fe img { display: block; }
   }
 })();
 </script>
+<!-- Graphic-design project popup -->
+<div class="gd-modal" id="gdModal" aria-hidden="true">
+  <button class="gd-close" id="gdClose" type="button" aria-label="Close project">&times;</button>
+  <iframe id="gdFrame" title="Project" src="" allowfullscreen></iframe>
+</div>
+<script>
+(function () {
+  var modal = document.getElementById("gdModal"), frame = document.getElementById("gdFrame"), closeBtn = document.getElementById("gdClose");
+  if (!modal || !frame) return;
+  function openGd(src) {
+    frame.src = src + (src.indexOf("?") > -1 ? "&" : "?") + "embed=1";
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+  function closeGd() {
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+    setTimeout(function () { frame.src = ""; }, 400);
+  }
+  document.querySelectorAll("[data-gd]").forEach(function (a) {
+    a.addEventListener("click", function (e) { e.preventDefault(); openGd(a.getAttribute("href")); });
+  });
+  if (closeBtn) closeBtn.addEventListener("click", closeGd);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && modal.classList.contains("active")) closeGd(); });
+})();
+</script>
+
 <!-- Under-construction notice (centered modal) -->
 <div class="uc-modal" id="ucNotice" role="dialog" aria-modal="true" aria-label="Site under construction">
   <div class="uc-card">
