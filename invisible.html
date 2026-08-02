@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Invisible by Design — Jerome Bustarga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B1322;
+  --bg-soft:#121C30;
+  --bg-card:#16223A;
+  --ink:#F5F5F0;
+  --ink-dim:#AEB8D0;
+  --ink-fade:#67718F;
+  --cyan:#22D3EE;
+  --purple:#A855F7;
+  --magenta:#EC4899;
+  --amber:#F59E0B;
+  --rule:rgba(174,184,208,.14);
+  --maxw:1320px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* ambient dust */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(circle,var(--cyan) .6px,transparent 1.6px),
+    radial-gradient(circle,var(--magenta) .6px,transparent 1.6px),
+    radial-gradient(circle,var(--amber) .6px,transparent 1.6px),
+    radial-gradient(circle,var(--purple) .6px,transparent 1.6px);
+  background-size:300px 300px,360px 360px,430px 430px,270px 270px;
+  background-position:30px 80px,200px 180px,110px 50px,250px 220px;
+  opacity:.16;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 40px;position:relative;z-index:1}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* eyebrow / labels */
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--cyan);display:inline-flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:'';width:26px;height:1px;background:var(--cyan)}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:120px 0 80px;
+}
+.hero__content{position:relative;z-index:2;max-width:64%}
+.hero__book{
+  position:absolute;right:-10px;top:50%;transform:translateY(-44%) rotate(8deg);
+  width:38%;max-width:440px;aspect-ratio:4/5;z-index:1;
+  filter:drop-shadow(-30px 40px 60px rgba(0,0,0,.55));
+}
+.hero__book .slot{
+  position:absolute;inset:0;background:var(--bg-soft);border:1px solid var(--rule);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  color:var(--ink-fade);text-align:center;padding:24px;overflow:hidden;
+}
+.hero__book .slot .tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
+.hero__book .slot .desc{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;line-height:1.55}
+.hero__book .slot::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg,transparent 0 26px,rgba(174,184,208,.04) 26px 27px);
+}
+.hero__eye{
+  width:64px;height:34px;margin-bottom:40px;
+}
+.hero__eye svg{width:100%;height:100%;display:block}
+.hero__kicker{
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ink-fade);margin-bottom:24px;
+}
+.hero__title{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(56px,12vw,180px);line-height:.86;letter-spacing:-.03em;
+  margin-bottom:36px;
+}
+.hero__title em{font-style:italic;font-weight:400;color:var(--cyan);display:block}
+.hero__sub{
+  font-style:italic;font-size:clamp(18px,2vw,26px);color:var(--ink-dim);
+  max-width:30ch;line-height:1.45;
+}
+.hero__scroll{
+  position:absolute;bottom:40px;left:40px;font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-fade);
+  display:flex;align-items:center;gap:10px;
+}
+.hero__scroll::after{content:'';width:40px;height:1px;background:var(--ink-fade);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ============ INTRO ============ */
+.intro{padding:120px 0;display:grid;grid-template-columns:1fr 1.8fr;gap:90px}
+.intro__meta{display:flex;flex-direction:column;gap:0}
+.meta-row{
+  padding:16px 0;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:5px;
+}
+.meta-row:last-child{border-bottom:1px solid var(--rule)}
+.meta-row .k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-fade)}
+.meta-row .v{font-size:15px;color:var(--ink)}
+.intro__body .eyebrow{margin-bottom:28px}
+.intro__body p{font-size:18px;line-height:1.75;color:var(--ink-dim);margin-bottom:24px;max-width:60ch}
+.intro__body p:first-of-type::first-letter{
+  font-family:'Space Grotesk',sans-serif;font-size:4.6em;font-weight:600;line-height:.8;
+  float:left;padding:10px 16px 0 0;color:var(--cyan);
+}
+.intro__body strong{color:var(--ink);font-weight:600}
+
+/* ============ DATA STRIP (signature) ============ */
+.data{padding:80px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.data__head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:16px;margin-bottom:60px}
+.data__head h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(26px,3vw,40px);letter-spacing:-.02em}
+.data__head .note{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-fade);letter-spacing:.1em}
+.stats{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+.stat{display:flex;flex-direction:column;gap:8px;position:relative;padding-top:22px}
+.stat::before{content:'';position:absolute;top:0;left:0;width:28px;height:3px}
+.stat:nth-child(1)::before{background:var(--cyan)}
+.stat:nth-child(2)::before{background:var(--magenta)}
+.stat:nth-child(3)::before{background:var(--amber)}
+.stat:nth-child(4)::before{background:var(--purple)}
+.stat:nth-child(5)::before{background:var(--cyan)}
+.stat .num{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(34px,4vw,56px);line-height:1;letter-spacing:-.02em}
+.stat .lab{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--ink-fade);line-height:1.5;text-transform:uppercase}
+.stat--big{grid-column:span 4}
+.stat--med{grid-column:span 2}
+.stat--med2{grid-column:span 2}
+
+/* ============ PULL QUOTE ============ */
+.pq{padding:130px 0;text-align:center;position:relative}
+.pq blockquote{
+  font-family:'Space Grotesk',sans-serif;font-style:italic;font-weight:400;
+  font-size:clamp(30px,4.5vw,58px);line-height:1.15;letter-spacing:-.015em;
+  max-width:20ch;margin:0 auto;position:relative;
+}
+.pq blockquote .mark{color:var(--cyan);font-style:normal}
+.pq cite{
+  display:block;margin-top:36px;font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-fade);font-style:normal;
+}
+
+/* ============ CHAPTER GALLERY ============ */
+.chapter{padding:90px 0}
+.chapter__head{display:flex;align-items:baseline;gap:24px;margin-bottom:50px;flex-wrap:wrap}
+.chapter__no{
+  font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.2em;color:var(--cyan);
+  border:1px solid var(--rule);border-radius:50%;width:54px;height:54px;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+}
+.chapter__title{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(28px,3.4vw,46px);letter-spacing:-.02em}
+.chapter__title em{font-style:italic;color:var(--cyan)}
+.chapter__desc{font-size:16px;color:var(--ink-dim);max-width:54ch;margin-top:6px}
+
+/* book gallery — true aspect ratios (no cropping), 2-up, click to enlarge */
+.sheet{display:grid;grid-template-columns:repeat(2,1fr);gap:30px;align-items:start}
+.plate{display:flex;flex-direction:column;gap:14px}
+.plate__frame{
+  position:relative;background:var(--bg-soft);border:1px solid var(--rule);
+  overflow:hidden;border-radius:6px;cursor:zoom-in;
+  transition:border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+}
+.plate__frame:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.plate__frame img{display:block;width:100%;height:auto}
+.plate__cap{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-fade);line-height:1.55;display:flex;gap:10px}
+.plate__cap .pg{color:var(--cyan);flex-shrink:0}
+.plate__cap b{color:var(--ink);font-weight:500}
+.hero__book img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+/* full-width emphasis + centered portrait covers */
+.plate.wide{grid-column:1 / -1}
+.plate.cover{grid-column:1 / -1;max-width:480px;width:100%;margin-inline:auto}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:9999;background:rgba(5,9,18,.95);display:none;
+  align-items:center;justify-content:center;padding:24px;cursor:zoom-out;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.lb.open{display:flex}
+.lb img{max-width:95vw;max-height:92vh;width:auto;height:auto;border:1px solid var(--rule);
+  box-shadow:0 30px 90px rgba(0,0,0,.7);border-radius:4px}
+.lb__close{position:fixed;top:18px;right:22px;font-family:'JetBrains Mono',monospace;font-size:20px;
+  color:var(--ink-dim);cursor:pointer;line-height:1;z-index:10000}
+.lb__close:hover{color:var(--cyan)}
+
+/* ============ APPROACH ============ */
+.approach{padding:110px 0;border-top:1px solid var(--rule)}
+.approach__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin-top:50px}
+.appr h3{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:500;margin-bottom:14px;display:flex;align-items:center;gap:11px}
+.appr h3 .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.appr:nth-child(1) .dot{background:var(--cyan)}
+.appr:nth-child(2) .dot{background:var(--magenta)}
+.appr:nth-child(3) .dot{background:var(--amber)}
+.appr p{font-size:15px;line-height:1.65;color:var(--ink-dim)}
+
+/* ============ FLIPBOOK ============ */
+.read{padding:110px 0}
+.read__head{margin-bottom:44px}
+.read__head h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(28px,3.4vw,46px);letter-spacing:-.02em;margin-top:18px;max-width:18ch}
+.read__head h2 em{font-style:italic;color:var(--cyan)}
+.book{position:relative;background:var(--bg-card);border:1px solid var(--rule);padding:26px}
+.book::before{
+  content:'INTERACTIVE FLIPBOOK';position:absolute;top:-9px;left:26px;background:var(--bg);
+  padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;color:var(--cyan);
+}
+.book iframe{width:100%;aspect-ratio:16/10;min-height:520px;border:0;display:block}
+.book__foot{margin-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-fade)}
+.book__foot a{color:var(--cyan);text-decoration:none;border-bottom:1px solid var(--cyan)}
+
+/* ============ COLOPHON ============ */
+.colophon{padding:120px 0 70px;border-top:1px solid var(--rule);margin-top:40px}
+.colophon__top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap;margin-bottom:70px}
+.colophon__logo{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.colophon__logo svg{width:56px;height:30px}
+.colophon__logo .pub{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--ink-dim)}
+.colophon__quote{font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:clamp(20px,2.4vw,30px);max-width:18ch;text-align:right;line-height:1.25}
+.colophon__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:44px}
+.col h4{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-fade);margin-bottom:14px;font-weight:400}
+.col p,.col li{font-size:14px;color:var(--ink-dim);line-height:1.7;list-style:none}
+.colophon__sig{margin-top:70px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--ink-fade)}
+
+@media(max-width:920px){
+  .wrap{padding:0 24px}
+  .hero{min-height:auto;padding:90px 0 70px}
+  .hero__content{max-width:100%}
+  .hero__book{position:relative;right:auto;top:auto;transform:rotate(4deg);width:70%;max-width:320px;margin:48px auto 0;display:block}
+  .hero__scroll{display:none}
+  .intro{grid-template-columns:1fr;gap:44px;padding:80px 0}
+  .stats{gap:32px 20px}
+  .stat--big,.stat--med,.stat--med2{grid-column:span 6}
+  .sheet{grid-template-columns:1fr;gap:24px}
+  .plate.cover{max-width:100%}
+  .approach__grid{grid-template-columns:1fr;gap:34px}
+  .colophon__grid{grid-template-columns:repeat(2,1fr);gap:34px}
+  .colophon__quote{text-align:left}
+  .book iframe{min-height:340px}
+}
+
+/* Embed mode — chrome-free when opened inside the home-page modal (?embed=1) */
+body.embed-mode .hero__scroll,
+body.embed-mode .colophon{display:none}
+body.embed-mode .hero{min-height:auto}
+</style>
+</head>
+<body>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embed-mode');</script>
+<div class="wrap">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero__content">
+    <div class="hero__eye" aria-hidden="true">
+      <svg viewBox="0 0 64 34" fill="none" stroke="#F5F5F0" stroke-width="1.6">
+        <path d="M1 17 C 14 2, 50 2, 63 17 C 50 32, 14 32, 1 17 Z"/>
+        <circle cx="32" cy="17" r="7"/><circle cx="32" cy="17" r="2.4" fill="#22D3EE" stroke="none"/>
+        <line x1="44" y1="6" x2="20" y2="28" stroke="#22D3EE"/>
+      </svg>
+    </div>
+    <div class="hero__kicker">Book Design · Editorial · 2026</div>
+    <h1 class="hero__title">Invisible<em>by Design</em></h1>
+    <p class="hero__sub">A coffee-table book about the algorithmic systems we've stopped seeing — and the people they leave behind.</p>
+  </div>
+  <figure class="hero__book">
+    <img src="images/book-cover.png" alt="Invisible by Design — angled cover mockup">
+  </figure>
+  <div class="hero__scroll">Scroll</div>
+</header>
+
+<!-- ===== INTRO ===== -->
+<section class="intro">
+  <aside class="intro__meta">
+    <div class="meta-row"><span class="k">Designer</span><span class="v">Jerome Bustarga</span></div>
+    <div class="meta-row"><span class="k">Course</span><span class="v">Book Design · Creighton University</span></div>
+    <div class="meta-row"><span class="k">Instructor</span><span class="v">Kelsey Scofield</span></div>
+    <div class="meta-row"><span class="k">Format</span><span class="v">8 × 10 in · 28 pp · hardcover</span></div>
+    <div class="meta-row"><span class="k">Role</span><span class="v">Concept · Writing · Illustration · Layout</span></div>
+    <div class="meta-row"><span class="k">Imprint</span><span class="v">Unseen Publishing</span></div>
+  </aside>
+  <div class="intro__body">
+    <div class="eyebrow">The Project</div>
+    <p>Invisible by Design documents the making of <strong>The Algorithm Mirror</strong> — a privacy-first web tool I built that turns a person's YouTube watch history into visual data art. The book turns that tool into an argument: the same systems that quietly narrow your feed also widen the gap between people who understand how those systems work and people who never knew they existed.</p>
+    <p>Across 28 pages it moves from a personal story — growing up in the Philippines, watching the digital divide split a classroom during the pandemic — to <strong>original research</strong> on twelve participants and 82,164 videos, and finally to a case for algorithmic literacy as a civil-rights issue.</p>
+    <p>The design problem was making something invisible feel concrete. Rather than reach for stock metaphors — magnifying glasses, padlocks, glowing eyes — I built the book's entire visual language out of the same material the tool itself produces: <strong>particle fields, pixel grids, and network meshes</strong>, each one generated from data.</p>
+  </div>
+</section>
+
+<!-- ===== DATA STRIP ===== -->
+<section class="data">
+  <div class="data__head">
+    <h2>The pilot study, in numbers.</h2>
+    <span class="note">// 12 participants · 2 years of history</span>
+  </div>
+  <div class="stats">
+    <div class="stat stat--big">
+      <span class="num">82,164</span>
+      <span class="lab">Videos analyzed across<br>twelve participants</span>
+    </div>
+    <div class="stat stat--med">
+      <span class="num">64.7%</span>
+      <span class="lab">Viewing in just the<br>top three categories</span>
+    </div>
+    <div class="stat stat--med2">
+      <span class="num">31.2%</span>
+      <span class="lab">Watched between<br>10 pm and 2 am</span>
+    </div>
+    <div class="stat stat--med">
+      <span class="num">−57%</span>
+      <span class="lab">Diversity decline,<br>User A (18 months)</span>
+    </div>
+    <div class="stat stat--med2">
+      <span class="num">7</span>
+      <span class="lab">Languages the<br>tool supports</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PULL QUOTE 1 ===== -->
+<section class="pq">
+  <blockquote><span class="mark">"</span>Algorithmic literacy shouldn't be a privilege. It should be a right.</blockquote>
+  <cite>— from the book</cite>
+</section>
+
+<!-- ===== CHAPTER 1 ===== -->
+<section class="chapter">
+  <div class="chapter__head">
+    <div class="chapter__no">01</div>
+    <div>
+      <h2 class="chapter__title">The <em>Compounding</em> Gap</h2>
+      <p class="chapter__desc">Cover, opening portrait, and the personal story — where the visual system and the argument are introduced together.</p>
+    </div>
+  </div>
+
+  <div class="sheet">
+    <div class="plate cover">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-01.png" alt="Cover" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.1</span><span><b>Cover.</b> The title split by a rising curve — generative network mesh emerging from negative space.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-02.png" alt="Pixel portrait spread" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.2</span><span><b>Pixel portrait.</b> Each square is one video; each color, a category. Real watch history as abstract art.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-05.png" alt="Skyscraper and Philippines pixel map spread" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.8</span><span><b>Unstable ground.</b> "You cannot build a skyscraper on unstable ground." The personal origin spread.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-06.png" alt="Chapter one cityscape opener" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.10</span><span><b>Chapter one opener.</b> A rural-to-urban skyline walking the reader across the divide, an algorithmic dome overhead.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-07.png" alt="Algorithm signals and filter bubble diagrams" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.12</span><span><b>How it steers you.</b> Three custom line-art infographics: the signal funnel, the filter bubble, and the path to agency.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PULL QUOTE 2 ===== -->
+<section class="pq">
+  <blockquote><span class="mark">"</span>The algorithm isn't malicious. It's optimized.</blockquote>
+  <cite>— Chapter One</cite>
+</section>
+
+<!-- ===== CHAPTER 2 ===== -->
+<section class="chapter">
+  <div class="chapter__head">
+    <div class="chapter__no">02</div>
+    <div>
+      <h2 class="chapter__title">Building the <em>Mirror</em></h2>
+      <p class="chapter__desc">The tool itself, the research findings, and the data visualizations that carry the book's evidence.</p>
+    </div>
+  </div>
+
+  <div class="sheet">
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-08.png" alt="Chapter two privacy architecture" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.14</span><span><b>Chapter two opener.</b> A line-art diagram of local, on-device processing — a tool that reveals surveillance without doing it.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-09.png" alt="Research findings data spread" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.16</span><span><b>The data spread.</b> 82,164 videos rendered as a content-concentration ring and a late-night temporal dial.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-10.png" alt="User A diversity decline pixel grid" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.18</span><span><b>User A.</b> Eighteen months of viewing collapsing from rainbow to a single hue — a feed narrowing in real time.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-11.png" alt="Perspective corridor of category tiles" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.20</span><span><b>"I feel manipulated."</b> A one-point corridor of colored tiles vanishing to a point — viewing history as a hallway.</span></div>
+    </div>
+    <div class="plate wide">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-12.png" alt="Pixel-art participants and particle figure" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.22</span><span><b>Not against AI.</b> Twelve pixel-art participants beside a figure dissolving into colored particles — the human at the center.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PULL QUOTE 3 ===== -->
+<section class="pq">
+  <blockquote>We just have to build it.<br>And <span class="mark">share</span> it. And <span class="mark">teach</span> it.</blockquote>
+  <cite>— Looking Forward</cite>
+</section>
+
+<!-- ===== CLOSING ===== -->
+<section class="chapter">
+  <div class="chapter__head">
+    <div class="chapter__no">03</div>
+    <div>
+      <h2 class="chapter__title">What Comes <em>Next</em></h2>
+      <p class="chapter__desc">The call to action and the closing image — the book hands the mirror to the reader.</p>
+    </div>
+  </div>
+  <div class="sheet">
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-13.png" alt="Four platform feeds spread" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.24</span><span><b>Beyond YouTube.</b> Four recommendation feeds in the book's palette — the same framework applied across platforms.</span></div>
+    </div>
+    <div class="plate">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-14.png" alt="Closing eye and walking figure spread" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.26</span><span><b>The closing spread.</b> An iris built from data, a lone figure walking into a field of falling color. "The reflection awaits."</span></div>
+    </div>
+    <div class="plate cover">
+      <div class="plate__frame"><img src="images/Invisible by Design - Book Design Project-15.png" alt="Back cover" loading="lazy"></div>
+      <div class="plate__cap"><span class="pg">pp.28</span><span><b>Back cover.</b> Full trade-back anatomy — hook headline, jacket copy, endorsement, author bio, and barcode.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== APPROACH ===== -->
+<section class="approach">
+  <div class="eyebrow">Approach</div>
+  <div class="approach__grid">
+    <div class="appr">
+      <h3><span class="dot"></span>Data as material</h3>
+      <p>Nothing in the book is decorative. Every particle field, pixel grid, and mesh is generated from real or simulated watch-history data, so the visuals are the same kind of object the tool produces — not illustrations of it.</p>
+    </div>
+    <div class="appr">
+      <h3><span class="dot"></span>No stock metaphors</h3>
+      <p>The brief deliberately avoids the visual clichés of surveillance design — no padlocks, no all-seeing eyes used as scare imagery, no magnifying glasses. The one eye in the book is a quiet imprint mark, not a threat.</p>
+    </div>
+    <div class="appr">
+      <h3><span class="dot"></span>Editorial typography</h3>
+      <p>Space Grotesk sets the display voice, Inter carries long-form reading, and JetBrains Mono labels every data point and caption — a three-way system that keeps research, narrative, and interface legible side by side.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLIPBOOK ===== -->
+<section class="read">
+  <div class="read__head">
+    <div class="eyebrow">Read it</div>
+    <h2>The full book, <em>page by page.</em></h2>
+  </div>
+  <div class="book">
+    <iframe allowfullscreen="allowfullscreen" allow="clipboard-write" scrolling="no" class="fp-iframe" src="https://heyzine.com/flip-book/6979bd6ff4.html" title="Invisible by Design flipbook"></iframe>
+    <div class="book__foot">
+      <span>// 28 pages · best viewed full-screen</span>
+      <a href="https://heyzine.com/flip-book/6979bd6ff4.html" target="_blank" rel="noopener">Open flipbook ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COLOPHON ===== -->
+<footer class="colophon">
+  <div class="colophon__top">
+    <div class="colophon__logo">
+      <svg viewBox="0 0 64 34" fill="none" stroke="#AEB8D0" stroke-width="1.6">
+        <path d="M1 17 C 14 2, 50 2, 63 17 C 50 32, 14 32, 1 17 Z"/>
+        <circle cx="32" cy="17" r="7"/><circle cx="32" cy="17" r="2.4" fill="#AEB8D0" stroke="none"/>
+        <line x1="44" y1="6" x2="20" y2="28"/>
+      </svg>
+      <span class="pub">UNSEEN&nbsp;&nbsp;PUBLISHING</span>
+    </div>
+    <p class="colophon__quote">For the ones the system wasn't built for — <em>yet.</em></p>
+  </div>
+  <div class="colophon__grid">
+    <div class="col"><h4>Designed by</h4><p>Jerome Bustarga<br>San Diego, 2026</p></div>
+    <div class="col"><h4>Set in</h4><p>Space Grotesk<br>Inter<br>JetBrains Mono</p></div>
+    <div class="col"><h4>Built with</h4><p>Adobe InDesign<br>Adobe Illustrator<br>Adobe Photoshop<br>JavaScript &amp; p5.js</p></div>
+    <div class="col"><h4>Course</h4><p>Book Design<br>Creighton University<br>Spring 2026</p></div>
+  </div>
+  <p class="colophon__sig">Invisible by Design · Jerome Bustarga · 2026</p>
+</footer>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" aria-hidden="true">
+  <span class="lb__close" id="lbClose" aria-label="Close">✕</span>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<script>
+(function(){
+  var lb=document.getElementById('lb'), lbImg=document.getElementById('lbImg'), lbClose=document.getElementById('lbClose');
+  function open(src,alt){ lbImg.src=src; lbImg.alt=alt||''; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function close(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); lbImg.src=''; document.body.style.overflow=''; }
+  document.querySelectorAll('.plate__frame img').forEach(function(img){
+    img.addEventListener('click', function(){ open(img.currentSrc||img.src, img.alt); });
+  });
+  lb.addEventListener('click', function(e){ if(e.target!==lbImg) close(); });
+  lbClose.addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && lb.classList.contains('open')) close(); });
+})();
+</script>
+</body>
+</html>

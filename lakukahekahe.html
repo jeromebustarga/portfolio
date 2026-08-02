@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lā Kūkahekahe 2026 — Jerome Bustarga</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brown:#5D4037;--terra:#C04000;--ochre:#CC7722;--olive:#6B7B3C;
+      --cream:#F5F0E6;--white:#fff;--black:#1a1a1a;--gray:#666;--light:#f1ece2;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;color:var(--black);background:var(--white)}
+    img{max-width:100%;height:auto;display:block}
+
+    nav{position:fixed;top:0;left:0;right:0;padding:18px 50px;display:flex;justify-content:space-between;align-items:center;background:rgba(245,240,230,.9);backdrop-filter:blur(12px);z-index:100;border-bottom:1px solid rgba(93,64,55,.1)}
+    nav .logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--brown);text-decoration:none}
+    nav .back{font-size:14px;color:var(--gray);text-decoration:none;transition:color .2s}
+    nav .back:hover{color:var(--terra)}
+
+    .hero{padding:130px 50px 70px;background:var(--cream);text-align:center}
+    .hero .kicker{font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--terra);margin-bottom:18px}
+    .hero h1{font-family:'Playfair Display',serif;font-size:60px;font-weight:700;color:var(--brown);margin-bottom:12px;line-height:1.05}
+    .hero .subtitle{font-size:18px;color:var(--gray);margin-bottom:55px}
+    .hero-banner{max-width:1200px;margin:0 auto;border-radius:14px;overflow:hidden;box-shadow:0 25px 70px rgba(93,64,55,.25)}
+
+    section{padding:95px 50px;max-width:1300px;margin:0 auto}
+    section.cream{background:var(--cream);max-width:100%}
+    .inner{max-width:1300px;margin:0 auto}
+    .label{font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--terra);margin-bottom:18px}
+    h2{font-family:'Playfair Display',serif;font-size:38px;font-weight:600;color:var(--brown);margin-bottom:26px;line-height:1.15}
+    p{color:var(--gray);max-width:680px;margin-bottom:18px}
+    .center{text-align:center}
+    .center p{margin-left:auto;margin-right:auto}
+
+    .overview{display:grid;grid-template-columns:280px 1fr;gap:70px;align-items:start}
+    .meta{display:flex;flex-direction:column;gap:24px}
+    .meta .item{display:flex;flex-direction:column;gap:4px}
+    .meta .k{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--terra)}
+    .meta .v{font-size:15px;color:var(--black)}
+
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center}
+    .shot{border-radius:10px;overflow:hidden;box-shadow:0 12px 45px rgba(93,64,55,.16)}
+    .shot.soft{box-shadow:0 8px 30px rgba(93,64,55,.10)}
+
+    .palette{display:flex;gap:34px;flex-wrap:wrap;justify-content:center;margin-top:46px}
+    .sw{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .dot{width:96px;height:96px;border-radius:50%;box-shadow:0 6px 22px rgba(0,0,0,.12)}
+    .sw .n{font-size:13px;font-weight:600}
+    .sw .h{font-size:11px;color:var(--gray);font-family:monospace}
+
+    .full{max-width:1150px;margin:0 auto}
+    .cap{margin-top:18px;font-size:14px;color:var(--gray);text-align:center;max-width:780px;margin-left:auto;margin-right:auto}
+
+    .pair{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+    .card .meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+    .card .nm{font-weight:600}
+    .card .sz{font-size:13px;color:var(--gray)}
+
+    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+    .three .lbl{font-size:13px;color:var(--gray);text-align:center;margin-top:10px}
+
+    .reflection{text-align:center}
+    .reflection p{max-width:800px;margin:0 auto;font-size:18px;line-height:1.9}
+
+    footer{padding:55px;text-align:center;background:var(--brown);color:var(--cream)}
+    footer .links{display:flex;justify-content:center;gap:38px;margin-bottom:26px}
+    footer a{color:var(--cream);text-decoration:none;font-size:14px;opacity:.7;transition:opacity .2s}
+    footer a:hover{opacity:1}
+    footer .cr{font-size:12px;opacity:.5}
+
+    @media(max-width:900px){
+      nav{padding:14px 24px}
+      .hero{padding:100px 24px 50px}
+      .hero h1{font-size:38px}
+      section{padding:55px 24px}
+      .overview{grid-template-columns:1fr;gap:36px}
+      .two,.pair,.three{grid-template-columns:1fr;gap:32px}
+      h2{font-size:28px}
+    }
+
+    /* Embed mode — chrome-free when opened inside the home-page modal (?embed=1) */
+    body.embed-mode nav,
+    body.embed-mode footer{display:none}
+    body.embed-mode .hero{padding-top:70px}
+  </style>
+<style>/* safe-area-notch-fix */
+@supports (padding: max(0px)) {
+  nav { padding-top: calc(env(safe-area-inset-top, 0px) + 16px) !important; }
+}
+</style>
+</head>
+<body>
+  <script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embed-mode');</script>
+
+  <nav>
+    <a href="home.html" class="logo">Jerome Bustarga</a>
+    <a href="home.html#work" class="back">← Back to Projects</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="kicker">Event Promotional Graphics</p>
+    <h1>Lā Kūkahekahe 2026</h1>
+    <p class="subtitle">A hand-lettered identity celebrating Hawaiian Language Day</p>
+    <div class="hero-banner">
+      <img src="images/LaKukahekahe_Eventbrite.png" alt="Lā Kūkahekahe 2026 event banner">
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section>
+    <div class="overview">
+      <div class="meta">
+        <div class="item"><span class="k">Role</span><span class="v">Designer · Illustrator</span></div>
+        <div class="item"><span class="k">Tools</span><span class="v">Adobe Illustrator</span></div>
+        <div class="item"><span class="k">Deliverables</span><span class="v">Poster, Flyer, Tote Bag, Eventbrite Header, Social Graphic</span></div>
+        <div class="item"><span class="k">Event</span><span class="v">Feb 14, 2026 · Nā Lama Kukui, Honolulu</span></div>
+      </div>
+      <div>
+        <p class="label">Overview</p>
+        <h2>Celebrating ʻŌlelo Hawaiʻi</h2>
+        <p>Lā Kūkahekahe is Hawaiian Language Day — an annual celebration of ʻŌlelo Hawaiʻi. I designed a complete promotional identity for the 2026 event hosted by the Office of Hawaiian Affairs, carried across print, digital, and merchandise.</p>
+        <p>The system is built around original hand-lettering and a dense cultural illustration — kūpuna storytelling, hula, honu, voyaging canoes, and native plants — all tied together under the theme <em>Ka Leo O Ke Ola: The Voice of Life</em>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="cream">
+    <div class="inner center" style="max-width:880px">
+      <p class="label">The Challenge</p>
+      <h2>Honoring Culture Through Design</h2>
+      <p>Build a cohesive set of event graphics that honor Hawaiian language and culture — balancing celebration with cultural respect — while creating one visual system flexible enough to live across a poster, flyer, tote, social post, and event page.</p>
+    </div>
+  </section>
+
+  <!-- THE ARTWORK (poster as showcase) -->
+  <section>
+    <div class="two">
+      <div class="shot">
+        <img src="images/LaKukahekahe_Poster.png" alt="Lā Kūkahekahe poster">
+      </div>
+      <div>
+        <p class="label">The Artwork</p>
+        <h2>Hand-Lettering & Illustration</h2>
+        <p>The title is fully hand-lettered, with traditional kapa-inspired geometric patterns drawn inside each letterform. The triangles and linework reference ancestral textile arts, making the type itself part of the cultural story.</p>
+        <p>At the center, a kūpuna (elder) passes ʻōlelo to a young hula dancer — surrounded by honu, voyaging canoe, conch shell, pahu drum, mauna, and native plants like kalo and ʻōhiʻa lehua.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section class="cream">
+    <div class="inner center">
+      <p class="label">Visual Identity</p>
+      <h2>Color Palette</h2>
+      <p style="max-width:600px">Earth tones drawn from the Hawaiian landscape — volcanic soil, terracotta, golden sun, native foliage, and natural kapa cloth.</p>
+    </div>
+    <div class="palette">
+      <div class="sw"><div class="dot" style="background:#5D4037"></div><span class="n">Volcanic Brown</span><span class="h">#5D4037</span></div>
+      <div class="sw"><div class="dot" style="background:#C04000"></div><span class="n">Terracotta</span><span class="h">#C04000</span></div>
+      <div class="sw"><div class="dot" style="background:#CC7722"></div><span class="n">Ochre</span><span class="h">#CC7722</span></div>
+      <div class="sw"><div class="dot" style="background:#6B7B3C"></div><span class="n">Olive</span><span class="h">#6B7B3C</span></div>
+      <div class="sw"><div class="dot" style="background:#F5F0E6;border:1px solid #ddd"></div><span class="n">Kapa Cream</span><span class="h">#F5F0E6</span></div>
+    </div>
+  </section>
+
+  <!-- PRINT -->
+  <section>
+    <div class="center" style="margin-bottom:46px">
+      <p class="label">Deliverables</p>
+      <h2>Print</h2>
+    </div>
+    <div class="pair">
+      <div class="card">
+        <div class="shot"><img src="images/LaKukahekahe_Poster.png" alt="Poster"></div>
+        <div class="meta-row"><span class="nm">Poster</span><span class="sz">11 × 17 in</span></div>
+      </div>
+      <div class="card">
+        <div class="shot"><img src="images/LaKukahekahe_Flyer.png" alt="Flyer"></div>
+        <div class="meta-row"><span class="nm">Flyer</span><span class="sz">7 × 5 in</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section class="cream">
+    <div class="inner center" style="margin-bottom:46px">
+      <p class="label">Deliverable</p>
+      <h2>Social Graphic</h2>
+      <p style="max-width:600px">A 1080×1350 portrait post adapting the system for Instagram, shown in feed.</p>
+    </div>
+    <div class="inner pair">
+      <div class="card"><div class="shot soft"><img src="images/LaKukahekahe_Social.png" alt="Social graphic"></div></div>
+      <div class="card"><div class="shot soft"><img src="images/LaKukahekahe_Social_Mockup.png" alt="Social in feed"></div></div>
+    </div>
+  </section>
+
+  <!-- EVENTBRITE -->
+  <section>
+    <div class="center" style="margin-bottom:46px">
+      <p class="label">Deliverable</p>
+      <h2>Eventbrite Header</h2>
+      <p style="max-width:620px">A 2160×1080 banner built to sit cleanly above the event details on the Eventbrite page.</p>
+    </div>
+    <div class="full" style="margin-bottom:40px">
+      <div class="shot"><img src="images/LaKukahekahe_Eventbrite.png" alt="Eventbrite header"></div>
+    </div>
+    <div class="full">
+      <div class="shot soft"><img src="images/LaKukahekahe_Eventbrite_Mockup.png" alt="Eventbrite page mockup"></div>
+    </div>
+  </section>
+
+  <!-- TOTE -->
+  <section class="cream">
+    <div class="inner center" style="margin-bottom:46px">
+      <p class="label">Merchandise</p>
+      <h2>Tote Bag</h2>
+      <p style="max-width:620px">A 12×14 portrait composition redrawn for fabric, with the cream-interior lettering treatment.</p>
+    </div>
+    <div class="inner pair">
+      <div class="card">
+        <div class="shot soft"><img src="images/LaKukahekahe_ToteBag.png" alt="Tote bag design"></div>
+        <div class="meta-row"><span class="nm">Tote Design</span><span class="sz">12 × 14 in</span></div>
+      </div>
+      <div class="card">
+        <div class="shot"><img src="images/LaKukahekahe_ToteBag_Mockup.png" alt="Tote bag mockup"></div>
+        <div class="meta-row"><span class="nm">In Context</span><span class="sz"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="reflection">
+    <p class="label">Reflection</p>
+    <h2>What I Learned</h2>
+    <p>This project pushed me to balance creative expression with cultural responsibility. Every choice — from the kapa-inspired lettering to each element in the illustration — was made with respect for Hawaiian heritage. Adapting one visual system across five formats taught me how to hold an identity together while designing for each medium on its own terms.</p>
+  </section>
+
+  <footer>
+    <div class="links">
+      <a href="home.html#work">All Projects</a>
+    </div>
+    <p class="cr">© 2026 Jerome Bustarga</p>
+  </footer>
+
+</body>
+</html>

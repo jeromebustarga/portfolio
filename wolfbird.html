@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canadian Wolf Bird Ginger Ale — Jerome Bustarga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Work+Sans:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#2a4130;
+    --pine-deep:#1b2a20;
+    --cream:#ece2cc;
+    --cream-lt:#f3ecda;
+    --amber:#f8a52d;
+    --sun:#fbb040;
+    --bronze:#8a5f25;
+    --bronze-lt:#b9883c;
+    --rust:#9e3b2e;
+    --ink:#1b1b14;
+    --pine-rgb:42,65,48;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Work Sans",sans-serif;
+    font-size:18px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+  .hero>.wrap{width:100%}
+  .eyebrow{
+    font-family:"Oswald",sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.28em;
+    font-size:.72rem;
+    font-weight:500;
+  }
+  h1,h2,h3{font-family:"Fraunces",serif;line-height:1.05;font-weight:600}
+  p{max-width:62ch}
+  a{color:inherit}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:var(--pine-deep);
+    color:var(--cream);
+    overflow:hidden;
+    padding:72px 0 0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  .hero::before{ /* sun glow */
+    content:"";
+    position:absolute;
+    width:780px;height:780px;
+    right:-160px;top:80px;
+    background:radial-gradient(circle, rgba(248,165,45,.42) 0%, rgba(248,165,45,.10) 42%, transparent 66%);
+    pointer-events:none;
+  }
+  .hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:3}
+  .brandmark{font-family:"Fraunces",serif;font-weight:900;font-size:1.05rem;letter-spacing:.02em}
+  .brandmark span{color:var(--amber)}
+  .hero-top .eyebrow{color:var(--bronze-lt)}
+  .hero-grid{
+    flex:1;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    align-items:center;
+    gap:40px;
+    position:relative;z-index:2;
+    padding:24px 0 56px;
+  }
+  .hero-copy .eyebrow{color:var(--amber);display:block;margin-bottom:26px}
+  .hero-copy h1{
+    font-size:clamp(3.2rem,8vw,6.6rem);
+    font-weight:900;
+    letter-spacing:-.015em;
+  }
+  .hero-copy h1 em{
+    display:block;font-style:normal;color:var(--amber);
+    font-weight:500;font-size:.46em;letter-spacing:.02em;margin-top:.1em;
+  }
+  .hero-lede{
+    margin-top:30px;font-size:1.18rem;color:#d8cdb2;max-width:46ch;
+  }
+  .hero-meta{
+    display:flex;gap:34px;margin-top:38px;flex-wrap:wrap;
+  }
+  .hero-meta div{border-left:2px solid var(--bronze);padding-left:14px}
+  .hero-meta .k{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.66rem;color:var(--bronze-lt)}
+  .hero-meta .v{font-size:.96rem;color:var(--cream)}
+  .hero-art{position:relative;display:flex;justify-content:center}
+  .hero-art img{
+    width:108%;max-width:620px;
+    filter:drop-shadow(0 40px 60px rgba(0,0,0,.45));
+  }
+  .scrollcue{
+    text-align:center;padding-bottom:26px;position:relative;z-index:2;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.3em;
+    font-size:.62rem;color:var(--bronze-lt);
+  }
+  .scrollcue span{display:block;font-size:1.1rem;margin-top:4px;animation:bob 1.8s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+  /* ---------- horizon divider ---------- */
+  .horizon{display:block;width:100%;height:46px;color:var(--bronze)}
+
+  /* ---------- SECTION BASICS ---------- */
+  section{padding:96px 0}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:14px}
+  .sec-num{font-family:"Oswald",sans-serif;color:var(--bronze);font-size:.8rem;letter-spacing:.2em}
+  .sec-head .eyebrow{color:var(--bronze)}
+  h2{font-size:clamp(2rem,4.4vw,3.1rem);margin-bottom:26px}
+  .lead{font-size:1.22rem;color:#3a3a2c}
+
+  /* overview two-col */
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:start}
+  .twocol p + p{margin-top:18px}
+  .pull{
+    font-family:"Fraunces",serif;font-weight:500;font-size:1.5rem;line-height:1.3;
+    color:var(--pine);border-top:3px solid var(--amber);padding-top:22px;
+  }
+
+  /* sketch + inspiration band */
+  .band-pine{background:var(--pine);color:var(--cream)}
+  .sketch-layout{display:grid;grid-template-columns:1.22fr 1fr;gap:48px;align-items:start;margin-top:40px}
+  .sketch-imgs{display:flex;flex-direction:column;gap:26px}
+  figure.sketch{background:#fff;padding:14px 14px 6px;border-radius:7px;box-shadow:0 20px 44px rgba(0,0,0,.36)}
+  figure.sketch img{width:100%;display:block;border-radius:3px}
+  figure.sketch figcaption{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:.6rem;color:var(--bronze);padding-top:12px;text-align:center}
+  .sketch-layout .feat{margin-top:6px}
+
+  /* inspiration */
+  .insp-layout{display:grid;grid-template-columns:1.3fr .9fr;gap:50px;align-items:center;margin-top:36px}
+  .influences{list-style:none;margin-top:30px}
+  .influences li{display:flex;gap:16px;padding:15px 0;border-top:1px solid rgba(236,226,204,.16)}
+  .influences li:last-child{border-bottom:1px solid rgba(236,226,204,.16)}
+  .influences .ix{font-family:"Oswald",sans-serif;color:var(--amber);font-size:.8rem;letter-spacing:.08em;padding-top:4px}
+  .influences b{font-family:"Fraunces",serif;font-weight:600;display:block;font-size:1.05rem;color:var(--cream)}
+  .influences span{font-size:.93rem;color:#bdb293}
+  .insp-badge{display:flex;justify-content:center}
+  .badge-svg{width:100%;max-width:300px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.32))}
+  /* heated rivalry image cluster */
+  .insp-cluster{position:relative;width:100%;aspect-ratio:1/1;max-width:470px;margin:0 auto}
+  .ic{position:absolute;width:47%;margin:0;background:#fff;padding:8px 8px 11px;border-radius:4px;
+      box-shadow:0 12px 26px rgba(0,0,0,.36);
+      transition:transform .4s cubic-bezier(.2,.75,.2,1),box-shadow .4s;cursor:pointer}
+  .ic img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:2px}
+  .ic1{top:1%;left:5%;transform:rotate(-8deg);z-index:2}
+  .ic2{top:0%;left:44%;transform:rotate(6deg);z-index:3}
+  .ic3{top:30%;left:25%;transform:rotate(-3deg);z-index:4}
+  .ic4{top:51%;left:1%;transform:rotate(5deg);z-index:2}
+  .ic5{top:49%;left:47%;transform:rotate(-6deg);z-index:3}
+  .ic:hover,.ic.active{transform:scale(1.18) rotate(0deg);z-index:20;box-shadow:0 28px 52px rgba(0,0,0,.5)}
+  .band-pine h2{color:var(--cream)}
+  .band-pine .sec-head .eyebrow,.band-pine .sec-num{color:var(--amber)}
+  .band-pine .lead{color:#d9cfb4}
+  .band-pine p{color:#cfc4a8}
+
+  /* can showcase */
+  .can-show{display:grid;grid-template-columns:1.55fr 1fr;gap:48px;align-items:center;margin-top:40px}
+  .can-show img{width:100%;border-radius:10px;box-shadow:0 24px 50px rgba(27,27,20,.22)}
+  .feat{list-style:none}
+  .feat li{padding:16px 0;border-bottom:1px solid rgba(var(--pine-rgb),.18);display:flex;gap:14px}
+  .feat li:first-child{border-top:1px solid rgba(var(--pine-rgb),.18)}
+  .feat .dot{flex:0 0 auto;width:11px;height:11px;border-radius:50%;background:var(--amber);margin-top:8px;box-shadow:0 0 0 4px rgba(248,165,45,.2)}
+  .feat b{font-family:"Fraunces",serif;font-weight:600;display:block;font-size:1.06rem}
+  .feat span{font-size:.95rem;color:#54543f}
+  .band-pine .feat span{color:#bdb293}
+  .band-pine .feat li{border-color:rgba(236,226,204,.16)}
+  .band-pine .feat li:first-child{border-color:rgba(236,226,204,.16)}
+
+  /* carrier */
+  .carrier-show{display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:center;margin-top:30px}
+  .carrier-show img{width:100%;border-radius:10px;box-shadow:0 24px 50px rgba(0,0,0,.3)}
+
+  /* mockups amber band */
+  .band-amber{background:var(--amber)}
+  .band-amber h2,.band-amber .sec-num,.band-amber .sec-head .eyebrow{color:var(--pine-deep)}
+  .band-amber .lead{color:#5a3d10}
+  .mock-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:26px;margin-top:44px}
+  .mock-grid figure{background:transparent}
+  .mock-grid img{width:100%;display:block;filter:drop-shadow(0 26px 34px rgba(90,55,8,.34))}
+  .mock-big{grid-row:span 2;display:flex;align-items:center;justify-content:center;padding:10px}
+  .mock-pair{display:grid;grid-template-rows:1fr 1fr;gap:26px}
+  .mock-grid figcaption{
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.18em;
+    font-size:.64rem;color:#6b4a14;padding:0 0 14px 4px;
+  }
+  .mock-cell{background:transparent;padding:0;display:flex;align-items:center;justify-content:center}
+  .mock-cell img{width:auto;max-height:340px;margin:0 auto}
+
+  /* design system */
+  .sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;margin-top:40px;align-items:start}
+  .swatches{display:flex;flex-direction:column;gap:0;border-radius:10px;overflow:hidden;box-shadow:0 14px 34px rgba(27,27,20,.16)}
+  .sw{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;font-family:"Oswald",sans-serif;letter-spacing:.1em;font-size:.8rem;text-transform:uppercase}
+  .sw .hex{opacity:.8;font-size:.72rem}
+  .type-spec b{font-family:"Fraunces",serif;font-weight:900;font-size:2.4rem;display:block;line-height:1.1}
+  .type-spec .label{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:.66rem;color:var(--bronze);margin:18px 0 4px}
+  .type-spec .desc{font-size:.95rem;color:#54543f}
+  .type-spec .cond{font-family:"Oswald",sans-serif;font-weight:600;font-size:1.5rem;text-transform:uppercase;letter-spacing:.05em}
+
+  /* footer */
+  footer{background:var(--pine-deep);color:var(--cream);padding:70px 0 50px;text-align:center}
+  footer .loon{width:64px;margin:0 auto 22px;display:block;opacity:.9}
+  footer h3{font-size:1.8rem;color:var(--cream)}
+  footer h3 span{color:var(--amber)}
+  footer .meta{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.22em;font-size:.72rem;color:var(--bronze-lt);margin-top:14px}
+  footer .fine{font-size:.82rem;color:#8a8068;margin-top:30px}
+
+  @media(max-width:880px){
+    body{font-size:17px}
+    .wrap{padding:0 22px}
+    .hero{padding-top:54px}
+    .hero-grid{grid-template-columns:1fr;gap:10px;padding-bottom:30px}
+    .hero-art{order:-1;margin-bottom:10px}
+    .hero-art img{max-width:300px;width:80%}
+    .hero-copy h1{font-size:clamp(2.8rem,13vw,4rem)}
+    .twocol,.can-show,.carrier-show,.sys-grid,.sketch-layout,.insp-layout{grid-template-columns:1fr;gap:34px}
+    .mock-grid{grid-template-columns:1fr}
+    .mock-big{grid-row:auto}
+    section{padding:64px 0}
+    .hero-meta{gap:20px}
+  }
+
+  /* Embed mode — when opened inside the home-page modal (?embed=1) */
+  body.embed-mode .scrollcue{display:none}
+  body.embed-mode .hero{min-height:auto;padding-bottom:48px}
+</style>
+</head>
+<body>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embed-mode');</script>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="wrap hero-top">
+    <div class="brandmark">CANADIAN <span>WOLF BIRD</span></div>
+    <div class="eyebrow">Est. 2025 · No. 02</div>
+  </div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Brand &amp; Beverage Packaging</span>
+      <h1>Canadian<br>Wolf Bird<em>Ginger Ale</em></h1>
+      <p class="hero-lede">A vintage-inspired packaging system for a fictional Canadian craft ginger ale — concept, illustration, can, carrier, and mockups.</p>
+      <div class="hero-meta">
+        <div><div class="k">Role</div><div class="v">Brand · Illustration · Packaging</div></div>
+        <div><div class="k">Deliverables</div><div class="v">12 oz can · 4-pack · 3 mockups</div></div>
+        <div><div class="k">Year</div><div class="v">Spring 2026</div></div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <img src="images/hero-cans.png" alt="Two Canadian Wolf Bird ginger ale cans, front and back">
+    </div>
+  </div>
+  <div class="scrollcue">Scroll<span>↓</span></div>
+</header>
+
+<svg class="horizon" viewBox="0 0 1200 46" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" style="background:var(--pine-deep)">
+  <circle cx="600" cy="46" r="30" fill="currentColor"/>
+  <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <line x1="600" y1="2" x2="600" y2="9"/>
+    <line x1="558" y1="9" x2="554" y2="15"/><line x1="642" y1="9" x2="646" y2="15"/>
+    <line x1="520" y1="20" x2="514" y2="25"/><line x1="680" y1="20" x2="686" y2="25"/>
+  </g>
+  <line x1="0" y1="44" x2="540" y2="44" stroke="currentColor" stroke-width="2"/>
+  <line x1="660" y1="44" x2="1200" y2="44" stroke="currentColor" stroke-width="2"/>
+</svg>
+
+<!-- ===== OVERVIEW ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><span class="eyebrow">The Project</span></div>
+    <h2>Build a beverage worth putting on a shelf.</h2>
+    <div class="twocol">
+      <div>
+        <p class="lead">The goal: an original packaging system for a craft beverage in a 12&nbsp;oz slim can, with a matching four-pack carrier and mockups that show it in context.</p>
+        <p>I chose a non-alcoholic craft ginger ale and built an entire fictional brand around it — <b>Canadian Wolf Bird</b> — rooted in the imagery of the Canadian backcountry: lakeside cottages, pine forest, still water at first light, and the call of the loon.</p>
+        <p>The nickname does the heavy lifting. In Northern folklore the loon is called the "wolf bird," so the name carries the wilderness, the wildlife, and a little mystery in three words.</p>
+      </div>
+      <div>
+        <p class="pull">Rather than a flat front and back, the label reads as one continuous scene — a dock on a quiet lake at sunrise — that you discover as the can turns in your hand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INSPIRATION ===== -->
+<section class="band-pine">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><span class="eyebrow">Inspiration</span></div>
+    <h2>Built from a Canadian summer.</h2>
+    <div class="insp-layout">
+      <div class="insp-copy">
+        <p class="lead">The world came first. I pulled from the quiet of the Canadian backcountry — still water at dawn, a cabin with smoke in the pines, the lonely call of a loon across the lake.</p>
+        <p>Vintage craft-beverage labels and weathered lodge signage shaped the lettering and ornament. The brand's emotional center came from Rachel Reid's novel <em>Heated Rivalry</em> — the source of the dock, the closeness in the illustration, and the name on the can.</p>
+        <ul class="influences">
+          <li><span class="ix">01</span><div><b>The backcountry</b><span>Cottages, pines, loons, and still lakes at first light.</span></div></li>
+          <li><span class="ix">02</span><div><b>Vintage craft labels</b><span>Hand-tuned serifs, flourishes, and a muted heritage palette.</span></div></li>
+          <li><span class="ix">03</span><div><b>Heated Rivalry</b><span>Rachel Reid's novel — the warmth that frames the scene.</span></div></li>
+        </ul>
+      </div>
+      <div class="insp-cluster" aria-label="Heated Rivalry inspiration images">
+        <figure class="ic ic1"><img src="images/insp-1.png" alt="Heated Rivalry inspiration"></figure>
+        <figure class="ic ic2"><img src="images/insp-2.png" alt="Heated Rivalry inspiration"></figure>
+        <figure class="ic ic3"><img src="images/insp-3.png" alt="Heated Rivalry inspiration"></figure>
+        <figure class="ic ic4"><img src="images/insp-4.png" alt="Heated Rivalry inspiration"></figure>
+        <figure class="ic ic5"><img src="images/insp-5.png" alt="Heated Rivalry inspiration"></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONCEPT / SKETCHES ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><span class="eyebrow">Concept &amp; Sketches</span></div>
+    <h2>Three directions, one world.</h2>
+    <p class="lead">Before committing, I explored three illustration routes and tested the wordmark until the lettering felt crafted instead of corporate.</p>
+    <div class="sketch-layout">
+      <div class="sketch-imgs">
+        <figure class="sketch"><img src="images/sketch-cans.png" alt="Three can concept sketches in pencil"><figcaption>Can concepts — pencil studies</figcaption></figure>
+        <figure class="sketch"><img src="images/sketch-lettering.png" alt="Wolf Bird wordmark lettering studies"><figcaption>Wordmark lettering studies</figcaption></figure>
+      </div>
+      <ul class="feat">
+        <li><span class="dot"></span><div><b>The lakeside cottage</b><span>A cabin and pines framed by crossed hockey sticks — heritage and sport in one mark.</span></div></li>
+        <li><span class="dot"></span><div><b>The dock at sunrise</b><span>Two figures looking out over the water. Warm, human, and unmistakably "lake season." This one won.</span></div></li>
+        <li><span class="dot"></span><div><b>The face-off</b><span>Two players nose to nose with the loon set between them like a crest.</span></div></li>
+        <li><span class="dot"></span><div><b>Lettering studies</b><span>Vintage, rustic, and modern-condensed wordmarks — landing on a hand-built vintage serif.</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CAN ===== -->
+<section class="band-pine">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><span class="eyebrow">The Can</span></div>
+    <h2>A label that does two jobs at once.</h2>
+    <p class="lead">A full wraparound illustration on one side; a working information panel on the other — designed to meet real beverage conventions.</p>
+    <div class="can-show">
+      <img src="images/can-label.png" alt="Flattened Canadian Wolf Bird can label artwork">
+      <ul class="feat">
+        <li><span class="dot"></span><div><b>Continuous scene</b><span>The sunrise, lake, and cabin wrap unbroken around the can.</span></div></li>
+        <li><span class="dot"></span><div><b>Bilingual panel</b><span>English / French nutrition facts, ingredients, and barcode.</span></div></li>
+        <li><span class="dot"></span><div><b>The loon mark</b><span>A "crafted by nature" badge anchors the brand identity.</span></div></li>
+        <li><span class="dot"></span><div><b>Founder's signature</b><span>A signed endorsement and "Proudly Canadian" seal sell the craft story.</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CARRIER ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><span class="eyebrow">The Carrier</span></div>
+    <h2>One landscape, four cans.</h2>
+    <div class="carrier-show">
+      <div>
+        <p class="lead">The four-pack carrier extends the same scene across its panels, so the artwork continues unbroken when the cans sit inside.</p>
+        <p>The top flap repeats the wordmark, volume, and key details for shelf visibility — the part a shopper sees first looking down into a cooler.</p>
+      </div>
+      <img src="images/carrier.png" alt="Canadian Wolf Bird four-pack carrier dieline">
+    </div>
+  </div>
+</section>
+
+<!-- ===== MOCKUPS ===== -->
+<section class="band-amber">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><span class="eyebrow">In Context</span></div>
+    <h2>Tested in three dimensions.</h2>
+    <p class="lead">Rendered in Photoshop to check how the scene wraps, how the panel sits, and how the four-pack reads on a shelf.</p>
+    <div class="mock-grid">
+      <figure class="mock-big"><img src="images/mockup-fourpack.png" alt="Four-pack carrier with cans"></figure>
+      <div class="mock-pair">
+        <figure class="mock-cell"><img src="images/mockup-can-front.png" alt="Single can, illustration side"></figure>
+        <figure class="mock-cell"><img src="images/mockup-can-back.png" alt="Single can, nutrition panel side"></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DESIGN SYSTEM ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><span class="eyebrow">Design System</span></div>
+    <h2>The kit behind the brand.</h2>
+    <div class="sys-grid">
+      <div>
+        <div class="type-spec">
+          <div class="label">Palette</div>
+          <div class="desc" style="margin-bottom:18px">Forest green for depth, parchment for warmth, gold for the ginger and the morning sun, rust pulled straight from the flannel on the dock.</div>
+        </div>
+        <div class="swatches">
+          <div class="sw" style="background:#2a4130;color:#ece2cc">Pine Green <span class="hex">#2A4130</span></div>
+          <div class="sw" style="background:#ece2cc;color:#2a4130">Parchment <span class="hex">#ECE2CC</span></div>
+          <div class="sw" style="background:#f8a52d;color:#2a4130">Sunrise Gold <span class="hex">#F8A52D</span></div>
+          <div class="sw" style="background:#8a5f25;color:#ece2cc">Bronze <span class="hex">#8A5F25</span></div>
+          <div class="sw" style="background:#9e3b2e;color:#ece2cc">Flannel Rust <span class="hex">#9E3B2E</span></div>
+        </div>
+      </div>
+      <div class="type-spec">
+        <div class="label">Wordmark</div>
+        <b>Wolf Bird</b>
+        <div class="desc">A vintage, hand-tuned serif with ornamental flourishes — the voice of an old lodge sign.</div>
+        <div class="label">Supporting</div>
+        <div class="cond">Bold Ginger · Crisp Refreshment</div>
+        <div class="desc">Condensed uppercase for callouts and labels keeps the panel tight and legible at can scale.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <svg class="loon" viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="60" cy="52" rx="46" ry="9" fill="#2a4130"/>
+      <path d="M30 52 Q34 36 60 36 Q86 36 92 50 Q70 56 30 52Z" fill="#1b1b14"/>
+      <path d="M30 50 Q26 40 22 40 Q20 44 26 50Z" fill="#1b1b14"/>
+      <circle cx="27" cy="44" r="2.4" fill="#9e3b2e"/>
+      <path d="M18 44 L24 45 L20 47Z" fill="#8a5f25"/>
+      <g fill="#ece2cc"><circle cx="50" cy="46" r="1.3"/><circle cx="58" cy="44" r="1.3"/><circle cx="66" cy="46" r="1.3"/><circle cx="74" cy="48" r="1.3"/><circle cx="54" cy="50" r="1.1"/><circle cx="62" cy="49" r="1.1"/><circle cx="70" cy="51" r="1.1"/></g>
+    </svg>
+    <h3>Canadian <span>Wolf Bird</span> Ginger Ale</h3>
+    <div class="meta">Designed by Jerome Bustarga</div>
+    <p class="fine">Fictional brand and packaging concept. Inspired in part by Rachel Reid's novel <em>Heated Rivalry</em>.</p>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.insp-cluster .ic').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const on=el.classList.contains('active');
+      el.parentElement.querySelectorAll('.ic').forEach(x=>x.classList.remove('active'));
+      if(!on) el.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
