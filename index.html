@@ -226,7 +226,8 @@ nav.hidden { transform: translateY(-110%); }
 /* "What I do" revealed by the parting marquee */
 .veil-reveal { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 86px 24px; opacity: 0; transform: scale(1.08); will-change: transform, opacity; pointer-events: none; }
 .veil-reveal .disc-head { margin-bottom: 0; }
-.veil-reveal .disc-grid { width: 100%; max-width: var(--max); }
+.veil-reveal .disc-grid { width: 100%; max-width: var(--max); grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 1100px) { .veil-reveal .disc-grid { grid-template-columns: repeat(3, 1fr); } }
 .veil-reveal .disc-card { min-height: 200px; }
 @media (max-width: 700px) {
   .veil-section { height: 240vh; }
@@ -959,36 +960,43 @@ img.fe, .fe img { display: block; }
         <div class="veil-reveal" id="disciplines">
           <div class="disc-head">
             <span class="label">(What I do)</span>
-            <h2>Four crafts, <em>one maker.</em></h2>
+            <h2>Five crafts, <em>one maker.</em></h2>
           </div>
           <div class="disc-grid">
             <a class="disc-card" href="#work" data-link>
               <span class="disc-card__num">01</span>
               <i class="fa-solid fa-laptop-code disc-card__icon"></i>
-              <h3>Web Design</h3>
-              <p>Responsive websites &amp; interfaces — designed and built.</p>
+              <h3>Web Design &amp; Development</h3>
+              <p>Responsive websites, designed and built front to back.</p>
               <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
             </a>
-            <a class="disc-card" href="webdesign.html" data-link>
+            <a class="disc-card" href="illustrations.html" data-link>
               <span class="disc-card__num">02</span>
-              <i class="fa-solid fa-mobile-screen-button disc-card__icon"></i>
-              <h3>UI / UX</h3>
-              <p>Product thinking — flows, prototypes &amp; interfaces.</p>
+              <i class="fa-solid fa-palette disc-card__icon"></i>
+              <h3>Graphic Design</h3>
+              <p>Illustration, branding &amp; packaging with character.</p>
               <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
             </a>
             <a class="disc-card" href="#motion" data-link>
               <span class="disc-card__num">03</span>
               <i class="fa-solid fa-film disc-card__icon"></i>
-              <h3>Motion Graphics</h3>
+              <h3>Motion Design</h3>
               <p>Animation &amp; motion that brings ideas to life.</p>
               <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
             </a>
-            <a class="disc-card" href="illustrations.html" data-link>
+            <a class="disc-card" href="#top" data-link>
               <span class="disc-card__num">04</span>
-              <i class="fa-solid fa-palette disc-card__icon"></i>
-              <h3>Graphic Design</h3>
-              <p>Illustration, branding &amp; packaging with character.</p>
+              <i class="fa-solid fa-cube disc-card__icon"></i>
+              <h3>3D Design</h3>
+              <p>Modeling, texturing &amp; animation in three dimensions.</p>
               <span class="disc-card__go"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+            <a class="disc-card" href="https://github.com/jhb09808" target="_blank" rel="noopener">
+              <span class="disc-card__num">05</span>
+              <i class="fa-solid fa-code disc-card__icon"></i>
+              <h3>Software Development</h3>
+              <p>Full-stack apps &amp; tools — from idea to shipped.</p>
+              <span class="disc-card__go"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
             </a>
           </div>
         </div>
