@@ -258,6 +258,8 @@ nav.hidden { transform: translateY(-110%); }
 .stack-container { position: relative; width: 100%; height: clamp(280px, 46vh, 520px); }
 .stack-img { position: absolute; top: 50%; left: 50%; width: clamp(190px, 23vw, 320px); aspect-ratio: 3/4; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--bg-soft); box-shadow: 0 30px 70px rgba(0,0,0,0.55); transform: translate(-50%, -50%); will-change: transform; }
 .stack-img img { width: 100%; height: 100%; object-fit: cover; }
+a.stack-img { cursor: pointer; transition: border-color 0.3s var(--ease); }
+a.stack-img:hover { border-color: rgba(244,121,33,0.6); }
 .stack-img::after { content: attr(data-caption); position: absolute; left: 12px; bottom: 12px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); background: rgba(6,6,6,0.5); padding: 4px 8px; border-radius: 4px; backdrop-filter: blur(4px); }
 .s1 { z-index: 1; } .s2 { z-index: 2; } .s3 { z-index: 3; } .s4 { z-index: 4; }
 .stack-progress { width: min(320px, 60vw); height: 2px; background: var(--line); }
@@ -1079,10 +1081,10 @@ img.fe, .fe img { display: block; }
           <span class="meta">↓ Scroll to spread the plates</span>
         </div>
         <div class="stack-container">
-          <div class="stack-img s1" data-x="-340" data-y="-90" data-rot="-14" data-caption="Plate 01 · 2024"><img src="images/dataviz.jpg" alt=""></div>
-          <div class="stack-img s2" data-x="-115" data-y="-30" data-rot="-5" data-caption="Plate 02 · 2025"><img src="images/portrait.png" alt=""></div>
-          <div class="stack-img s3" data-x="115" data-y="-30" data-rot="5" data-caption="Plate 03 · 2025"><img src="images/collagev1.png" alt=""></div>
-          <div class="stack-img s4" data-x="340" data-y="-90" data-rot="14" data-caption="Plate 04 · 2026"><img src="images/collagev2.png" alt=""></div>
+          <a href="wolfbird.html" data-link class="stack-img s1" data-x="-340" data-y="-90" data-rot="-14" data-caption="Wolf Bird · Packaging"><img src="images/hero-cans.png" alt="Canadian Wolf Bird packaging"></a>
+          <a href="lakukahekahe.html" data-link class="stack-img s2" data-x="-115" data-y="-30" data-rot="-5" data-caption="Lā Kūkahekahe · Graphic"><img src="images/LaKukahekahe_Poster.png" alt="Lā Kūkahekahe poster"></a>
+          <a href="typhoons.html" data-link class="stack-img s3" data-x="115" data-y="-30" data-rot="5" data-caption="Typhoons · Infographic"><img src="images/IllustratedInfographics_ContinuousGraphic_JeromeBustarga.png" alt="Lifecycle of Typhoons infographic"></a>
+          <a href="invisible.html" data-link class="stack-img s4" data-x="340" data-y="-90" data-rot="14" data-caption="Invisible · Book Design"><img src="images/book-cover.png" alt="Invisible by Design book cover"></a>
         </div>
         <div class="stack-progress"><div class="stack-progress-fill" id="stackProgress"></div></div>
       </div>
