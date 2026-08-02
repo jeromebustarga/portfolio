@@ -1710,14 +1710,14 @@ img.fe, .fe img { display: block; }
 
   // image-sequence: pre-decode every frame to an ImageBitmap so drawing is a pure
   // GPU blit (no decoding mid-scroll = no stutter)
-  const SEQ_FRAMES = 241;
+  const SEQ_FRAMES = 181;
   const seqBmps = new Array(SEQ_FRAMES).fill(null);
   let seqDecoded = 0, seqLastIdx = -1, sctx = null;
   const scrubLoader = document.getElementById("scrubLoader");
   const scrubLoaderBar = scrubLoader ? scrubLoader.querySelector("i") : null;
   function seqSize() {
     if (!scrubCanvas) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     scrubCanvas.width = Math.round(window.innerWidth * dpr);
     scrubCanvas.height = Math.round(window.innerHeight * dpr);
   }
@@ -2230,7 +2230,7 @@ img.fe, .fe img { display: block; }
       const r = scrubSection.getBoundingClientRect();
       const total = scrubSection.offsetHeight - vh;
       const pTarget = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
-      scrubP += (pTarget - scrubP) * 0.25;
+      scrubP += (pTarget - scrubP) * 0.32;
       if (Math.abs(pTarget - scrubP) < 0.0003) scrubP = pTarget;
       if (r.top < vh && r.bottom > 0) {
         // draw the exact frame for this scroll position — no video seeking = seamless
