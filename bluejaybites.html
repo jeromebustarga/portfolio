@@ -11,6 +11,8 @@
 body { font-family: 'DM Sans', sans-serif; background: #14141f; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
 .proto-back { position: fixed; top: 20px; left: 20px; z-index: 500; display: inline-flex; align-items: center; gap: 7px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); text-decoration: none; border: 1px solid rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 100px; transition: all .25s ease; }
 .proto-back:hover { color: #fff; border-color: rgba(255,255,255,0.35); }
+body.pf-embed .proto-back, body.pf-embed .page-title { display: none !important; }
+body.pf-embed { padding-top: 8px; }
 .iphone-frame { position: relative; width: 393px; height: 852px; background: #1c1c1e; border-radius: 56px; padding: 12px; box-shadow: 0 0 0 2px #3a3a3c, 0 0 0 4px #1c1c1e, 0 0 0 6px #2a2a2c, 0 40px 90px -10px rgba(0,0,0,0.7), inset 0 0 4px rgba(255,255,255,0.06); }
 .iphone-frame::before { content: ''; position: absolute; left: -3px; top: 160px; width: 3px; height: 32px; background: #2a2a2c; border-radius: 2px 0 0 2px; box-shadow: 0 46px 0 #2a2a2c, 0 92px 0 #2a2a2c; }
 .iphone-frame::after { content: ''; position: absolute; right: -3px; top: 198px; width: 3px; height: 64px; background: #2a2a2c; border-radius: 0 2px 2px 0; }
@@ -91,6 +93,7 @@ body { font-family: 'DM Sans', sans-serif; background: #14141f; display: flex; j
 </style>
 </head>
 <body>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('pf-embed');</script>
 
 <a class="proto-back" href="webdesign.html">← Back to portfolio</a>
 
