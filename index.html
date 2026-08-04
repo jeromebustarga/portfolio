@@ -1338,7 +1338,14 @@ img.fe, .fe img { display: block; }
   // Always restart at the top on refresh — the intro is the entrance, not a bookmark
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   window.scrollTo(0, 0);
-  window.addEventListener("load", () => window.scrollTo(0, 0));
+  window.addEventListener("load", () => {
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+    });
+  });
+  window.addEventListener("pageshow", (e) => { if (e.persisted) window.scrollTo(0, 0); });
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -1833,6 +1840,9 @@ img.fe, .fe img { display: block; }
   let stDrive = false;
   if (scrubSection && !prefersReduced && typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
+    // ScrollTrigger keeps its own scroll memory and restores position on refresh —
+    // disable it so the page always restarts at the top
+    ScrollTrigger.clearScrollMemory("manual");
     if (lenis) lenis.on("scroll", ScrollTrigger.update);
     const stProxy = { p: 0 };
     gsap.to(stProxy, {
