@@ -1740,10 +1740,30 @@ img.fe, .fe img { display: block; }
     else { dh = ch; dw = ch * ir; dy = 0; dx = (cw - dw) / 2; }
     sctx.drawImage(bmp, dx, dy, dw, dh);
   }
-  function seqShow(idx) {
-    if (seqBmps[idx]) { seqDraw(seqBmps[idx]); return; }
-    for (let j = idx; j >= 0; j--) { if (seqBmps[j]) { seqDraw(seqBmps[j]); return; } }
-    for (let j = idx + 1; j < SEQ_FRAMES; j++) { if (seqBmps[j]) { seqDraw(seqBmps[j]); return; } }
+  function seqNearest(idx) {
+    if (seqBmps[idx]) return idx;
+    for (let d = 1; d < SEQ_FRAMES; d++) {
+      if (idx - d >= 0 && seqBmps[idx - d]) return idx - d;
+      if (idx + d < SEQ_FRAMES && seqBmps[idx + d]) return idx + d;
+    }
+    return -1;
+  }
+  // continuous position → draw frame i, crossfade frame i+1 on top by the fractional
+  // part. Two GPU blits/frame; turns the frame steps into fluid motion.
+  function seqRenderAt(p) {
+    if (!sctx) return;
+    const f = Math.max(0, Math.min(1, p)) * (SEQ_FRAMES - 1);
+    const i0 = Math.floor(f), frac = f - i0;
+    const a = seqNearest(i0);
+    if (a < 0) return;
+    seqDraw(seqBmps[a]);
+    const i1 = Math.min(i0 + 1, SEQ_FRAMES - 1);
+    if (a === i0 && i1 !== i0 && seqBmps[i1] && frac > 0.01) {
+      sctx.globalAlpha = frac;
+      seqDraw(seqBmps[i1]);
+      sctx.globalAlpha = 1;
+    }
+    seqLastIdx = i0;
   }
   async function seqLoad() {
     const pad = (n) => String(n).padStart(4, "0");
@@ -1761,7 +1781,7 @@ img.fe, .fe img { display: block; }
           }
         } catch (e) {}
         seqDecoded++;
-        seqShow(seqLastIdx >= 0 ? seqLastIdx : 0);
+        seqRenderAt(scrubP);
         if (scrubLoaderBar) scrubLoaderBar.style.width = Math.round((seqDecoded / SEQ_FRAMES) * 100) + "%";
         if (seqDecoded >= SEQ_FRAMES && scrubLoader) scrubLoader.classList.add("done");
       }
@@ -1770,11 +1790,15 @@ img.fe, .fe img { display: block; }
   }
   if (useSeq) {
     scrubVideo.style.display = "none";
+    // the canvas path never plays the file — cancel the hidden 22MB video download
+    // so it doesn't compete with the frame fetches on first load
+    try { scrubVideo.querySelectorAll("source").forEach((s) => s.remove()); scrubVideo.removeAttribute("src"); scrubVideo.load(); } catch (e) {}
     scrubCanvas.style.display = "block";
     sctx = scrubCanvas.getContext("2d");
+    sctx.imageSmoothingQuality = "high";
     seqSize();
     seqLoad();
-    window.addEventListener("resize", () => { seqSize(); seqLastIdx = -1; seqShow(Math.round(scrubP * (SEQ_FRAMES - 1))); });
+    window.addEventListener("resize", () => { seqSize(); seqRenderAt(scrubP); });
   } else if (scrubVideo) {
     if (scrubCanvas) scrubCanvas.style.display = "none";
     if (prefersReduced) {
@@ -2238,14 +2262,13 @@ img.fe, .fe img { display: block; }
       const r = scrubSection.getBoundingClientRect();
       const total = scrubSection.offsetHeight - vh;
       const pTarget = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
-      scrubP += (pTarget - scrubP) * 0.32;
+      // Lenis already smooths the scroll — track it 1:1; extra damping here just
+      // made the animation trail behind the scroll (read as lag)
+      scrubP = lenis ? pTarget : scrubP + (pTarget - scrubP) * 0.3;
       if (Math.abs(pTarget - scrubP) < 0.0003) scrubP = pTarget;
       if (r.top < vh && r.bottom > 0) {
-        // draw the exact frame for this scroll position — no video seeking = seamless
-        if (useSeq) {
-          const idx = Math.round(scrubP * (SEQ_FRAMES - 1));
-          if (idx !== seqLastIdx) { seqShow(idx); seqLastIdx = idx; }
-        }
+        // crossfaded draw every frame — fluid motion, no frame-stepping
+        if (useSeq) seqRenderAt(scrubP);
         // scroll-synced captions fade in/out over their ranges (box slides, cap fades)
         for (let i = 0; i < scrubCapEls.length; i++) {
           const c = scrubCapEls[i];
