@@ -713,34 +713,29 @@ img.fe, .fe img { display: block; }
 @keyframes wzToast { 0%{opacity:0;transform:translate(-50%,10px)} 10%{opacity:1;transform:translate(-50%,0)} 80%{opacity:1} 100%{opacity:0;visibility:hidden} }
 .wz-key { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; padding: 2px 7px; background: rgba(244,121,33,0.12); border: 1px solid rgba(244,121,33,0.3); border-radius: 4px; color: var(--accent); font-size: 10px; font-weight: 600; }
 
-/* ============================================================ 3D Design — CSS 3D scene */
-.threed-section { position: relative; z-index: 1; max-width: var(--max); margin: 0 auto; padding: clamp(90px, 14vh, 170px) 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+/* ============================================================ 3D Design — explorable worlds */
+.threed-section { position: relative; z-index: 1; max-width: var(--max); margin: 0 auto; padding: clamp(90px, 14vh, 170px) 48px; }
+.threed-head { max-width: 640px; margin-bottom: 44px; }
 .threed-head .label { display: block; margin-bottom: 16px; }
-.threed-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 7vw, 110px); line-height: 0.9; letter-spacing: -0.02em; }
+.threed-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 7vw, 100px); line-height: 0.9; letter-spacing: -0.02em; }
 .threed-head h2 em { color: var(--accent); font-style: italic; }
-.threed-head p { color: var(--text-dim); font-size: 15px; line-height: 1.7; max-width: 380px; margin-top: 18px; }
-.threed-stage { perspective: 1000px; display: flex; align-items: center; justify-content: center; min-height: 400px; }
-.threed-scene { position: relative; transform-style: preserve-3d; }
-.cube { position: relative; width: 190px; height: 190px; transform-style: preserve-3d; animation: cubeSpin 20s linear infinite; }
-@keyframes cubeSpin { from { transform: rotateX(-22deg) rotateY(0deg); } to { transform: rotateX(-22deg) rotateY(360deg); } }
-.cube__face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 46px; color: var(--text); border: 1px solid rgba(244,121,33,0.55); background: rgba(244,121,33,0.05); box-shadow: inset 0 0 44px rgba(244,121,33,0.14), 0 0 22px rgba(244,121,33,0.08); }
-.cube__face--front  { transform: translateZ(95px); }
-.cube__face--back   { transform: rotateY(180deg) translateZ(95px); }
-.cube__face--right  { transform: rotateY(90deg) translateZ(95px); }
-.cube__face--left   { transform: rotateY(-90deg) translateZ(95px); color: var(--accent); }
-.cube__face--top    { transform: rotateX(90deg) translateZ(95px); background: rgba(52,217,195,0.06); border-color: rgba(52,217,195,0.5); }
-.cube__face--bottom { transform: rotateX(-90deg) translateZ(95px); }
-.orbit-dot { position: absolute; top: 50%; left: 50%; width: 12px; height: 12px; margin: -6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 16px var(--accent); }
-.orbit-dot--1 { animation: orbit1 7s linear infinite; }
-.orbit-dot--2 { width: 8px; height: 8px; margin: -4px; background: var(--accent-light, #ff9642); animation: orbit2 11s linear infinite; }
-@keyframes orbit1 { from { transform: rotateY(0deg) translateX(180px) rotateY(0deg); } to { transform: rotateY(360deg) translateX(180px) rotateY(-360deg); } }
-@keyframes orbit2 { from { transform: rotateX(70deg) rotateZ(0deg) translateX(150px); } to { transform: rotateX(70deg) rotateZ(360deg) translateX(150px); } }
+.threed-head p { color: var(--text-dim); font-size: 15px; line-height: 1.7; margin-top: 18px; }
+.world-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.world-card { display: block; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--bg-soft); transition: border-color 0.35s var(--ease), transform 0.35s var(--ease); }
+.world-card:hover { border-color: rgba(244,121,33,0.45); transform: translateY(-4px); }
+.world-card__media { position: relative; aspect-ratio: 10/7; overflow: hidden; }
+.world-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
+.world-card:hover .world-card__media img { transform: scale(1.06); }
+.world-card__play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 9px; font-size: 13px; font-weight: 600; color: #fff; background: rgba(6,6,6,0.35); opacity: 0; transition: opacity 0.35s var(--ease); }
+.world-card__play i { color: var(--accent); }
+.world-card:hover .world-card__play { opacity: 1; }
+.world-card__cap { padding: 16px 18px 18px; }
+.world-card__cap h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; letter-spacing: -0.01em; }
+.world-card__cap span { font-size: 12.5px; color: var(--text-dim); }
 @media (max-width: 820px) {
-  .threed-section { grid-template-columns: 1fr; text-align: center; padding: 80px 24px; gap: 20px; }
-  .threed-head .label, .threed-head p { margin-left: auto; margin-right: auto; }
-  .threed-stage { min-height: 320px; }
+  .threed-section { padding: 80px 24px; }
+  .world-grid { grid-template-columns: 1fr; }
 }
-@media (prefers-reduced-motion: reduce) { .cube { animation: none; transform: rotateX(-22deg) rotateY(-34deg); } .orbit-dot { display: none; } }
 
 /* ============================================================ Collage — pieces assemble on scroll */
 .collage-section { position: relative; height: 340vh; z-index: 1; }
@@ -1219,26 +1214,26 @@ img.fe, .fe img { display: block; }
     <!-- (About moved into the scroll-scrub intro captions) -->
 
     <!-- COLLAGE — pieces fly in one by one as you scroll -->
-    <!-- 3D DESIGN -->
+    <!-- 3D DESIGN — explorable WebGL worlds -->
     <section class="threed-section" id="threed">
       <div class="threed-head">
         <span class="label reveal">(3D Design)</span>
-        <h2 class="reveal" style="--i:1">Three <em>dimensions.</em></h2>
-        <p class="reveal" style="--i:2">Modelling, texturing &amp; animation — spatial work rendered in the browser. A full gallery of renders is on the way.</p>
+        <h2 class="reveal" style="--i:1">Explorable <em>worlds.</em></h2>
+        <p class="reveal" style="--i:2">Real-time 3D worlds you can walk around in the browser — arrow keys or WASD to move, drag to look. Click a world to step inside.</p>
       </div>
-      <div class="threed-stage" aria-hidden="true">
-        <div class="threed-scene">
-          <div class="cube">
-            <div class="cube__face cube__face--front">3D</div>
-            <div class="cube__face cube__face--back">✦</div>
-            <div class="cube__face cube__face--right">JW</div>
-            <div class="cube__face cube__face--left">◆</div>
-            <div class="cube__face cube__face--top"></div>
-            <div class="cube__face cube__face--bottom"></div>
-          </div>
-          <span class="orbit-dot orbit-dot--1"></span>
-          <span class="orbit-dot orbit-dot--2"></span>
-        </div>
+      <div class="world-grid">
+        <a class="world-card reveal" href="world3d.html?world=castle" data-gd>
+          <div class="world-card__media"><img src="images/world-castle.jpg" alt="Colorful castle 3D world" loading="lazy"><span class="world-card__play"><i class="fa-solid fa-gamepad"></i> Explore</span></div>
+          <div class="world-card__cap"><h3>Colorful Castle</h3><span>Roam a bright fortress</span></div>
+        </a>
+        <a class="world-card reveal" href="world3d.html?world=forest" data-gd style="--i:1">
+          <div class="world-card__media"><img src="images/world-forest.jpg" alt="Forest 3D world" loading="lazy"><span class="world-card__play"><i class="fa-solid fa-gamepad"></i> Explore</span></div>
+          <div class="world-card__cap"><h3>Enchanted Forest</h3><span>Wander through the trees</span></div>
+        </a>
+        <a class="world-card reveal" href="world3d.html?world=city" data-gd style="--i:2">
+          <div class="world-card__media"><img src="images/world-city.jpg" alt="Neon city 3D world" loading="lazy"><span class="world-card__play"><i class="fa-solid fa-gamepad"></i> Explore</span></div>
+          <div class="world-card__cap"><h3>Neon City</h3><span>Drift through the streets</span></div>
+        </a>
       </div>
     </section>
 

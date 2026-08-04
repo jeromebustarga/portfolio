@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D World — Jerome Bustarga</title>
+<link rel="icon" type="image/png" href="images/favicon.png?v=26">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: #0a0d16; font-family: 'DM Sans', system-ui, sans-serif; }
+  #c { display: block; width: 100vw; height: 100vh; cursor: grab; }
+  #c:active { cursor: grabbing; }
+  .hud { position: fixed; z-index: 5; color: #fff; pointer-events: none; }
+  .hud.title { top: 22px; left: 26px; }
+  .hud.title h1 { font-weight: 700; font-size: 22px; letter-spacing: 0.02em; text-shadow: 0 2px 14px rgba(0,0,0,0.6); }
+  .hud.title p { font-size: 12px; opacity: 0.75; margin-top: 3px; text-shadow: 0 2px 10px rgba(0,0,0,0.6); }
+  .hud.hint { bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .hud.hint span { pointer-events: none; font-size: 11px; letter-spacing: 0.05em; color: #fff; background: rgba(6,6,6,0.5); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.16); padding: 8px 14px; border-radius: 100px; }
+  .back { position: fixed; top: 20px; right: 20px; z-index: 6; display: inline-flex; align-items: center; gap: 7px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.75); text-decoration: none; border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 100px; background: rgba(6,6,6,0.4); backdrop-filter: blur(8px); transition: all 0.25s ease; }
+  .back:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+  body.pf-embed .back { display: none; }
+  .loader { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; background: #0a0d16; color: #fff; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; transition: opacity 0.6s ease; }
+  .loader.done { opacity: 0; pointer-events: none; }
+</style>
+<script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.__embed=1;</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud title"><h1 id="wtitle">3D World</h1><p id="wsub">Explore</p></div>
+<div class="hud hint"><span>◀ ▲ ▼ ▶ / WASD — move</span><span>drag — look around</span></div>
+<a class="back" href="index.html#threed">← Portfolio</a>
+<div class="loader" id="loader">Building world…</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  if (new URLSearchParams(location.search).has('embed')) document.body.classList.add('pf-embed');
+  var WORLD = (new URLSearchParams(location.search).get('world') || 'castle').toLowerCase();
+  var loader = document.getElementById('loader');
+  if (typeof THREE === 'undefined') { loader.textContent = 'WebGL failed to load'; return; }
+
+  var THEMES = {
+    castle: { title: 'Colorful Castle', sub: 'A bright fortress to roam', sky: 0x8fd3ff, ground: 0x6fae4a, fog: [40, 170] },
+    forest: { title: 'Enchanted Forest', sub: 'Wander through the trees', sky: 0x9fd8c8, ground: 0x3f7d43, fog: [26, 130] },
+    city:   { title: 'Neon City', sub: 'Drift through the streets', sky: 0x2a2340, ground: 0x1b1b24, fog: [30, 150] }
+  };
+  var T = THEMES[WORLD] || THEMES.castle;
+  document.getElementById('wtitle').textContent = T.title;
+  document.getElementById('wsub').textContent = T.sub;
+  document.title = T.title + ' — Jerome Bustarga';
+
+  var canvas = document.getElementById('c');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(T.sky);
+  scene.fog = new THREE.Fog(T.sky, T.fog[0], T.fog[1]);
+  var camera = new THREE.PerspectiveCamera(62, 1, 0.1, 500);
+  camera.rotation.order = 'YXZ';
+  camera.position.set(0, 3, 26);
+
+  function resize() {
+    var w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize); resize();
+
+  // lights
+  scene.add(new THREE.HemisphereLight(T.sky, T.ground, 0.95));
+  var sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(30, 50, 20); scene.add(sun);
+
+  // ground
+  var groundMat = new THREE.MeshLambertMaterial({ color: T.ground });
+  var ground = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), groundMat);
+  ground.rotation.x = -Math.PI / 2; scene.add(ground);
+
+  function box(w, h, d, color, x, y, z) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshLambertMaterial({ color: color }));
+    m.position.set(x, y, z); scene.add(m); return m;
+  }
+  function cyl(rt, rb, h, color, x, y, z, seg) {
+    var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 8), new THREE.MeshLambertMaterial({ color: color, flatShading: true }));
+    m.position.set(x, y, z); scene.add(m); return m;
+  }
+  function cone(r, h, color, x, y, z, seg) {
+    var m = new THREE.Mesh(new THREE.ConeGeometry(r, h, seg || 6), new THREE.MeshLambertMaterial({ color: color, flatShading: true }));
+    m.position.set(x, y, z); scene.add(m); return m;
+  }
+  var R = (function () { var s = WORLD.length * 999 + 7; return function () { s = (s * 16807) % 2147483647; return s / 2147483647; }; })();
+
+  if (WORLD === 'castle') {
+    var stone = 0xd9cbb0, roofs = [0xff6b6b, 0x4ecdc4, 0xffd166, 0xa06cd5];
+    box(20, 8, 20, stone, 0, 4, 0);              // keep
+    box(26, 5, 26, 0xc7b799, 0, 2.5, 0);         // base wall ring (simplified)
+    var corners = [[-11, -11], [11, -11], [-11, 11], [11, 11]];
+    corners.forEach(function (c, i) {
+      cyl(2.4, 2.8, 16, stone, c[0], 8, c[1], 12);
+      cone(3.4, 5, roofs[i % roofs.length], c[0], 18.5, c[1], 10);
+      box(0.2, 2, 1.4, roofs[i % roofs.length], c[0], 22, c[1]); // flag pole area
+    });
+    cone(6, 7, 0x4ecdc4, 0, 11.5, 0, 8);         // central roof
+    // scattered colorful banners / crates
+    for (var i = 0; i < 40; i++) {
+      var col = [0xff6b6b, 0x4ecdc4, 0xffd166, 0xa06cd5, 0xf78c6b][i % 5];
+      var a = R() * Math.PI * 2, d = 30 + R() * 90;
+      box(1.6, 1.6, 1.6, col, Math.cos(a) * d, 0.8, Math.sin(a) * d);
+    }
+  } else if (WORLD === 'forest') {
+    var greens = [0x2f6d3a, 0x3f8b4a, 0x54a35c, 0x6cbf6a];
+    for (var i = 0; i < 220; i++) {
+      var a = R() * Math.PI * 2, d = 4 + R() * 150;
+      var x = Math.cos(a) * d, z = Math.sin(a) * d;
+      var hh = 5 + R() * 7;
+      cyl(0.5, 0.8, hh, 0x6b4a2b, x, hh / 2, z, 6);
+      var g = greens[(R() * greens.length) | 0];
+      cone(2.4 + R() * 1.4, 5 + R() * 3, g, x, hh + 2.5, z, 7);
+      cone(2 + R() * 1, 3.5 + R() * 2, g, x, hh + 5, z, 7);
+    }
+    for (var i = 0; i < 30; i++) { var a = R() * Math.PI * 2, d = 6 + R() * 140; box(1.5 + R(), 1 + R(), 1.5 + R(), 0x7d7d86, Math.cos(a) * d, 0.6, Math.sin(a) * d); }
+  } else { // city
+    var pal = [0x2b2f45, 0x33385a, 0x3d2b52, 0x243a55, 0x402a3a];
+    var neon = [0x00e5cc, 0xff4d8d, 0xffd166, 0xa06cd5, 0xff6b35];
+    for (var gx = -6; gx <= 6; gx++) {
+      for (var gz = -6; gz <= 6; gz++) {
+        if ((gx + 20) % 2 === 0 || (gz + 20) % 2 === 0) continue; // leave streets
+        var h = 6 + R() * 34;
+        var b = box(5.5, h, 5.5, pal[(R() * pal.length) | 0], gx * 8, h / 2, gz * 8);
+        // neon top strip
+        var e = box(5.7, 0.7, 5.7, neon[(R() * neon.length) | 0], gx * 8, h, gz * 8);
+        e.material.emissive = new THREE.Color(e.material.color.getHex()); e.material.emissiveIntensity = 0.9;
+      }
+    }
+    ground.material.color.set(0x14141c);
+    sun.intensity = 0.4;
+    scene.add(new THREE.PointLight(0xff4d8d, 0.6, 120));
+  }
+
+  // controls
+  var yaw = Math.PI, pitch = -0.05, keys = {}, dragging = false, px = 0, py = 0;
+  canvas.addEventListener('pointerdown', function (e) { dragging = true; px = e.clientX; py = e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointerup', function () { dragging = false; });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    yaw -= (e.clientX - px) * 0.005; pitch -= (e.clientY - py) * 0.005;
+    pitch = Math.max(-1.2, Math.min(1.2, pitch)); px = e.clientX; py = e.clientY;
+  });
+  var MOVE = { KeyW: 'f', ArrowUp: 'f', KeyS: 'b', ArrowDown: 'b', KeyA: 'l', ArrowLeft: 'l', KeyD: 'r', ArrowRight: 'r' };
+  window.addEventListener('keydown', function (e) { if (MOVE[e.code]) { keys[MOVE[e.code]] = true; e.preventDefault(); } });
+  window.addEventListener('keyup', function (e) { if (MOVE[e.code]) keys[MOVE[e.code]] = false; });
+
+  var fwd = new THREE.Vector3(), right = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0), tmp = new THREE.Vector3();
+  var clock = new THREE.Clock(), speed = 22;
+  function tick() {
+    var dt = Math.min(clock.getDelta(), 0.05);
+    camera.rotation.y = yaw; camera.rotation.x = pitch;
+    camera.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();
+    right.crossVectors(fwd, up).normalize();
+    tmp.set(0, 0, 0);
+    if (keys.f) tmp.add(fwd); if (keys.b) tmp.sub(fwd);
+    if (keys.r) tmp.add(right); if (keys.l) tmp.sub(right);
+    if (tmp.lengthSq() > 0) { tmp.normalize().multiplyScalar(speed * dt); camera.position.add(tmp); }
+    var lim = 150; camera.position.x = Math.max(-lim, Math.min(lim, camera.position.x)); camera.position.z = Math.max(-lim, Math.min(lim, camera.position.z));
+    camera.position.y = 3;
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+  loader.classList.add('done');
+  tick();
+})();
+</script>
+</body>
+</html>
