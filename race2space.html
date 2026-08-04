@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Race2Space — Jerome Bustarga</title>
+<meta name="description" content="Race2Space — a full-stack Django platform with a live mission-control dashboard, tracking the rise of developing nations in space. Built by Jerome Bustarga.">
+<link rel="icon" type="image/png" href="images/favicon.png?v=26">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05060e; --panel: #0b0e1c; --panel2: #0e1226;
+    --line: rgba(255,255,255,0.09);
+    --text: #f4f1ea; --dim: #9aa0b4; --faint: #6a7086;
+    --accent: #f47921; --teal: #34d9c3; --green: #2ec27e;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --ease: cubic-bezier(0.16,1,0.3,1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+  body { font-family: var(--sans); background:
+      radial-gradient(120% 60% at 50% 0%, #0b1030 0%, var(--bg) 55%);
+    color: var(--text); line-height: 1.65; font-weight: 300; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  /* stars */
+  body::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .5;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 18%, rgba(255,255,255,.8), transparent),
+      radial-gradient(1px 1px at 72% 9%, rgba(255,255,255,.6), transparent),
+      radial-gradient(1.6px 1.6px at 88% 34%, rgba(255,214,170,.7), transparent),
+      radial-gradient(1px 1px at 35% 42%, rgba(52,217,195,.65), transparent),
+      radial-gradient(1.2px 1.2px at 55% 76%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 8% 66%, rgba(167,139,250,.6), transparent); }
+
+  .pf-nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 26px;font-family:var(--sans);background:rgba(5,6,14,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .pf-nav a{color:var(--text);font-size:13px;letter-spacing:.02em;}
+  .pf-nav .pf-logo{display:flex;align-items:center;gap:9px;font-weight:600;}
+  .pf-nav .pf-logo img{width:24px;height:24px;border-radius:6px;}
+  .pf-nav .pf-links{display:flex;gap:22px;align-items:center;}
+  .pf-nav .pf-links a{opacity:.82;transition:opacity .25s,color .25s;}
+  .pf-nav .pf-links a:hover{opacity:1;color:var(--accent);}
+  @media(max-width:600px){.pf-nav{padding:11px 16px;}.pf-nav .pf-links{gap:14px;}.pf-nav .pf-logo span{display:none;}}
+  body.pf-embed .pf-nav{display:none!important;}
+  body.pf-embed .wrap{padding-top:48px;}
+
+  .wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 118px 28px 90px; }
+
+  /* hero */
+  .r2s-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 12px; }
+  .r2s-kicker::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(244,121,33,.5), transparent); }
+  .r2s-head { display: flex; align-items: center; gap: 22px; margin: 22px 0 10px; }
+  .r2s-head img { width: clamp(74px, 10vw, 108px); height: auto; border-radius: 20px; border: 1px solid var(--line); box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(46px, 8vw, 84px); line-height: .95; letter-spacing: -0.02em; }
+  h1 em { color: var(--accent); font-style: italic; }
+  .r2s-sub { font-family: var(--serif); font-style: italic; font-size: clamp(18px, 2.6vw, 24px); color: var(--dim); margin-top: 4px; }
+  .r2s-meta { display: flex; flex-wrap: wrap; gap: 9px; margin: 26px 0 0; }
+  .chip { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 7px 14px; border: 1px solid var(--line); border-radius: 100px; color: var(--dim); background: rgba(255,255,255,.02); }
+  .chip--live { color: var(--green); border-color: rgba(46,194,126,.35); display: inline-flex; align-items: center; gap: 7px; }
+  .chip--live i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .35; } }
+
+  .r2s-cover { margin: 44px 0 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 40px 100px rgba(0,0,0,.55); }
+
+  /* sections */
+  section { margin-top: 64px; }
+  .sec-label { font-family: var(--mono); font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(52,217,195,.35), transparent); }
+  section > p { color: var(--dim); font-size: 16px; max-width: 720px; }
+  section > p strong { color: var(--text); font-weight: 500; }
+
+  .hl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .hl { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; transition: border-color .3s var(--ease), transform .3s var(--ease); }
+  .hl:hover { border-color: rgba(244,121,33,.4); transform: translateY(-2px); }
+  .hl .ic { font-size: 20px; margin-bottom: 10px; }
+  .hl h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .hl p { font-size: 13.5px; color: var(--dim); }
+
+  .stack { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stack .cell { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+  .stack h4 { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
+  .stack p { font-size: 13.5px; color: var(--dim); line-height: 1.8; }
+
+  .demo { background: linear-gradient(135deg, rgba(244,121,33,.09), rgba(52,217,195,.06)); border: 1px solid var(--line); border-radius: 16px; padding: 26px 28px; font-size: 15px; color: var(--dim); }
+  .demo strong { color: var(--text); font-weight: 500; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 54px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 30px; border-radius: 100px; font-size: 14px; font-weight: 500; transition: all .3s var(--ease); }
+  .btn--live { background: var(--accent); color: #060606; }
+  .btn--live:hover { filter: brightness(1.09); transform: translateY(-2px); }
+  .btn--repo { border: 1px solid var(--line); color: var(--text); }
+  .btn--repo:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer { position: relative; z-index: 1; border-top: 1px solid var(--line); padding: 26px 28px 34px; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--faint); }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 100px 20px 60px; }
+    .hl-grid { grid-template-columns: 1fr; }
+    .stack { grid-template-columns: 1fr 1fr; }
+    .r2s-head { gap: 16px; }
+  }
+</style>
+<script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.classList.add('pre-embed');</script>
+</head>
+<body>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('pf-embed');</script>
+
+<nav class="pf-nav">
+  <a class="pf-logo" href="index.html"><img src="images/logo.png?v=26" alt=""><span>It's Jerome's World</span></a>
+  <div class="pf-links"><a href="index.html">Home</a><a href="index.html#software">Work</a><a href="about.html">About</a></div>
+</nav>
+
+<div class="wrap">
+  <div class="r2s-kicker">Mission Control · Software Development</div>
+  <div class="r2s-head">
+    <img src="images/race2space-logo.png" alt="Race2Space logo" onerror="this.style.display='none'">
+    <div>
+      <h1>Race<em>2</em>Space</h1>
+      <p class="r2s-sub">Tracking the rise of developing nations in space.</p>
+    </div>
+  </div>
+  <div class="r2s-meta">
+    <span class="chip chip--live"><i></i>Live</span>
+    <span class="chip">Full-Stack Web App</span>
+    <span class="chip">2024 – Present</span>
+    <span class="chip">Sole developer — full-stack, design &amp; deployment</span>
+  </div>
+
+  <div class="r2s-cover"><img src="images/race2space-cover.png" alt="Race2Space — Space Operations Dashboard"></div>
+
+  <section>
+    <div class="sec-label">01 · Overview</div>
+    <p><strong>Race2Space</strong> is a full-stack web platform that documents and celebrates the space programs of developing nations — the agencies, missions and milestones of countries too often left out of the story of space exploration. It combines live data, interactive visualizations and original content into a single, cohesive product.</p>
+  </section>
+
+  <section>
+    <div class="sec-label">02 · Highlights</div>
+    <div class="hl-grid">
+      <div class="hl"><div class="ic">🛰️</div><h3>Live mission-control dashboard</h3><p>Real-time tracking of the ISS, Tiangong and Hubble on a dark control-room map, a live launch schedule with countdowns, and a running "humans in space" count.</p></div>
+      <div class="hl"><div class="ic">📊</div><h3>Interactive data visualization</h3><p>Government space-budget comparisons across 34 agencies, with region filtering — built with Chart.js.</p></div>
+      <div class="hl"><div class="ic">🌍</div><h3>Interactive world maps</h3><p>Space agencies and live satellites plotted with Leaflet.</p></div>
+      <div class="hl"><div class="ic">🕹️</div><h3>Custom interactive timeline</h3><p>A hand-built journey through the milestones that carried developing nations into orbit.</p></div>
+      <div class="hl"><div class="ic">📰</div><h3>Live newsroom &amp; forum</h3><p>A self-updating space-news feed and a Reddit-style community discussion board.</p></div>
+      <div class="hl"><div class="ic">🎨</div><h3>Bespoke design system</h3><p>A fully custom, responsive UI with light/dark themes — no off-the-shelf template. SEO'd (sitemap, structured data, Open Graph) with secure production settings.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label">03 · Tech stack</div>
+    <div class="stack">
+      <div class="cell"><h4>Backend</h4><p>Python<br>Django<br>SQLite</p></div>
+      <div class="cell"><h4>Frontend</h4><p>Vanilla JavaScript<br>HTML / CSS<br>Chart.js · Leaflet</p></div>
+      <div class="cell"><h4>Live data</h4><p>Spaceflight News API<br>Launch Library 2<br>WhereTheISS.at</p></div>
+      <div class="cell"><h4>Deployment</h4><p>PythonAnywhere<br>Git-based CD</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label">04 · What it demonstrates</div>
+    <div class="demo"><strong>Full-stack development</strong> — third-party REST API integration, real-time data handling, data visualization, responsive UI/UX design, SEO, and end-to-end deployment.</div>
+  </section>
+
+  <div class="actions">
+    <a class="btn btn--live" href="https://race2space.pythonanywhere.com" target="_blank" rel="noopener">Visit the live site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+    <a class="btn btn--repo" href="https://github.com/jhb09808/Race2Space" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> View the source</a>
+  </div>
+</div>
+
+<footer>
+  <span>RACE2SPACE · CASE STUDY</span>
+  <span>DESIGNED &amp; BUILT BY JEROME BUSTARGA · SAN DIEGO, CA</span>
+</footer>
+
+</body>
+</html>
