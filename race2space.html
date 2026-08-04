@@ -86,6 +86,10 @@
   .stack h4 { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
   .stack p { font-size: 13.5px; color: var(--dim); line-height: 1.8; }
 
+  .gal { columns: 2; column-gap: 14px; }
+  .gal img { width: 100%; margin-bottom: 14px; border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(0,0,0,.4); break-inside: avoid; }
+  @media (max-width: 620px) { .gal { columns: 1; } }
+
   .demo { background: linear-gradient(135deg, rgba(244,121,33,.09), rgba(52,217,195,.06)); border: 1px solid var(--line); border-radius: 16px; padding: 26px 28px; font-size: 15px; color: var(--dim); }
   .demo strong { color: var(--text); font-weight: 500; }
 
@@ -131,7 +135,7 @@
     <span class="chip">Sole developer — full-stack, design &amp; deployment</span>
   </div>
 
-  <div class="r2s-cover"><img src="images/race2space-cover.png" alt="Race2Space — Space Operations Dashboard"></div>
+  <div class="r2s-cover"><img src="images/race2space-cover.jpg" alt="Race2Space — Space Operations Dashboard"></div>
 
   <section>
     <div class="sec-label">01 · Overview</div>
@@ -161,7 +165,17 @@
   </section>
 
   <section>
-    <div class="sec-label">04 · What it demonstrates</div>
+    <div class="sec-label">04 · Gallery</div>
+    <div class="gal">
+      <img src="images/race2space-agencies.jpg" alt="Space agencies budget analytics" loading="lazy">
+      <img src="images/race2space-timeline.jpg" alt="Interactive history timeline" loading="lazy">
+      <img src="images/race2space-forum.jpg" alt="Community forum" loading="lazy">
+      <img src="images/race2space-mobile.jpg" alt="Responsive mobile view" loading="lazy">
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label">05 · What it demonstrates</div>
     <div class="demo"><strong>Full-stack development</strong> — third-party REST API integration, real-time data handling, data visualization, responsive UI/UX design, SEO, and end-to-end deployment.</div>
   </section>
 
