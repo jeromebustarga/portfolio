@@ -1750,6 +1750,7 @@ img.fe, .fe img { display: block; }
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     scrubCanvas.width = Math.round(window.innerWidth * dpr);
     scrubCanvas.height = Math.round(window.innerHeight * dpr);
+    seqLastF = -1; // canvas was cleared — force the next render
   }
   function seqDraw(bmp) {
     if (!sctx || !bmp) return;
@@ -1772,9 +1773,12 @@ img.fe, .fe img { display: block; }
   }
   // continuous position → draw frame i, crossfade frame i+1 on top by the fractional
   // part. Two GPU blits/frame; turns the frame steps into fluid motion.
-  function seqRenderAt(p) {
+  let seqLastF = -1;
+  function seqRenderAt(p, force) {
     if (!sctx) return;
     const f = Math.max(0, Math.min(1, p)) * (SEQ_FRAMES - 1);
+    if (!force && Math.abs(f - seqLastF) < 0.0006) return; // idle: nothing moved, skip repaint
+    seqLastF = f;
     const i0 = Math.floor(f), frac = f - i0;
     const a = seqNearest(i0);
     if (a < 0) return;
@@ -1803,7 +1807,7 @@ img.fe, .fe img { display: block; }
           }
         } catch (e) {}
         seqDecoded++;
-        seqRenderAt(scrubP);
+        seqRenderAt(scrubP, true);
         if (scrubLoaderBar) scrubLoaderBar.style.width = Math.round((seqDecoded / SEQ_FRAMES) * 100) + "%";
         if (seqDecoded >= SEQ_FRAMES && scrubLoader) scrubLoader.classList.add("done");
       }
