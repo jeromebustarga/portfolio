@@ -1318,6 +1318,8 @@ img.fe, .fe img { display: block; }
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 <script>
 /* ============================================================
    It's Jerome's World — interactive engine
@@ -1811,6 +1813,23 @@ img.fe, .fe img { display: block; }
       scrubVideo.play().catch(() => {});  // phones: loop as a light background
     }
   }
+
+  /* GSAP ScrollTrigger drives the intro scrub with studio-grade catch-up smoothing
+     (scrub: 0.55 = the professional "glide to position" feel). Falls back to the
+     hand-rolled tracking if the CDN fails. */
+  let stDrive = false;
+  if (scrubSection && !prefersReduced && typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+    if (lenis) lenis.on("scroll", ScrollTrigger.update);
+    const stProxy = { p: 0 };
+    gsap.to(stProxy, {
+      p: 1,
+      ease: "none",
+      onUpdate: () => { scrubP = stProxy.p; },
+      scrollTrigger: { trigger: scrubSection, start: "top top", end: "bottom bottom", scrub: 0.55 }
+    });
+    stDrive = true;
+  }
   let forestItems = [];
   let forestGroups = 1;
   let forestP = 0;
@@ -2262,10 +2281,11 @@ img.fe, .fe img { display: block; }
       const r = scrubSection.getBoundingClientRect();
       const total = scrubSection.offsetHeight - vh;
       const pTarget = total > 0 ? Math.min(Math.max(-r.top, 0), total) / total : 0;
-      // Lenis already smooths the scroll — track it 1:1; extra damping here just
-      // made the animation trail behind the scroll (read as lag)
-      scrubP = lenis ? pTarget : scrubP + (pTarget - scrubP) * 0.3;
-      if (Math.abs(pTarget - scrubP) < 0.0003) scrubP = pTarget;
+      // ScrollTrigger (scrub: 0.55) writes scrubP when available; this is the fallback
+      if (!stDrive) {
+        scrubP = lenis ? pTarget : scrubP + (pTarget - scrubP) * 0.3;
+        if (Math.abs(pTarget - scrubP) < 0.0003) scrubP = pTarget;
+      }
       if (r.top < vh && r.bottom > 0) {
         // crossfaded draw every frame — fluid motion, no frame-stepping
         if (useSeq) seqRenderAt(scrubP);
