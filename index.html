@@ -562,6 +562,34 @@ img.fe, .fe img { display: block; }
 .webwork__all { align-self: end; white-space: nowrap; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--accent); padding-bottom: 4px; transition: color 0.3s ease; }
 .webwork__all:hover { color: var(--accent); }
 .webwork__grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; grid-auto-flow: dense; }
+/* featured software project card */
+.sw-feature { display: grid; grid-template-columns: 1.15fr 1fr; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: var(--bg-soft); }
+.sw-feature__media { position: relative; display: block; min-height: 320px; }
+.sw-feature__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s var(--ease); }
+.sw-feature__media:hover img { transform: scale(1.04); }
+.sw-feature__status { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #2ec27e; background: rgba(6,6,6,0.65); border: 1px solid rgba(46,194,126,0.35); padding: 6px 12px; border-radius: 100px; backdrop-filter: blur(6px); }
+.sw-feature__status i { width: 7px; height: 7px; border-radius: 50%; background: #2ec27e; box-shadow: 0 0 8px #2ec27e; animation: swPulse 2s ease-in-out infinite; }
+@keyframes swPulse { 50% { opacity: 0.4; } }
+.sw-feature__info { padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; gap: 14px; }
+.sw-feature__meta { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.sw-feature__info h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(34px, 4.4vw, 56px); line-height: 0.95; letter-spacing: -0.01em; }
+.sw-feature__sub { font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--text); opacity: 0.85; }
+.sw-feature__desc { font-size: 14.5px; line-height: 1.7; color: var(--text-dim); }
+.sw-feature__list { list-style: none; display: flex; flex-direction: column; gap: 7px; font-size: 13.5px; color: var(--text-dim); }
+.sw-feature__list li { display: flex; gap: 9px; align-items: baseline; }
+.sw-feature__list li::before { content: '◆'; font-size: 8px; color: var(--accent); }
+.sw-feature__tech { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+.sw-feature__tech span { padding: 6px 13px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 100px; font-size: 11.5px; color: var(--text-dim); }
+.sw-feature__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: auto; padding-top: 18px; }
+.sw-feature__btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 26px; border-radius: 100px; font-size: 13.5px; font-weight: 500; transition: all 0.3s var(--ease); }
+.sw-feature__btn--live { background: var(--accent); color: #060606; }
+.sw-feature__btn--live:hover { filter: brightness(1.09); transform: translateY(-2px); }
+.sw-feature__btn--repo { border: 1px solid var(--line); color: var(--text); }
+.sw-feature__btn--repo:hover { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 900px) {
+  .sw-feature { grid-template-columns: 1fr; }
+  .sw-feature__media { min-height: 230px; aspect-ratio: 16/10; }
+}
 .ww-tile { position: relative; border-radius: 16px; overflow: hidden; background: var(--bg-soft); border: 1px solid var(--line); display: block; transition: border-color 0.3s ease; }
 .ww-tile:hover { border-color: rgba(244,121,33,0.4); }
 .ww-tile:nth-child(1) { grid-column: span 4; aspect-ratio: 16/10; }
@@ -1032,27 +1060,30 @@ img.fe, .fe img { display: block; }
         </div>
         <a href="https://github.com/jhb09808" target="_blank" rel="noopener" class="webwork__all reveal" style="--i:3">See all on GitHub →</a>
       </div>
-      <div class="webwork__grid">
-        <a href="webdesign.html" class="ww-tile reveal" data-link>
-          <img src="images/aerotech-home.png" alt="AeroTech responsive website" loading="lazy">
-          <span class="ww-tile__cap"><span class="ww-tile__title">AeroTech</span><span class="ww-tile__tag">Web Design · UI/UX</span></span>
+      <div class="sw-feature reveal">
+        <a class="sw-feature__media" href="https://race2space.pythonanywhere.com" target="_blank" rel="noopener" aria-label="Open Race2Space live site">
+          <img src="images/race2space-cover.png" alt="Race2Space — mission control dashboard" loading="lazy">
+          <span class="sw-feature__status"><i></i> Live</span>
         </a>
-        <a href="webdesign.html" class="ww-tile reveal" style="--i:1" data-link>
-          <img src="images/coco-web.png" alt="Coco website concept" loading="lazy">
-          <span class="ww-tile__cap"><span class="ww-tile__title">Coco</span><span class="ww-tile__tag">Web Design</span></span>
-        </a>
-        <a href="webdesign.html" class="ww-tile reveal" style="--i:2" data-link>
-          <img src="images/csdj1.png" alt="CSDJ brand and web" loading="lazy">
-          <span class="ww-tile__cap"><span class="ww-tile__title">CSDJ</span><span class="ww-tile__tag">Brand &amp; Web</span></span>
-        </a>
-        <a href="webdesign.html" class="ww-tile reveal" data-link>
-          <img src="images/amy-web.jpeg" alt="Amy website design" loading="lazy">
-          <span class="ww-tile__cap"><span class="ww-tile__title">Amy</span><span class="ww-tile__tag">Web Design</span></span>
-        </a>
-        <a href="webdesign.html" class="ww-tile reveal" style="--i:1" data-link>
-          <img src="images/cutespace.jpg" alt="CuteSpace interface concept" loading="lazy">
-          <span class="ww-tile__cap"><span class="ww-tile__title">CuteSpace</span><span class="ww-tile__tag">UI Design</span></span>
-        </a>
+        <div class="sw-feature__info">
+          <span class="sw-feature__meta">Full-Stack Web App · 2024 – Present · Sole developer</span>
+          <h3>Race2Space</h3>
+          <p class="sw-feature__sub">Tracking the rise of developing nations in space.</p>
+          <p class="sw-feature__desc">A full-stack Django platform documenting the space programs of developing nations — combining live data, interactive visualizations, and original content into one cohesive product.</p>
+          <ul class="sw-feature__list">
+            <li>Live mission-control dashboard — real-time ISS, Tiangong &amp; Hubble tracking, launch countdowns</li>
+            <li>Budget analytics across 34 space agencies (Chart.js) + interactive Leaflet world maps</li>
+            <li>Hand-built history timeline, self-updating newsroom &amp; community forum</li>
+            <li>Bespoke responsive design system with light/dark themes — SEO'd and deployed</li>
+          </ul>
+          <div class="sw-feature__tech">
+            <span>Python</span><span>Django</span><span>JavaScript</span><span>Chart.js</span><span>Leaflet</span><span>REST APIs</span><span>SQLite</span>
+          </div>
+          <div class="sw-feature__actions">
+            <a class="sw-feature__btn sw-feature__btn--live" href="https://race2space.pythonanywhere.com" target="_blank" rel="noopener">Visit live site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            <a class="sw-feature__btn sw-feature__btn--repo" href="https://github.com/jhb09808/Race2Space" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> View source</a>
+          </div>
+        </div>
       </div>
     </section>
 
