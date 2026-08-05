@@ -713,29 +713,6 @@ img.fe, .fe img { display: block; }
 @keyframes wzToast { 0%{opacity:0;transform:translate(-50%,10px)} 10%{opacity:1;transform:translate(-50%,0)} 80%{opacity:1} 100%{opacity:0;visibility:hidden} }
 .wz-key { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; padding: 2px 7px; background: rgba(244,121,33,0.12); border: 1px solid rgba(244,121,33,0.3); border-radius: 4px; color: var(--accent); font-size: 10px; font-weight: 600; }
 
-/* ============================================================ Constellation — 3D project orbit */
-.orbit-section { position: relative; z-index: 1; max-width: var(--max); margin: 0 auto; padding: clamp(80px, 12vh, 150px) 48px clamp(40px, 6vh, 80px); }
-.orbit-head { max-width: 620px; margin: 0 auto 8px; text-align: center; }
-.orbit-head .label { display: block; margin-bottom: 16px; }
-.orbit-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 6.5vw, 92px); line-height: 0.92; letter-spacing: -0.02em; }
-.orbit-head h2 em { color: var(--accent); font-style: italic; }
-.orbit-head p { color: var(--text-dim); font-size: 15px; line-height: 1.7; margin-top: 16px; }
-.orbit-stage { position: relative; width: 100%; height: clamp(420px, 62vh, 640px); margin-top: 10px; }
-.orbit-stage canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
-.orbit-stage canvas:active { cursor: grabbing; }
-.orbit-tip { position: absolute; top: 0; left: 0; z-index: 3; pointer-events: none; transform: translate(-50%, -140%); opacity: 0; transition: opacity 0.2s ease; background: rgba(6,6,6,0.7); backdrop-filter: blur(8px); border: 1px solid var(--line); padding: 7px 13px; border-radius: 100px; white-space: nowrap; }
-.orbit-tip.show { opacity: 1; }
-.orbit-tip b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 15px; color: var(--text); }
-.orbit-tip span { font-size: 11px; color: var(--accent); margin-left: 8px; letter-spacing: 0.04em; }
-/* fallback grid if WebGL is unavailable */
-.orbit-fallback { display: none; position: absolute; inset: 0; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-content: center; }
-.orbit-fallback.show { display: grid; }
-.orbit-fallback a { border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: var(--bg-soft); transition: border-color 0.3s; }
-.orbit-fallback a:hover { border-color: rgba(244,121,33,0.45); }
-.orbit-fallback h4 { font-family: var(--serif); font-weight: 400; font-size: 19px; }
-.orbit-fallback span { font-size: 11px; color: var(--accent); }
-@media (max-width: 820px) { .orbit-section { padding: 70px 20px 30px; } }
-
 /* ============================================================ 3D Design — explorable worlds */
 .threed-section { position: relative; z-index: 1; max-width: var(--max); margin: 0 auto; padding: clamp(90px, 14vh, 170px) 48px; }
 .threed-head { max-width: 640px; margin-bottom: 44px; }
@@ -743,21 +720,22 @@ img.fe, .fe img { display: block; }
 .threed-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 7vw, 100px); line-height: 0.9; letter-spacing: -0.02em; }
 .threed-head h2 em { color: var(--accent); font-style: italic; }
 .threed-head p { color: var(--text-dim); font-size: 15px; line-height: 1.7; margin-top: 18px; }
-.world-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.world-card { display: block; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--bg-soft); transition: border-color 0.35s var(--ease), transform 0.35s var(--ease); }
-.world-card:hover { border-color: rgba(244,121,33,0.45); transform: translateY(-4px); }
-.world-card__media { position: relative; aspect-ratio: 10/7; overflow: hidden; }
-.world-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
-.world-card:hover .world-card__media img { transform: scale(1.06); }
-.world-card__play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 9px; font-size: 13px; font-weight: 600; color: #fff; background: rgba(6,6,6,0.35); opacity: 0; transition: opacity 0.35s var(--ease); }
-.world-card__play i { color: var(--accent); }
-.world-card:hover .world-card__play { opacity: 1; }
-.world-card__cap { padding: 16px 18px 18px; }
-.world-card__cap h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; letter-spacing: -0.01em; }
-.world-card__cap span { font-size: 12.5px; color: var(--text-dim); }
+.threed-stage { position: relative; width: 100%; height: clamp(440px, 64vh, 660px); margin-top: 8px; }
+.threed-stage canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.threed-stage canvas:active { cursor: grabbing; }
+.threed-tip { position: absolute; top: 0; left: 0; z-index: 3; pointer-events: none; transform: translate(-50%, -150%); opacity: 0; transition: opacity 0.2s ease; background: rgba(6,6,6,0.72); backdrop-filter: blur(8px); border: 1px solid var(--line); padding: 8px 15px; border-radius: 100px; white-space: nowrap; }
+.threed-tip.show { opacity: 1; }
+.threed-tip b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 16px; color: var(--text); }
+.threed-tip span { font-size: 11px; color: var(--accent); margin-left: 9px; letter-spacing: 0.05em; }
+.threed-fallback { display: none; position: absolute; inset: 0; grid-template-columns: repeat(3, 1fr); gap: 14px; align-content: center; }
+.threed-fallback.show { display: grid; }
+.threed-fallback a { border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: var(--bg-soft); transition: border-color 0.3s; }
+.threed-fallback a:hover { border-color: rgba(244,121,33,0.45); }
+.threed-fallback h4 { font-family: var(--serif); font-weight: 400; font-size: 21px; }
+.threed-fallback span { font-size: 11px; color: var(--accent); }
 @media (max-width: 820px) {
   .threed-section { padding: 80px 24px; }
-  .world-grid { grid-template-columns: 1fr; }
+  .threed-fallback { grid-template-columns: 1fr; }
 }
 
 /* ============================================================ Collage — pieces assemble on scroll */
@@ -1120,20 +1098,6 @@ img.fe, .fe img { display: block; }
       </div>
     </section>
 
-    <!-- CONSTELLATION — clickable 3D shapes orbiting a core; each opens a project -->
-    <section class="orbit-section" id="orbit">
-      <div class="orbit-head">
-        <span class="label reveal">(Selected Work)</span>
-        <h2 class="reveal" style="--i:1">A constellation <em>of work.</em></h2>
-        <p class="reveal" style="--i:2">Every shape is a project — orbiting a core. Drag to spin the system, hover to name it, click to step inside.</p>
-      </div>
-      <div class="orbit-stage" id="orbitStage">
-        <canvas id="orbitCanvas"></canvas>
-        <div class="orbit-tip" id="orbitTip"></div>
-        <div class="orbit-fallback" id="orbitFallback" aria-hidden="true"></div>
-      </div>
-    </section>
-
     <!-- SOFTWARE DEVELOPMENT — full-stack projects (right after "What I do") -->
     <section id="software" class="webwork">
       <div class="webwork__head">
@@ -1258,19 +1222,10 @@ img.fe, .fe img { display: block; }
         <h2 class="reveal" style="--i:1">Explorable <em>worlds.</em></h2>
         <p class="reveal" style="--i:2">Real-time 3D worlds you can walk around in the browser — arrow keys or WASD to move, drag to look. Click a world to step inside.</p>
       </div>
-      <div class="world-grid">
-        <a class="world-card reveal" href="world3d.html?world=castle" data-gd>
-          <div class="world-card__media"><img src="images/world-castle.jpg" alt="Colorful castle 3D world" loading="lazy"><span class="world-card__play"><i class="fa-solid fa-gamepad"></i> Explore</span></div>
-          <div class="world-card__cap"><h3>Colorful Castle</h3><span>Roam a bright fortress</span></div>
-        </a>
-        <a class="world-card reveal" href="world3d.html?world=forest" data-gd style="--i:1">
-          <div class="world-card__media"><img src="images/world-forest.jpg" alt="Forest 3D world" loading="lazy"><span class="world-card__play"><i class="fa-solid fa-gamepad"></i> Explore</span></div>
-          <div class="world-card__cap"><h3>Enchanted Forest</h3><span>Wander through the trees</span></div>
-        </a>
-        <a class="world-card reveal" href="world3d.html?world=city" data-gd style="--i:2">
-          <div class="world-card__media"><img src="images/world-city.jpg" alt="Neon city 3D world" loading="lazy"><span class="world-card__play"><i class="fa-solid fa-gamepad"></i> Explore</span></div>
-          <div class="world-card__cap"><h3>Neon City</h3><span>Drift through the streets</span></div>
-        </a>
+      <div class="threed-stage" id="threedStage">
+        <canvas id="threedCanvas"></canvas>
+        <div class="threed-tip" id="threedTip"></div>
+        <div class="threed-fallback" id="threedFallback" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -2846,27 +2801,20 @@ img.fe, .fe img { display: block; }
 })();
 </script>
 <script>
-/* Constellation — clickable 3D project shapes orbiting a core (Three.js) */
+/* 3D Design — three orbiting shapes (tree / cube / moon), each opens its world */
 (function () {
-  var stage = document.getElementById("orbitStage"), canvas = document.getElementById("orbitCanvas");
-  var tip = document.getElementById("orbitTip"), fb = document.getElementById("orbitFallback");
+  var stage = document.getElementById("threedStage"), canvas = document.getElementById("threedCanvas");
+  var tip = document.getElementById("threedTip"), fb = document.getElementById("threedFallback");
   if (!stage || !canvas) return;
-
-  var PROJECTS = [
-    { title: "Race2Space", tag: "Software", url: "race2space.html", color: 0xf47921, geo: "ico" },
-    { title: "Liwanag", tag: "UI/UX", url: "liwanag.html", color: 0x34d9c3, geo: "torus" },
-    { title: "BlueJay-Bites", tag: "UI/UX", url: "bluejaybites.html", color: 0xFFC72C, geo: "box" },
-    { title: "AeroTech", tag: "Web Design", url: "webdesign.html", color: 0x4d8dff, geo: "octa" },
-    { title: "Invisible by Design", tag: "Graphic", url: "invisible.html", color: 0xa06cd5, geo: "dodeca" },
-    { title: "Colorful Castle", tag: "3D World", url: "world3d.html?world=castle", color: 0xff4d8d, geo: "cone" },
-    { title: "Film & Motion", tag: "Motion", url: "film.html", color: 0xff6b35, geo: "knot" }
+  var WORLDS = [
+    { title: "Enchanted Forest", tag: "Explore", url: "world3d.html?world=forest", kind: "tree" },
+    { title: "Neon City", tag: "Explore", url: "world3d.html?world=city", kind: "cube" },
+    { title: "Colorful Castle", tag: "Explore", url: "world3d.html?world=castle", kind: "moon" }
   ];
-  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  // Fallback: no WebGL / reduced motion → simple card grid
-  if (typeof THREE === "undefined" || prefersReduced) {
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (typeof THREE === "undefined" || reduced) {
     canvas.style.display = "none"; fb.classList.add("show");
-    fb.innerHTML = PROJECTS.map(function (p) { return '<a href="' + p.url + '" data-gd><h4>' + p.title + '</h4><span>' + p.tag + '</span></a>'; }).join("");
+    fb.innerHTML = WORLDS.map(function (w) { return '<a href="' + w.url + '" data-gd><h4>' + w.title + '</h4><span>Explore ↗</span></a>'; }).join("");
     fb.querySelectorAll("[data-gd]").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); if (window.openGdPopup) window.openGdPopup(a.getAttribute("href")); }); });
     return;
   }
@@ -2875,85 +2823,88 @@ img.fe, .fe img { display: block; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 200);
-  camera.position.set(0, 6, 46);
-  camera.lookAt(0, 0, 0);
+  camera.position.set(0, 4, 34); camera.lookAt(0, 0, 0);
   function size() { var w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
   window.addEventListener("resize", size); size();
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-  var key = new THREE.DirectionalLight(0xffffff, 0.8); key.position.set(12, 20, 18); scene.add(key);
-  var core = new THREE.PointLight(0xf47921, 1.1, 90); scene.add(core);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  var key = new THREE.DirectionalLight(0xffffff, 0.85); key.position.set(10, 18, 14); scene.add(key);
+  scene.add(new THREE.PointLight(0xf47921, 0.7, 80));
 
-  var group = new THREE.Group(); scene.add(group);
-  // glowing core
-  var coreMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(3, 1), new THREE.MeshStandardMaterial({ color: 0x120c08, emissive: 0xf47921, emissiveIntensity: 0.5, roughness: 0.4, wireframe: true }));
-  group.add(coreMesh);
+  var system = new THREE.Group(); scene.add(system);
+  // faint core the shapes orbit
+  system.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 0), new THREE.MeshStandardMaterial({ color: 0x1a1207, emissive: 0xf47921, emissiveIntensity: 0.4, wireframe: true })));
 
-  function makeGeo(kind) {
-    switch (kind) {
-      case "torus": return new THREE.TorusGeometry(2.1, 0.7, 12, 32);
-      case "box": return new THREE.BoxGeometry(3, 3, 3);
-      case "octa": return new THREE.OctahedronGeometry(2.4, 0);
-      case "dodeca": return new THREE.DodecahedronGeometry(2.4, 0);
-      case "cone": return new THREE.ConeGeometry(2.2, 4, 6);
-      case "knot": return new THREE.TorusKnotGeometry(1.7, 0.55, 64, 10);
-      default: return new THREE.IcosahedronGeometry(2.5, 0);
-    }
+  function mat(c, e) { return new THREE.MeshStandardMaterial({ color: c, emissive: e || c, emissiveIntensity: 0.18, roughness: 0.4, flatShading: true }); }
+  function buildTree() {
+    var g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.6, 3, 7), mat(0x7a5230)));
+    var f1 = new THREE.Mesh(new THREE.ConeGeometry(2.6, 3.4, 8), mat(0x3f8b4a)); f1.position.y = 2.6; g.add(f1);
+    var f2 = new THREE.Mesh(new THREE.ConeGeometry(2.1, 2.8, 8), mat(0x54a35c)); f2.position.y = 4.4; g.add(f2);
+    var f3 = new THREE.Mesh(new THREE.ConeGeometry(1.5, 2.2, 8), mat(0x6cbf6a)); f3.position.y = 5.9; g.add(f3);
+    g.position.y = -2; return g;
   }
+  function buildCube() {
+    var g = new THREE.Group();
+    var b = new THREE.Mesh(new THREE.BoxGeometry(3.4, 3.4, 3.4), mat(0x2b2f55));
+    g.add(b);
+    var edges = new THREE.LineSegments(new THREE.EdgesGeometry(b.geometry), new THREE.LineBasicMaterial({ color: 0x00e5cc }));
+    g.add(edges);
+    var top = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.5, 3.6), new THREE.MeshStandardMaterial({ color: 0xff4d8d, emissive: 0xff4d8d, emissiveIntensity: 0.8 }));
+    top.position.y = 1.7; g.add(top);
+    return g;
+  }
+  function buildMoon() {
+    var g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(2.3, 28, 20), new THREE.MeshStandardMaterial({ color: 0xd7d9e4, emissive: 0x8890b0, emissiveIntensity: 0.25, roughness: 0.85 })));
+    var craters = [[1.1, 0.8, 1.7], [-1.3, 0.4, 1.5], [0.3, -1.4, 1.7], [-0.6, 1.5, 1.4]];
+    craters.forEach(function (c) { var m = new THREE.Mesh(new THREE.SphereGeometry(0.4, 10, 8), new THREE.MeshStandardMaterial({ color: 0xb3b7c8, roughness: 1 })); m.position.set(c[0], c[1], c[2]); g.add(m); });
+    return g;
+  }
+  var builders = { tree: buildTree, cube: buildCube, moon: buildMoon };
   var nodes = [];
-  PROJECTS.forEach(function (p, i) {
-    var mesh = new THREE.Mesh(makeGeo(p.geo), new THREE.MeshStandardMaterial({ color: p.color, emissive: p.color, emissiveIntensity: 0.22, roughness: 0.35, metalness: 0.1, flatShading: true }));
-    mesh.userData = { url: p.url, title: p.title, tag: p.tag, base: 1,
-      angle: (i / PROJECTS.length) * Math.PI * 2, radius: 13 + (i % 3) * 4.5, yb: (i % 2 ? 3 : -3), spd: 0.12 + (i % 4) * 0.03, spin: 0.4 + Math.random() * 0.5 };
-    group.add(mesh); nodes.push(mesh);
+  WORLDS.forEach(function (w, i) {
+    var g = builders[w.kind]();
+    g.userData = { url: w.url, title: w.title, tag: w.tag, angle: (i / WORLDS.length) * Math.PI * 2, radius: 11, spd: 0.28, spin: 0.5 + i * 0.15, base: 1 };
+    system.add(g); nodes.push(g);
   });
 
-  // drag-to-rotate
-  var yaw = 0, pitch = 0.15, dragging = false, moved = 0, sx = 0, sy = 0, downT = 0;
+  var yaw = 0, pitch = 0.12, dragging = false, moved = 0, sx = 0, sy = 0, downT = 0;
   canvas.addEventListener("pointerdown", function (e) { dragging = true; moved = 0; sx = e.clientX; sy = e.clientY; downT = performance.now(); canvas.setPointerCapture(e.pointerId); });
-  canvas.addEventListener("pointerup", function (e) {
-    dragging = false;
-    if (moved < 7 && performance.now() - downT < 400) clickAt(e); // treat as tap
-  });
-  var ndc = new THREE.Vector2(), ray = new THREE.Raycaster(), hover = null;
-  canvas.addEventListener("pointermove", function (e) {
-    var r = canvas.getBoundingClientRect();
-    ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-    ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
-    if (dragging) { moved += Math.abs(e.clientX - sx) + Math.abs(e.clientY - sy); yaw += (e.clientX - sx) * 0.006; pitch = Math.max(-0.6, Math.min(0.9, pitch + (e.clientY - sy) * 0.004)); sx = e.clientX; sy = e.clientY; }
-    ray.setFromCamera(ndc, camera);
-    var hit = ray.intersectObjects(nodes, false)[0];
-    hover = hit ? hit.object : null;
-    canvas.style.cursor = hover ? "pointer" : (dragging ? "grabbing" : "grab");
-    if (hover) {
-      var v = hover.position.clone().project(camera);
-      tip.style.left = ((v.x * 0.5 + 0.5) * r.width) + "px";
-      tip.style.top = ((-v.y * 0.5 + 0.5) * r.height) + "px";
-      tip.innerHTML = "<b>" + hover.userData.title + "</b><span>" + hover.userData.tag + "</span>";
-      tip.classList.add("show");
-    } else tip.classList.remove("show");
-  });
+  canvas.addEventListener("pointerup", function (e) { dragging = false; if (moved < 8 && performance.now() - downT < 400) pick(e, true); });
   canvas.addEventListener("pointerleave", function () { tip.classList.remove("show"); });
-  function clickAt(e) {
+  var ndc = new THREE.Vector2(), ray = new THREE.Raycaster(), hover = null;
+  function nodeFrom(o) { while (o && !o.userData.url) o = o.parent; return o; }
+  function pick(e, doOpen) {
     var r = canvas.getBoundingClientRect();
     ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1; ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
     ray.setFromCamera(ndc, camera);
-    var hit = ray.intersectObjects(nodes, false)[0];
-    if (hit && window.openGdPopup) window.openGdPopup(hit.object.userData.url);
+    var hit = ray.intersectObjects(nodes, true)[0];
+    var node = hit ? nodeFrom(hit.object) : null;
+    if (doOpen) { if (node && window.openGdPopup) window.openGdPopup(node.userData.url); return; }
+    hover = node; canvas.style.cursor = node ? "pointer" : (dragging ? "grabbing" : "grab");
+    if (node) {
+      var wp = new THREE.Vector3(); node.getWorldPosition(wp); wp.project(camera);
+      tip.style.left = ((wp.x * 0.5 + 0.5) * r.width) + "px"; tip.style.top = ((-wp.y * 0.5 + 0.5) * r.height) + "px";
+      tip.innerHTML = "<b>" + node.userData.title + "</b><span>" + node.userData.tag + " ↗</span>"; tip.classList.add("show");
+    } else tip.classList.remove("show");
   }
+  canvas.addEventListener("pointermove", function (e) {
+    if (dragging) { moved += Math.abs(e.clientX - sx) + Math.abs(e.clientY - sy); yaw += (e.clientX - sx) * 0.006; pitch = Math.max(-0.5, Math.min(0.8, pitch + (e.clientY - sy) * 0.004)); sx = e.clientX; sy = e.clientY; }
+    pick(e, false);
+  });
 
   var clock = new THREE.Clock(), running = true, t = 0;
   new IntersectionObserver(function (es) { running = es[0].isIntersecting; if (running) loop(); }, { threshold: 0.05 }).observe(stage);
   function loop() {
     if (!running) return;
     var dt = Math.min(clock.getDelta(), 0.05); t += dt;
-    group.rotation.y = yaw + t * 0.05; group.rotation.x = pitch;
-    coreMesh.rotation.y += dt * 0.4; coreMesh.rotation.x += dt * 0.2;
-    nodes.forEach(function (m) {
-      var u = m.userData; u.angle += u.spd * dt;
-      m.position.set(Math.cos(u.angle) * u.radius, u.yb + Math.sin(u.angle * 0.8) * 2.2, Math.sin(u.angle) * u.radius);
-      m.rotation.x += dt * u.spin; m.rotation.y += dt * u.spin * 0.8;
-      var target = (m === hover) ? 1.35 : 1; u.base += (target - u.base) * Math.min(dt * 8, 1); m.scale.setScalar(u.base);
+    system.rotation.y = yaw + t * 0.08; system.rotation.x = pitch;
+    nodes.forEach(function (g) {
+      var u = g.userData; u.angle += u.spd * dt;
+      g.position.set(Math.cos(u.angle) * u.radius, Math.sin(u.angle * 0.9) * 1.6, Math.sin(u.angle) * u.radius);
+      g.rotation.y += dt * u.spin;
+      var target = (g === hover) ? 1.28 : 1; u.base += (target - u.base) * Math.min(dt * 8, 1); g.scale.setScalar(u.base);
     });
     renderer.render(scene, camera);
     requestAnimationFrame(loop);
