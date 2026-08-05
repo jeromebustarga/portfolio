@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Follow Ledger — Jerome Bustarga</title>
+<meta name="description" content="Follow Ledger — a read-only Manifest V3 Chrome extension that finds the Instagram accounts you follow who don't follow you back, with a paced manual unfollow flow.">
+<link rel="icon" type="image/png" href="images/favicon.png?v=26">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06070e; --panel: #0c0f1c; --line: rgba(255,255,255,0.09);
+    --text: #f4f1ea; --dim: #9aa0b4; --faint: #6a7086;
+    --accent: #f47921; --teal: #34d9c3; --green: #2ec27e;
+    --serif: 'Instrument Serif', Georgia, serif; --sans: 'DM Sans', system-ui, sans-serif; --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --ease: cubic-bezier(0.16,1,0.3,1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+  body { font-family: var(--sans); background: radial-gradient(120% 60% at 50% 0%, #0c1024 0%, var(--bg) 55%); color: var(--text); line-height: 1.65; font-weight: 300; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; } img { max-width: 100%; display: block; }
+
+  .pf-nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 26px;background:rgba(6,7,14,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .pf-nav a{color:var(--text);font-size:13px;letter-spacing:.02em;}
+  .pf-nav .pf-logo{display:flex;align-items:center;gap:9px;font-weight:600;}
+  .pf-nav .pf-logo img{width:24px;height:24px;border-radius:6px;}
+  .pf-nav .pf-links{display:flex;gap:22px;align-items:center;}
+  .pf-nav .pf-links a{opacity:.82;transition:opacity .25s,color .25s;}
+  .pf-nav .pf-links a:hover{opacity:1;color:var(--accent);}
+  @media(max-width:600px){.pf-nav{padding:11px 16px;}.pf-nav .pf-links{gap:14px;}.pf-nav .pf-logo span{display:none;}}
+  body.pf-embed .pf-nav{display:none!important;}
+  body.pf-embed .wrap{padding-top:48px;}
+
+  .wrap { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 118px 28px 90px; }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 12px; }
+  .kicker::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(244,121,33,.5), transparent); }
+  .head { display: flex; align-items: center; gap: 22px; margin: 22px 0 10px; }
+  .head img { width: clamp(72px, 10vw, 104px); height: auto; border-radius: 22px; border: 1px solid var(--line); box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(46px, 8vw, 82px); line-height: .95; letter-spacing: -0.02em; }
+  .sub { font-family: var(--serif); font-style: italic; font-size: clamp(17px, 2.5vw, 23px); color: var(--dim); margin-top: 6px; max-width: 640px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 26px; }
+  .chip { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; padding: 7px 14px; border: 1px solid var(--line); border-radius: 100px; color: var(--dim); background: rgba(255,255,255,.02); }
+  .chip--ok { color: var(--green); border-color: rgba(46,194,126,.35); }
+
+  .demo { margin: 40px 0 0; aspect-ratio: 16/9; border-radius: 18px; border: 1px dashed var(--line); background: linear-gradient(135deg, rgba(244,121,33,.06), rgba(52,217,195,.05)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; color: var(--faint); }
+  .demo i { font-size: 34px; color: var(--accent); opacity: .8; }
+  .demo span { font-size: 13px; letter-spacing: .04em; }
+
+  section { margin-top: 60px; }
+  .sec-label { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(52,217,195,.35), transparent); }
+  section p { color: var(--dim); font-size: 16px; max-width: 730px; margin-bottom: 16px; }
+  section p strong { color: var(--text); font-weight: 500; }
+  ul.pts { list-style: none; display: flex; flex-direction: column; gap: 10px; max-width: 730px; }
+  ul.pts li { position: relative; padding-left: 22px; color: var(--dim); font-size: 15px; }
+  ul.pts li::before { content: '◆'; position: absolute; left: 0; top: 2px; font-size: 9px; color: var(--accent); }
+  ul.pts li strong { color: var(--text); font-weight: 500; }
+
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .trust .t { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .trust .t i { color: var(--green); font-size: 18px; margin-bottom: 10px; display: block; }
+  .trust .t h4 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  .trust .t p { font-size: 13px; color: var(--dim); margin: 0; }
+
+  .stack { display: flex; flex-wrap: wrap; gap: 8px; }
+  .stack span { padding: 7px 14px; background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 100px; font-size: 12px; color: var(--dim); }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 54px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 30px; border-radius: 100px; font-size: 14px; font-weight: 500; transition: all .3s var(--ease); }
+  .btn--repo { border: 1px solid var(--line); color: var(--text); }
+  .btn--repo:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer { position: relative; z-index: 1; border-top: 1px solid var(--line); padding: 26px 28px 34px; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--faint); }
+  @media (max-width: 760px) { .wrap { padding: 100px 20px 60px; } .trust { grid-template-columns: 1fr; } .head { gap: 16px; } }
+</style>
+</head>
+<body>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('pf-embed');</script>
+
+<nav class="pf-nav">
+  <a class="pf-logo" href="index.html"><img src="images/logo.png?v=26" alt=""><span>It's Jerome's World</span></a>
+  <div class="pf-links"><a href="index.html">Home</a><a href="index.html#software">Work</a><a href="about.html">About</a></div>
+</nav>
+
+<div class="wrap">
+  <div class="kicker">Software Development · Client-side</div>
+  <div class="head">
+    <img src="images/followledger-logo.png" alt="Follow Ledger logo">
+    <div>
+      <h1>Follow Ledger</h1>
+      <p class="sub">Find the Instagram accounts you follow who don't follow you back, with a paced manual flow that respects platform limits.</p>
+    </div>
+  </div>
+  <div class="meta">
+    <span class="chip">Chrome Extension</span>
+    <span class="chip">Manifest V3</span>
+    <span class="chip chip--ok">Read-only</span>
+    <span class="chip chip--ok">No password</span>
+    <span class="chip">Client-side / Frontend</span>
+  </div>
+
+  <div class="demo">
+    <i class="fa-solid fa-clapperboard"></i>
+    <span>Screen capture coming soon</span>
+  </div>
+
+  <section>
+    <div class="sec-label">01 · Overview</div>
+    <p>Follow Ledger answers a simple question, who do I follow that doesn't follow me back, without any of the sketchy patterns that usually come with follower-tracker tools. It never asks for your password. Instead it runs <strong>read-only</strong> inside your existing Instagram browser session, pages through your following and followers lists, and computes the difference.</p>
+    <p>The results render in Chrome's side panel, which stays open while you click through profiles, so you never lose your place. Results are cached locally, so reopening the panel is instant and avoids re-hitting Instagram's endpoints. When you are ready to act, a guided session opens each non-follower's profile in a compact window where Instagram's own unfollow button lives. Every unfollow is your own <strong>manual</strong> click. A short cooldown and a per-session soft cap keep the pace slow enough to avoid the action-blocks that Instagram issues for aggressive unfollowing, even when done by hand.</p>
+    <p>The interesting engineering is in the constraints. Instagram has no official API for this and blocks its profile pages from being embedded, so the tool works within those limits rather than around them. It handles pagination and rate limiting, backs off on throttling, and reports live progress through the extension's messaging layer.</p>
+  </section>
+
+  <section>
+    <div class="sec-label">02 · The trust story</div>
+    <div class="trust">
+      <div class="t"><i class="fa-solid fa-key"></i><h4>No password</h4><p>Runs inside your own logged-in session. Nothing to hand over.</p></div>
+      <div class="t"><i class="fa-solid fa-eye"></i><h4>Read-only by design</h4><p>It reads your lists and computes the difference. It changes nothing on its own.</p></div>
+      <div class="t"><i class="fa-solid fa-hand"></i><h4>Manual and paced</h4><p>Every unfollow is your click, with a cooldown and a soft cap to protect your account.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label">03 · What it demonstrates</div>
+    <ul class="pts">
+      <li><strong>Chrome extension architecture end to end:</strong> Manifest V3, a service worker, the Side Panel API, script injection, local storage, and message passing.</li>
+      <li><strong>Working within real platform constraints</strong> (no official API, embedding blocked) instead of resorting to credential harvesting or scraping.</li>
+      <li><strong>Deliberate safety and ethics tradeoffs:</strong> read-only by design, manual by design, and paced to protect the user's own account.</li>
+      <li><strong>Handling real-world API behavior:</strong> pagination, rate-limit backoff, and honest failure states.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-label">04 · Tech stack</div>
+    <div class="stack">
+      <span>JavaScript</span><span>Chrome Extension</span><span>Manifest V3</span><span>Side Panel API</span><span>chrome.scripting</span><span>chrome.storage</span><span>Service worker</span><span>Message passing</span><span>REST-style pagination</span>
+    </div>
+  </section>
+
+  <div class="actions">
+    <a class="btn btn--repo" href="https://github.com/jhb09808/follow-ledger" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> View the source</a>
+  </div>
+</div>
+
+<footer>
+  <span>FOLLOW LEDGER · CASE STUDY</span>
+  <span>BUILT BY JEROME BUSTARGA · SAN DIEGO, CA</span>
+</footer>
+</body>
+</html>
