@@ -44,9 +44,8 @@
   .chip { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; padding: 7px 14px; border: 1px solid var(--line); border-radius: 100px; color: var(--dim); background: rgba(255,255,255,.02); }
   .chip--ok { color: var(--green); border-color: rgba(46,194,126,.35); }
 
-  .demo { margin: 40px 0 0; aspect-ratio: 16/9; border-radius: 18px; border: 1px dashed var(--line); background: linear-gradient(135deg, rgba(244,121,33,.06), rgba(52,217,195,.05)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; color: var(--faint); }
-  .demo i { font-size: 34px; color: var(--accent); opacity: .8; }
-  .demo span { font-size: 13px; letter-spacing: .04em; }
+  .demo { margin: 40px 0 0; border-radius: 18px; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,.55); }
+  .demo img { width: 100%; display: block; }
 
   section { margin-top: 60px; }
   .sec-label { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
@@ -101,10 +100,7 @@
     <span class="chip">Client-side / Frontend</span>
   </div>
 
-  <div class="demo">
-    <i class="fa-solid fa-clapperboard"></i>
-    <span>Screen capture coming soon</span>
-  </div>
+  <div class="demo"><img src="images/follow.png" alt="Follow Ledger — following/followers check and side panel results"></div>
 
   <section>
     <div class="sec-label">01 · Overview</div>
