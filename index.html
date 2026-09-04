@@ -587,7 +587,6 @@
         </div>
         <div class="tb-center"><i class="fa-solid fa-folder-open"></i> jerome-world — repository</div>
         <div class="tb-right">
-            <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
             <button type="button" class="nav-link" data-about-open><i class="fa-solid fa-user"></i> About</button>
         </div>
         <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -595,7 +594,6 @@
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html" class="mobile-menu-link"><i class="fa-solid fa-house"></i> Home</a>
         <button type="button" class="mobile-menu-link" data-about-open><i class="fa-solid fa-user"></i> About</button>
     </div>
 
@@ -612,7 +610,6 @@
                     <button class="activity-btn" title="Extensions"><i class="fa-solid fa-puzzle-piece"></i></button>
                 </div>
                 <div class="activity-bottom">
-                    <a href="index.html" class="activity-btn nav-link" title="Home"><i class="fa-solid fa-house"></i></a>
                     <button type="button" class="activity-btn nav-link" title="About" data-about-open><i class="fa-solid fa-user"></i></button>
                 </div>
             </div>
@@ -1073,11 +1070,8 @@
                 addOutput('  cd [name]     Open project', 'output');
                 addOutput('  info          Current project info', 'output');
                 addOutput('  open          Open current project URL', 'output');
-                addOutput('  clear         Clear terminal', 'output');
-                addOutput('', 'output');
-                addOutput('Navigation:', 'output');
-                addOutput('  cd ~          Go to homepage', 'output');
                 addOutput('  about         Open the about dialog', 'output');
+                addOutput('  clear         Clear terminal', 'output');
             } else if (mainCmd === 'about' || mainCmd === 'whoami') {
                 addOutput('Opening about...', 'output-success');
                 setTimeout(() => openAbout(), 300);
@@ -1095,8 +1089,7 @@
                     addOutput('Usage: cd [project-name]', 'output-error');
                     addOutput('Type "ls" to see available projects', 'output');
                 } else if (arg === '~' || arg === 'home') {
-                    addOutput('Navigating to homepage...', 'output-success');
-                    setTimeout(() => window.location.href = 'index.html', 800);
+                    addOutput('Already home.', 'output');
                 } else if (arg === 'about') {
                     addOutput('Opening about...', 'output-success');
                     setTimeout(() => openAbout(), 400);
