@@ -1558,8 +1558,18 @@ document.addEventListener('keydown', (e) => {
 
 // (old-site navigation interactions removed — this page now uses the portfolio's slim nav)
 
-// Mouse trail with p5.js (disabled on touch devices)
-if (!('ontouchstart' in window)) {
+// Deep link: ?film=<id> opens that film's detail straight away, so the
+// repository landing can link to a single film rather than the whole gallery.
+(function () {
+  const id = new URLSearchParams(location.search).get('film');
+  if (!id) return;
+  const item = filmProjects.find(f => String(f.id) === String(id));
+  if (item) openModal(item);
+})();
+
+// Mouse trail with p5.js (disabled on touch devices, and when embedded in a
+// dialog, where a full-screen overlay canvas is just wasted work)
+if (!('ontouchstart' in window) && !new URLSearchParams(location.search).has('embed')) {
   new p5((p) => {
     let trails = [];
     
