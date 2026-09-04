@@ -626,7 +626,9 @@
     .about-content.solo { padding: 30px 38px 38px; }
 
     /* project dialog: wide, with the real page embedded */
-    .about-dialog.wide { width: min(1180px, 100%); height: min(820px, 92vh); }
+    /* Project dialogs hold real pages, so give them close to a full viewport —
+       a narrow frame forces those layouts into their cramped breakpoints. */
+    .about-dialog.wide { width: min(1560px, 96vw); height: min(1000px, 94vh); }
     .dlg-frame { flex: 1; min-height: 0; background: var(--terminal-bg); }
     .dlg-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
     .dlg-foot {

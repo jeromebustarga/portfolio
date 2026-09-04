@@ -101,6 +101,12 @@
     width:108%;max-width:620px;
     filter:drop-shadow(0 40px 60px rgba(0,0,0,.45));
   }
+  /* The 108% overshoot is a deliberate bleed, but between the 880px layout
+     switch and ~1240px the column is narrow enough that it spills past the
+     viewport and the cans get clipped. Pull it back in over that range. */
+  @media(max-width:1240px){
+    .hero-art img{width:100%}
+  }
   .scrollcue{
     text-align:center;padding-bottom:26px;position:relative;z-index:2;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.3em;
