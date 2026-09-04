@@ -38,7 +38,6 @@
   if (new URLSearchParams(location.search).has('embed')) document.body.classList.add('pf-embed');
   var WORLD = (new URLSearchParams(location.search).get('world') || 'castle').toLowerCase();
   var loader = document.getElementById('loader');
-  if (typeof THREE === 'undefined') { loader.textContent = 'WebGL failed to load'; return; }
 
   var THEMES = {
     castle: { title: 'Colorful Castle', sub: 'A bright fortress to roam', sky: 0x8fd3ff, ground: 0x6fae4a, fog: [40, 170] },
@@ -46,9 +45,13 @@
     city:   { title: 'Neon City', sub: 'Drift through the streets', sky: 0x2a2340, ground: 0x1b1b24, fog: [30, 150] }
   };
   var T = THEMES[WORLD] || THEMES.castle;
+  // Name the world before the WebGL check, so a failed load still says which
+  // world you asked for rather than a generic placeholder.
   document.getElementById('wtitle').textContent = T.title;
   document.getElementById('wsub').textContent = T.sub;
   document.title = T.title + ' — Jerome Bustarga';
+
+  if (typeof THREE === 'undefined') { loader.textContent = 'WebGL failed to load'; return; }
 
   var canvas = document.getElementById('c');
   var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
