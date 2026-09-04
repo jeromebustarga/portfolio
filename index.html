@@ -431,6 +431,142 @@
     }
     /* Mobile keeps normal document scrolling for .mobile-layout */
     </style>
+    <style>/* about-modal — VS Code style modal editor dialog */
+    button.nav-link, button.mobile-menu-link, button.activity-btn {
+      background: none; border: none; font: inherit; cursor: pointer;
+    }
+
+    .about-backdrop {
+      position: fixed; inset: 0; z-index: 5000;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+    .about-backdrop.open { opacity: 1; pointer-events: auto; }
+
+    .about-dialog {
+      width: min(940px, 100%); height: min(640px, 86vh);
+      background: var(--vs-sidebar);
+      border: 1px solid var(--vs-line-strong);
+      border-radius: 10px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transform: translateY(10px) scale(0.985);
+      transition: transform 0.24s cubic-bezier(0.16,1,0.3,1);
+    }
+    .about-backdrop.open .about-dialog { transform: none; }
+
+    /* dialog title bar */
+    .about-head {
+      height: 46px; flex-shrink: 0;
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 10px 0 16px;
+      background: var(--vs-titlebar);
+      border-bottom: 1px solid var(--vs-line);
+    }
+    .about-head .ttl {
+      font-family: 'JetBrains Mono', monospace; font-size: 13px;
+      color: var(--text-primary); display: flex; align-items: center; gap: 9px;
+    }
+    .about-head .ttl i { color: var(--terminal-orange); font-size: 12px; }
+    .about-head .win { margin-left: auto; display: flex; gap: 2px; }
+    .about-head .win button {
+      width: 30px; height: 28px; border: none; background: none; cursor: pointer;
+      color: var(--text-secondary); border-radius: 5px; font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .about-head .win button:hover { background: rgba(255,255,255,0.07); color: var(--text-primary); }
+    .about-head .win button.close:hover { background: #e11d48; color: #fff; }
+
+    /* body: left rail + content, like the Profiles dialog */
+    .about-body { flex: 1; display: flex; min-height: 0; }
+    .about-rail {
+      width: 210px; flex-shrink: 0; padding: 14px 10px;
+      border-right: 1px solid var(--vs-line);
+      background: var(--vs-activity);
+      overflow-y: auto;
+    }
+    .about-rail .rail-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); padding: 0 8px 10px;
+    }
+    .about-rail button {
+      width: 100%; text-align: left; border: none; background: none; cursor: pointer;
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; margin-bottom: 2px; border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+      color: var(--text-secondary);
+      transition: background 0.15s, color 0.15s;
+    }
+    .about-rail button i { width: 14px; font-size: 11px; color: var(--text-dim); }
+    .about-rail button:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+    .about-rail button.active { background: rgba(244,121,33,0.12); color: var(--terminal-orange); }
+    .about-rail button.active i { color: var(--terminal-orange); }
+
+    .about-content { flex: 1; overflow-y: auto; padding: 30px 38px 38px; min-width: 0; }
+    .about-pane { display: none; animation: aboutFade 0.28s ease; }
+    .about-pane.active { display: block; }
+    @keyframes aboutFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .about-pane h2 {
+      font-size: 26px; font-weight: 600; color: var(--text-primary);
+      letter-spacing: -0.02em; margin-bottom: 4px;
+      display: flex; align-items: baseline; gap: 10px;
+    }
+    .about-pane h2 span {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      font-weight: 400; color: var(--text-dim); font-style: italic;
+    }
+    .about-pane .lede { color: var(--text-secondary); font-size: 14px; line-height: 1.7; margin-bottom: 22px; }
+    .about-pane h3 {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--terminal-orange); margin: 26px 0 12px; font-weight: 500;
+    }
+    .about-pane p { color: var(--text-secondary); font-size: 13.5px; line-height: 1.75; margin-bottom: 13px; }
+    .about-pane p strong { color: var(--text-primary); font-weight: 500; }
+
+    .about-facts { border-top: 1px solid var(--vs-line); }
+    .about-facts div {
+      display: flex; gap: 18px; padding: 9px 0;
+      border-bottom: 1px solid var(--vs-line);
+      font-size: 13px;
+    }
+    .about-facts dt, .about-facts .k {
+      width: 120px; flex-shrink: 0; color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    }
+    .about-facts .v { color: var(--text-primary); }
+    .about-facts .v a { color: var(--terminal-orange); text-decoration: none; }
+    .about-facts .v a:hover { text-decoration: underline; }
+
+    .about-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 6px; }
+    .about-tags span {
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+      padding: 5px 11px; border-radius: 20px;
+      border: 1px solid var(--border-color); color: var(--text-secondary);
+      background: rgba(244,121,33,0.05);
+    }
+
+    @media (max-width: 768px) {
+      .about-backdrop { padding: 0; }
+      .about-dialog { width: 100%; height: 100%; border-radius: 0; border: none; }
+      .about-body { flex-direction: column; }
+      .about-rail {
+        width: 100%; display: flex; gap: 4px; overflow-x: auto; overflow-y: hidden;
+        padding: 10px; border-right: none; border-bottom: 1px solid var(--vs-line);
+      }
+      .about-rail .rail-label { display: none; }
+      .about-rail button { width: auto; white-space: nowrap; margin-bottom: 0; }
+      .about-content { padding: 24px 20px 34px; }
+    }
+    </style>
 </head>
 <body>
     <!-- Background Effects -->
@@ -452,8 +588,7 @@
         <div class="tb-center"><i class="fa-solid fa-folder-open"></i> jerome-world — repository</div>
         <div class="tb-right">
             <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="creative.html#warpzone" class="nav-link"><i class="fa-solid fa-rocket"></i> Warpzone</a>
-            <a href="about.html" class="nav-link"><i class="fa-solid fa-user"></i> About</a>
+            <button type="button" class="nav-link" data-about-open><i class="fa-solid fa-user"></i> About</button>
         </div>
         <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
     </header>
@@ -461,8 +596,7 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <a href="index.html" class="mobile-menu-link"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="creative.html#warpzone" class="mobile-menu-link"><i class="fa-solid fa-rocket"></i> Warpzone</a>
-        <a href="about.html" class="mobile-menu-link"><i class="fa-solid fa-user"></i> About</a>
+        <button type="button" class="mobile-menu-link" data-about-open><i class="fa-solid fa-user"></i> About</button>
     </div>
 
     <!-- ==================== DESKTOP: VS CODE IDE ==================== -->
@@ -479,8 +613,7 @@
                 </div>
                 <div class="activity-bottom">
                     <a href="index.html" class="activity-btn nav-link" title="Home"><i class="fa-solid fa-house"></i></a>
-                    <a href="creative.html#warpzone" class="activity-btn nav-link" title="Warpzone"><i class="fa-solid fa-rocket"></i></a>
-                    <a href="about.html" class="activity-btn nav-link" title="About"><i class="fa-solid fa-user"></i></a>
+                    <button type="button" class="activity-btn nav-link" title="About" data-about-open><i class="fa-solid fa-user"></i></button>
                 </div>
             </div>
 
@@ -944,8 +1077,10 @@
                 addOutput('', 'output');
                 addOutput('Navigation:', 'output');
                 addOutput('  cd ~          Go to homepage', 'output');
-                addOutput('  cd warp       Go to warpzone', 'output');
-                addOutput('  cd about      Go to about page', 'output');
+                addOutput('  about         Open the about dialog', 'output');
+            } else if (mainCmd === 'about' || mainCmd === 'whoami') {
+                addOutput('Opening about...', 'output-success');
+                setTimeout(() => openAbout(), 300);
             } else if (mainCmd === 'clear' || mainCmd === 'cls') {
                 terminalHistory.innerHTML = '';
             } else if (mainCmd === 'ls' || mainCmd === 'list' || mainCmd === 'dir') {
@@ -962,12 +1097,9 @@
                 } else if (arg === '~' || arg === 'home') {
                     addOutput('Navigating to homepage...', 'output-success');
                     setTimeout(() => window.location.href = 'index.html', 800);
-                } else if (arg === 'warp' || arg === 'warpzone') {
-                    addOutput('Launching warpzone...', 'output-success');
-                    setTimeout(() => window.location.href = 'warpzone.html', 800);
                 } else if (arg === 'about') {
-                    addOutput('Going to about...', 'output-success');
-                    setTimeout(() => window.location.href = 'about.html', 800);
+                    addOutput('Opening about...', 'output-success');
+                    setTimeout(() => openAbout(), 400);
                 } else if (arg === '..' || arg === '-') {
                     addOutput('Already at root directory', 'output');
                 } else if (projects[arg]) {
@@ -1218,6 +1350,148 @@
                 if (h) h.innerHTML = '';
             });
         })();
+    </script>
+
+    <!-- ==================== ABOUT: MODAL EDITOR DIALOG ==================== -->
+    <div class="about-backdrop" id="aboutBackdrop" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
+      <div class="about-dialog">
+        <div class="about-head">
+          <div class="ttl" id="aboutTitle"><i class="fa-solid fa-sliders"></i> About</div>
+          <div class="win">
+            <button type="button" title="Minimize" aria-hidden="true" tabindex="-1"><i class="fa-solid fa-window-minimize"></i></button>
+            <button type="button" title="Maximize" aria-hidden="true" tabindex="-1"><i class="fa-regular fa-square"></i></button>
+            <button type="button" class="close" id="aboutClose" title="Close" aria-label="Close about dialog"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+
+        <div class="about-body">
+          <div class="about-rail" id="aboutRail">
+            <div class="rail-label">Jerome Bustarga</div>
+            <button type="button" class="active" data-pane="profile"><i class="fa-solid fa-user"></i> Profile</button>
+            <button type="button" data-pane="story"><i class="fa-solid fa-book-open"></i> Background</button>
+            <button type="button" data-pane="skills"><i class="fa-solid fa-code"></i> Skills</button>
+            <button type="button" data-pane="contact"><i class="fa-solid fa-paper-plane"></i> Contact</button>
+          </div>
+
+          <div class="about-content">
+            <!-- Profile -->
+            <div class="about-pane active" data-pane="profile">
+              <h2>Jerome Bustarga <span>Built-in</span></h2>
+              <p class="lede">Software developer and multidisciplinary creator working across computer science, design and digital humanities. I build things that ship, and I care about who they leave out.</p>
+              <div class="about-facts">
+                <div><span class="k">Role</span><span class="v">Software Developer</span></div>
+                <div><span class="k">Focus</span><span class="v">Full-stack, web tools, data visualization</span></div>
+                <div><span class="k">Education</span><span class="v">Creighton University, Computer Science</span></div>
+                <div><span class="k">Status</span><span class="v">Open to opportunities</span></div>
+                <div><span class="k">GitHub</span><span class="v"><a href="https://github.com/jhb09808" target="_blank" rel="noopener">@jhb09808</a></span></div>
+              </div>
+              <h3>Currently</h3>
+              <p>Building <strong>The Algorithm Mirror</strong>, a privacy-first tool that turns YouTube watch histories into interactive visualizations. It reached <strong>91.2% categorization accuracy with an 89.7% cost reduction</strong> using a hybrid AI approach.</p>
+            </div>
+
+            <!-- Background -->
+            <div class="about-pane" data-pane="story">
+              <h2>Background</h2>
+              <p class="lede">The short version: design came first, code came later, and the gap between them is where I like to work.</p>
+              <p>I have been fond of designing since I was fifteen. I would volunteer to make invitations, banners and flyers for family occasions, weddings, birthdays and my cousins' school projects. It was something I could give people before I had anything else to give.</p>
+              <p>There was a stretch when I was an out-of-school youth, and I really felt like I had fallen behind. I stepped back from my own education so my siblings could continue theirs. Around that time my mom and I started a bakery and pizzeria, and I handled everything on the front: the marketing, the banners and flyers and calling cards, the social media, even making the pizza boxes.</p>
+              <p>I finished high school as valedictorian and was accepted to five schools that offered me scholarships, though none were enough on their own. I shared my story online and my provincial government recognized it.</p>
+              <p>At <strong>Creighton University</strong> I started as a physics major on the engineering track. One of the requirements was a computer science class, and the moment I took my first one I fell in love, so I switched my major.</p>
+              <p>I know the reality of being in the margins, and I still consider myself part of it. I am not someone looking in from the outside. That is why my mission is to help the next generation find their voice and amplify it.</p>
+            </div>
+
+            <!-- Skills -->
+            <div class="about-pane" data-pane="skills">
+              <h2>Skills</h2>
+              <p class="lede">What I reach for, roughly in order of how often I use it.</p>
+              <h3>Languages</h3>
+              <div class="about-tags"><span>Python</span><span>JavaScript</span><span>Java</span><span>HTML</span><span>CSS</span><span>SQL</span></div>
+              <h3>Frameworks &amp; Libraries</h3>
+              <div class="about-tags"><span>Django</span><span>Flask</span><span>p5.js</span><span>Three.js</span><span>GSAP</span><span>Canvas API</span></div>
+              <h3>AI &amp; Data</h3>
+              <div class="about-tags"><span>Gemini API</span><span>Data visualization</span><span>Categorization pipelines</span><span>Prompt design</span></div>
+              <h3>Platform &amp; Tools</h3>
+              <div class="about-tags"><span>Git</span><span>Chrome Extensions (MV3)</span><span>PythonAnywhere</span><span>MySQL</span><span>REST APIs</span></div>
+              <h3>Design</h3>
+              <div class="about-tags"><span>Figma</span><span>Illustrator</span><span>Photoshop</span><span>InDesign</span><span>After Effects</span></div>
+            </div>
+
+            <!-- Contact -->
+            <div class="about-pane" data-pane="contact">
+              <h2>Contact</h2>
+              <p class="lede">Open to software engineering and full-stack roles. The fastest way to reach me is email.</p>
+              <div class="about-facts">
+                <div><span class="k">Email</span><span class="v"><a href="mailto:jeromehadebustarga@gmail.com">jeromehadebustarga@gmail.com</a></span></div>
+                <div><span class="k">GitHub</span><span class="v"><a href="https://github.com/jhb09808" target="_blank" rel="noopener">github.com/jhb09808</a></span></div>
+                <div><span class="k">Creative work</span><span class="v"><a href="creative.html">It's Jerome's World &#8599;</a></span></div>
+              </div>
+              <h3>Selected live projects</h3>
+              <div class="about-facts">
+                <div><span class="k">Algorithm Mirror</span><span class="v"><a href="https://jeromebustarga.github.io/algorithm-mirror/" target="_blank" rel="noopener">Try the tool &#8599;</a></span></div>
+                <div><span class="k">Race2Space</span><span class="v"><a href="https://race2space.pythonanywhere.com" target="_blank" rel="noopener">race2space.pythonanywhere.com &#8599;</a></span></div>
+                <div><span class="k">Uplift</span><span class="v"><a href="https://upliftksmo.pythonanywhere.com" target="_blank" rel="noopener">upliftksmo.pythonanywhere.com &#8599;</a></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    /* about-modal controller */
+    (function () {
+        const backdrop = document.getElementById('aboutBackdrop');
+        if (!backdrop) return;
+        const rail = document.getElementById('aboutRail');
+        const panes = backdrop.querySelectorAll('.about-pane');
+        let lastFocus = null;
+
+        function showPane(name) {
+            rail.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.pane === name));
+            panes.forEach(p => p.classList.toggle('active', p.dataset.pane === name));
+            const c = backdrop.querySelector('.about-content');
+            if (c) c.scrollTop = 0;
+        }
+
+        window.openAbout = function () {
+            lastFocus = document.activeElement;
+            backdrop.hidden = false;
+            // let the browser paint the hidden->visible change before transitioning
+            requestAnimationFrame(() => backdrop.classList.add('open'));
+            const close = document.getElementById('aboutClose');
+            if (close) close.focus();
+            // close the mobile menu if it is open behind the dialog
+            const mm = document.getElementById('mobileMenu');
+            if (mm) mm.classList.remove('open', 'active');
+        };
+
+        window.closeAbout = function () {
+            backdrop.classList.remove('open');
+            setTimeout(() => { backdrop.hidden = true; }, 240);
+            if (lastFocus && lastFocus.focus) lastFocus.focus();
+        };
+
+        document.querySelectorAll('[data-about-open]').forEach(btn => {
+            btn.addEventListener('click', function (e) { e.preventDefault(); window.openAbout(); });
+        });
+
+        const closeBtn = document.getElementById('aboutClose');
+        if (closeBtn) closeBtn.addEventListener('click', window.closeAbout);
+
+        // click the dim backdrop (but not the dialog) to dismiss
+        backdrop.addEventListener('click', function (e) {
+            if (e.target === backdrop) window.closeAbout();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && backdrop.classList.contains('open')) window.closeAbout();
+        });
+
+        rail.addEventListener('click', function (e) {
+            const b = e.target.closest('button[data-pane]');
+            if (b) showPane(b.dataset.pane);
+        });
+    })();
     </script>
 </body>
 </html>
