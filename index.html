@@ -87,11 +87,6 @@
             font-size: 12px;
         }
         .tb-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
-        .tb-traffic { display: flex; gap: 8px; padding-left: 4px; }
-        .tb-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .tb-dot.r { background: #ff5f57; }
-        .tb-dot.y { background: #febc2e; }
-        .tb-dot.g { background: #28c840; }
         .nav-brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text-primary); }
         .nav-logo { width: 22px; height: 22px; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
         .nav-logo img { width: 100%; height: 100%; object-fit: contain; }
@@ -382,7 +377,6 @@
 
         @media (max-width: 768px) {
             .tb-right { display: none; }
-            .tb-traffic { display: none; }
             .hamburger { display: flex; }
             .title-bar { grid-template-columns: 1fr auto; }
             .tb-center { display: none; }
@@ -642,7 +636,6 @@
     <!-- Title Bar -->
     <header class="title-bar">
         <div class="tb-left">
-            <div class="tb-traffic"><span class="tb-dot r"></span><span class="tb-dot y"></span><span class="tb-dot g"></span></div>
             <a href="index.html" class="nav-brand">
                 <div class="nav-logo"><img src="images/logo.png" alt="Logo"></div>
                 <span class="nav-title">jerome<span>@</span>repository</span>
