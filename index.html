@@ -622,6 +622,29 @@
       background: rgba(244,121,33,0.05);
     }
 
+    /* project cards inside the design work dialog */
+    .work-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .work-card {
+      display: block; text-decoration: none;
+      border: 1px solid var(--vs-line); border-radius: 8px;
+      padding: 14px 16px; background: rgba(255,255,255,0.015);
+      transition: border-color 0.18s, background 0.18s, transform 0.18s;
+    }
+    .work-card:hover {
+      border-color: var(--border-hover); background: rgba(244,121,33,0.05);
+      transform: translateX(3px);
+    }
+    .wc-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .wc-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .wc-top i { font-size: 11px; color: var(--text-dim); transition: color 0.18s; }
+    .work-card:hover .wc-top i { color: var(--terminal-orange); }
+    .wc-meta {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--terminal-orange); margin: 5px 0 8px;
+    }
+    .wc-desc { font-size: 13px; line-height: 1.65; color: var(--text-secondary); }
+
     @media (max-width: 768px) {
       .about-backdrop { padding: 0; }
       .about-dialog { width: 100%; height: 100%; border-radius: 0; border: none; }
@@ -679,10 +702,10 @@
             <div class="activity-bar">
                 <div class="activity-top">
                     <button class="activity-btn active" title="Explorer"><i class="fa-solid fa-files"></i><i class="fa-regular fa-copy" style="display:none"></i></button>
-                    <button class="activity-btn" title="Search" id="actSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <button class="activity-btn" title="Source Control"><i class="fa-solid fa-code-branch"></i></button>
-                    <button class="activity-btn" title="Run &amp; Debug"><i class="fa-solid fa-play"></i></button>
-                    <button class="activity-btn" title="Extensions"><i class="fa-solid fa-puzzle-piece"></i></button>
+                    <button type="button" class="activity-btn" title="Graphic Design" aria-label="Graphic Design" data-work-open="graphic"><i class="fa-solid fa-pen-nib"></i></button>
+                    <button type="button" class="activity-btn" title="Motion Design" aria-label="Motion Design" data-work-open="motion"><i class="fa-solid fa-film"></i></button>
+                    <button type="button" class="activity-btn" title="Web Design" aria-label="Web Design" data-work-open="web"><i class="fa-solid fa-window-maximize"></i></button>
+                    <button type="button" class="activity-btn" title="3D Design" aria-label="3D Design" data-work-open="three"><i class="fa-solid fa-cube"></i></button>
                 </div>
                 <div class="activity-bottom">
                     <button type="button" class="activity-btn activity-avatar" title="About" aria-label="About Jerome" data-about-open><img src="images/avatar.png" alt=""></button>
@@ -1431,6 +1454,30 @@
         })();
     </script>
 
+    <!-- ==================== DESIGN WORK: MODAL EDITOR DIALOG ==================== -->
+    <div class="about-backdrop" id="workBackdrop" role="dialog" aria-modal="true" aria-labelledby="workTitle" hidden>
+      <div class="about-dialog">
+        <div class="about-head">
+          <div class="ttl" id="workTitle"><i class="fa-solid fa-shapes"></i> Design Work</div>
+          <div class="win">
+            <button type="button" title="Minimize" aria-hidden="true" tabindex="-1"><i class="fa-solid fa-window-minimize"></i></button>
+            <button type="button" title="Maximize" aria-hidden="true" tabindex="-1"><i class="fa-regular fa-square"></i></button>
+            <button type="button" class="close" id="workClose" title="Close" aria-label="Close design work dialog"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+        <div class="about-body">
+          <div class="about-rail" id="workRail">
+            <div class="rail-label">Disciplines</div>
+            <button type="button" data-disc="graphic"><i class="fa-solid fa-pen-nib"></i> Graphic Design</button>
+            <button type="button" data-disc="motion"><i class="fa-solid fa-film"></i> Motion Design</button>
+            <button type="button" data-disc="web"><i class="fa-solid fa-window-maximize"></i> Web Design</button>
+            <button type="button" data-disc="three"><i class="fa-solid fa-cube"></i> 3D Design</button>
+          </div>
+          <div class="about-content" id="workContent"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== ABOUT: MODAL EDITOR DIALOG ==================== -->
     <div class="about-backdrop" id="aboutBackdrop" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
       <div class="about-dialog">
@@ -1591,6 +1638,113 @@
             }
             ssBody.innerHTML = h;
         };
+    })();
+    </script>
+
+    <script>
+    /* design-work modal — the activity bar discipline buttons */
+    (function () {
+        const backdrop = document.getElementById('workBackdrop');
+        if (!backdrop) return;
+        const rail = document.getElementById('workRail');
+        const content = document.getElementById('workContent');
+        const titleEl = document.getElementById('workTitle');
+        let lastFocus = null;
+
+        const DISC = {
+            graphic: {
+                label: 'Graphic Design', icon: 'fa-pen-nib',
+                blurb: 'Editorial, brand and print work — one visual language carried across a whole system.',
+                items: [
+                    { n: 'Invisible by Design', m: 'Book Design · Research', h: 'invisible.html',
+                      d: 'A 28-page coffee-table book about the algorithmic systems we have stopped seeing, built on original research across 12 participants and 82,164 videos.' },
+                    { n: 'The Lifecycle of Typhoons', m: 'Editorial · Data Visualization', h: 'typhoons.html',
+                      d: 'A flat-vector system that turns hard meteorological data into something you feel while scrolling. One visual language, two formats, every number traced back to a source.' },
+                    { n: 'Canadian Wolf Bird Ginger Ale', m: 'Branding · Packaging', h: 'wolfbird.html',
+                      d: 'A vintage-inspired packaging system for a fictional Canadian craft ginger ale: concept, illustration, can, carrier and mockups.' },
+                    { n: 'Lā Kūkahekahe 2026', m: 'Identity · Lettering', h: 'lakukahekahe.html',
+                      d: 'A hand-lettered identity celebrating Hawaiian Language Day.' },
+                    { n: 'Illustrations', m: 'Illustration', h: 'illustrations.html',
+                      d: 'Digital and hand-drawn work exploring different themes, techniques and creative visions.' }
+                ]
+            },
+            motion: {
+                label: 'Motion Design', icon: 'fa-film',
+                blurb: 'Video production, motion graphics and cinematic storytelling.',
+                items: [
+                    { n: 'Film & Motion', m: 'Documentary · Motion Graphics', h: 'film.html',
+                      d: 'A showcase of video production, motion graphics and cinematic storytelling, including a documentary on Fr. John Shea shot and cut for festival entry.' }
+                ]
+            },
+            web: {
+                label: 'Web Design', icon: 'fa-window-maximize',
+                blurb: 'Responsive websites and interfaces — designed for clarity, built to feel effortless.',
+                items: [
+                    { n: 'Web Design & UI/UX', m: 'Responsive · Design Systems', h: 'webdesign.html',
+                      d: 'From layout systems and prototypes to the final responsive build. Where strategy meets craft.' },
+                    { n: 'Liwanag', m: 'UX/UI · Interactive Prototype', h: 'liwanag.html',
+                      d: 'A safety-first money app prototype that intercepts risky transfers before they happen.' }
+                ]
+            },
+            three: {
+                label: '3D Design', icon: 'fa-cube',
+                blurb: 'Real-time 3D you can walk around in the browser.',
+                items: [
+                    { n: '3D World', m: 'Real-time · WebGL · Three.js', h: 'world3d.html',
+                      d: 'An explorable real-time scene rendered in the browser, navigable with keyboard and mouse.' }
+                ]
+            }
+        };
+
+        const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+        function show(key) {
+            const d = DISC[key];
+            if (!d) return;
+            rail.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.disc === key));
+            titleEl.innerHTML = '<i class="fa-solid ' + d.icon + '"></i> ' + esc(d.label);
+            let h = '<div class="about-pane active"><h2>' + esc(d.label) + ' <span>' + d.items.length + ' project' + (d.items.length === 1 ? '' : 's') + '</span></h2>';
+            h += '<p class="lede">' + esc(d.blurb) + '</p><div class="work-list">';
+            d.items.forEach(it => {
+                h += '<a class="work-card" href="' + esc(it.h) + '">'
+                   + '<div class="wc-top"><span class="wc-name">' + esc(it.n) + '</span><i class="fa-solid fa-arrow-up-right-from-square"></i></div>'
+                   + '<div class="wc-meta">' + esc(it.m) + '</div>'
+                   + '<div class="wc-desc">' + esc(it.d) + '</div></a>';
+            });
+            h += '</div></div>';
+            content.innerHTML = h;
+            content.scrollTop = 0;
+        }
+
+        window.openWork = function (key) {
+            lastFocus = document.activeElement;
+            show(key || 'graphic');
+            backdrop.hidden = false;
+            requestAnimationFrame(() => backdrop.classList.add('open'));
+            const c = document.getElementById('workClose');
+            if (c) c.focus();
+            const mm = document.getElementById('mobileMenu');
+            if (mm) mm.classList.remove('open', 'active');
+        };
+        window.closeWork = function () {
+            backdrop.classList.remove('open');
+            setTimeout(() => { backdrop.hidden = true; }, 240);
+            if (lastFocus && lastFocus.focus) lastFocus.focus();
+        };
+
+        document.querySelectorAll('[data-work-open]').forEach(btn => {
+            btn.addEventListener('click', function (e) { e.preventDefault(); window.openWork(this.dataset.workOpen); });
+        });
+        const cb = document.getElementById('workClose');
+        if (cb) cb.addEventListener('click', window.closeWork);
+        backdrop.addEventListener('click', function (e) { if (e.target === backdrop) window.closeWork(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && backdrop.classList.contains('open')) window.closeWork();
+        });
+        rail.addEventListener('click', function (e) {
+            const b = e.target.closest('button[data-disc]');
+            if (b) show(b.dataset.disc);
+        });
     })();
     </script>
 
