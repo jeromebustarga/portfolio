@@ -768,6 +768,26 @@ main {
   overflow-y: auto;
 }
 
+/* Single-film view (?film=<id>&embed=1): the host dialog already supplies the
+   window chrome, so show the film on its own instead of as a translucent
+   overlay sitting on top of the gallery. */
+body.film-solo .hero-section,
+body.film-solo .gallery-section,
+body.film-solo .motion-lab-section,
+body.film-solo footer,
+body.film-solo .pf-nav { display: none !important; }
+body.film-solo .modal {
+  position: static;
+  inset: auto;
+  background: transparent;
+  backdrop-filter: none;
+  overflow: visible;
+  z-index: auto;
+}
+body.film-solo .modal-close { display: none !important; }
+body.film-solo .modal-content { padding-top: 44px; }
+body.film-solo { overflow: auto !important; }
+
 .modal.active {
   display: block;
   animation: modalFadeIn 0.3s ease;
@@ -1561,10 +1581,16 @@ document.addEventListener('keydown', (e) => {
 // Deep link: ?film=<id> opens that film's detail straight away, so the
 // repository landing can link to a single film rather than the whole gallery.
 (function () {
-  const id = new URLSearchParams(location.search).get('film');
+  const params = new URLSearchParams(location.search);
+  const id = params.get('film');
   if (!id) return;
   const item = filmProjects.find(f => String(f.id) === String(id));
-  if (item) openModal(item);
+  if (!item) return;
+  // Embedded in a dialog, present the film on its own rather than as an
+  // overlay over the gallery behind it.
+  if (params.has('embed')) document.body.classList.add('film-solo');
+  openModal(item);
+  if (params.has('embed')) document.body.style.overflow = 'auto';
 })();
 
 // Mouse trail with p5.js (disabled on touch devices, and when embedded in a
