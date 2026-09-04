@@ -504,5 +504,12 @@ document.addEventListener("keydown", (e) => {
   else if (contactPopup.classList.contains("active")) closeContact();
 });
 </script>
+<style>
+body.embed-mode #nav,
+body.embed-mode footer,
+body.embed-mode .site-footer { display: none !important; }
+body.embed-mode { padding-top: 0 !important; }
+</style>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embed-mode');</script>
 </body>
 </html>

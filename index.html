@@ -622,9 +622,35 @@
       background: rgba(244,121,33,0.05);
     }
 
+    /* a category dialog has no rail, so its content owns the full width */
+    .about-content.solo { padding: 30px 38px 38px; }
+
+    /* project dialog: wide, with the real page embedded */
+    .about-dialog.wide { width: min(1180px, 100%); height: min(820px, 92vh); }
+    .dlg-frame { flex: 1; min-height: 0; background: var(--terminal-bg); }
+    .dlg-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .dlg-foot {
+      flex-shrink: 0; height: 38px; display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; padding: 0 16px;
+      background: var(--vs-titlebar); border-top: 1px solid var(--vs-line);
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);
+    }
+    .dlg-foot a { color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 7px; }
+    .dlg-foot a:hover { color: var(--terminal-orange); }
+    .dlg-back {
+      width: 28px; height: 28px; margin-right: 4px; flex-shrink: 0;
+      border: none; background: none; cursor: pointer; border-radius: 5px;
+      color: var(--text-secondary); font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dlg-back:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+
     /* project cards inside the design work dialog */
     .work-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
     .work-card {
+      width: 100%; text-align: left; font: inherit; cursor: pointer;
       display: block; text-decoration: none;
       border: 1px solid var(--vs-line); border-radius: 8px;
       padding: 14px 16px; background: rgba(255,255,255,0.015);
@@ -1454,30 +1480,6 @@
         })();
     </script>
 
-    <!-- ==================== DESIGN WORK: MODAL EDITOR DIALOG ==================== -->
-    <div class="about-backdrop" id="workBackdrop" role="dialog" aria-modal="true" aria-labelledby="workTitle" hidden>
-      <div class="about-dialog">
-        <div class="about-head">
-          <div class="ttl" id="workTitle"><i class="fa-solid fa-shapes"></i> Design Work</div>
-          <div class="win">
-            <button type="button" title="Minimize" aria-hidden="true" tabindex="-1"><i class="fa-solid fa-window-minimize"></i></button>
-            <button type="button" title="Maximize" aria-hidden="true" tabindex="-1"><i class="fa-regular fa-square"></i></button>
-            <button type="button" class="close" id="workClose" title="Close" aria-label="Close design work dialog"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-        </div>
-        <div class="about-body">
-          <div class="about-rail" id="workRail">
-            <div class="rail-label">Disciplines</div>
-            <button type="button" data-disc="graphic"><i class="fa-solid fa-pen-nib"></i> Graphic Design</button>
-            <button type="button" data-disc="motion"><i class="fa-solid fa-film"></i> Motion Design</button>
-            <button type="button" data-disc="web"><i class="fa-solid fa-window-maximize"></i> Web Design</button>
-            <button type="button" data-disc="three"><i class="fa-solid fa-cube"></i> 3D Design</button>
-          </div>
-          <div class="about-content" id="workContent"></div>
-        </div>
-      </div>
-    </div>
-
     <!-- ==================== ABOUT: MODAL EDITOR DIALOG ==================== -->
     <div class="about-backdrop" id="aboutBackdrop" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
       <div class="about-dialog">
@@ -1642,15 +1644,9 @@
     </script>
 
     <script>
-    /* design-work modal — the activity bar discipline buttons */
+    /* Design work — one dialog per discipline, plus a dialog for each project.
+       Dialogs stack, so opening a project keeps its category open underneath. */
     (function () {
-        const backdrop = document.getElementById('workBackdrop');
-        if (!backdrop) return;
-        const rail = document.getElementById('workRail');
-        const content = document.getElementById('workContent');
-        const titleEl = document.getElementById('workTitle');
-        let lastFocus = null;
-
         const DISC = {
             graphic: {
                 label: 'Graphic Design', icon: 'fa-pen-nib',
@@ -1697,54 +1693,122 @@
         };
 
         const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const stack = [];   // open dialogs, topmost last
+        let z = 5000;
 
-        function show(key) {
-            const d = DISC[key];
-            if (!d) return;
-            rail.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.disc === key));
-            titleEl.innerHTML = '<i class="fa-solid ' + d.icon + '"></i> ' + esc(d.label);
-            let h = '<div class="about-pane active"><h2>' + esc(d.label) + ' <span>' + d.items.length + ' project' + (d.items.length === 1 ? '' : 's') + '</span></h2>';
-            h += '<p class="lede">' + esc(d.blurb) + '</p><div class="work-list">';
-            d.items.forEach(it => {
-                h += '<a class="work-card" href="' + esc(it.h) + '">'
-                   + '<div class="wc-top"><span class="wc-name">' + esc(it.n) + '</span><i class="fa-solid fa-arrow-up-right-from-square"></i></div>'
-                   + '<div class="wc-meta">' + esc(it.m) + '</div>'
-                   + '<div class="wc-desc">' + esc(it.d) + '</div></a>';
-            });
-            h += '</div></div>';
-            content.innerHTML = h;
-            content.scrollTop = 0;
+        function chrome(titleHTML, extraBtns) {
+            return '<div class="about-head">'
+                 + (extraBtns || '')
+                 + '<div class="ttl">' + titleHTML + '</div>'
+                 + '<div class="win">'
+                 + '<button type="button" title="Minimize" aria-hidden="true" tabindex="-1"><i class="fa-solid fa-window-minimize"></i></button>'
+                 + '<button type="button" title="Maximize" aria-hidden="true" tabindex="-1"><i class="fa-regular fa-square"></i></button>'
+                 + '<button type="button" class="close" data-close title="Close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>'
+                 + '</div></div>';
         }
 
-        window.openWork = function (key) {
-            lastFocus = document.activeElement;
-            show(key || 'graphic');
-            backdrop.hidden = false;
-            requestAnimationFrame(() => backdrop.classList.add('open'));
-            const c = document.getElementById('workClose');
+        function open(el) {
+            el.style.zIndex = ++z;
+            el.hidden = false;
+            requestAnimationFrame(() => el.classList.add('open'));
+            stack.push(el);
+            const c = el.querySelector('[data-close]');
             if (c) c.focus();
             const mm = document.getElementById('mobileMenu');
             if (mm) mm.classList.remove('open', 'active');
-        };
-        window.closeWork = function () {
-            backdrop.classList.remove('open');
-            setTimeout(() => { backdrop.hidden = true; }, 240);
-            if (lastFocus && lastFocus.focus) lastFocus.focus();
-        };
+        }
+        function close(el) {
+            el.classList.remove('open');
+            setTimeout(() => { el.hidden = true; }, 240);
+            const i = stack.indexOf(el);
+            if (i > -1) stack.splice(i, 1);
+            const below = stack[stack.length - 1];
+            if (below) { const c = below.querySelector('[data-close]'); if (c) c.focus(); }
+        }
+
+        function wire(el) {
+            el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => close(el)));
+            el.addEventListener('click', e => { if (e.target === el) close(el); });
+            document.body.appendChild(el);
+        }
+
+        /* ---- a dialog per project, holding the real page in an embedded frame ---- */
+        function openProject(item, parentLabel) {
+            const el = document.createElement('div');
+            el.className = 'about-backdrop';
+            el.setAttribute('role', 'dialog');
+            el.setAttribute('aria-modal', 'true');
+            el.setAttribute('aria-label', item.n);
+            el.hidden = true;
+            const sep = item.h.indexOf('?') > -1 ? '&' : '?';
+            const src = item.h + sep + 'embed=1';
+            el.innerHTML =
+                '<div class="about-dialog wide">'
+              + chrome('<i class="fa-solid fa-file-lines"></i> ' + esc(item.n),
+                       '<button type="button" class="dlg-back" data-close title="Back to ' + esc(parentLabel) + '"><i class="fa-solid fa-arrow-left"></i></button>')
+              + '<div class="dlg-frame"><iframe src="' + esc(src) + '" title="' + esc(item.n) + '"></iframe></div>'
+              + '<div class="dlg-foot"><span>' + esc(item.m) + '</span>'
+              + '<a href="' + esc(item.h) + '" target="_blank" rel="noopener">Open in new tab <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>'
+              + '</div>';
+            wire(el);
+            open(el);
+            // dispose when closed so iframes do not pile up
+            el.addEventListener('transitionend', function (e) {
+                if (e.propertyName === 'opacity' && !el.classList.contains('open')) el.remove();
+            });
+        }
+
+        /* ---- one dialog per discipline ---- */
+        const built = {};
+        function buildCategory(key) {
+            const d = DISC[key];
+            const el = document.createElement('div');
+            el.className = 'about-backdrop';
+            el.setAttribute('role', 'dialog');
+            el.setAttribute('aria-modal', 'true');
+            el.setAttribute('aria-label', d.label);
+            el.hidden = true;
+
+            let cards = '';
+            d.items.forEach((it, i) => {
+                cards += '<button type="button" class="work-card" data-i="' + i + '">'
+                       + '<div class="wc-top"><span class="wc-name">' + esc(it.n) + '</span><i class="fa-solid fa-arrow-right"></i></div>'
+                       + '<div class="wc-meta">' + esc(it.m) + '</div>'
+                       + '<div class="wc-desc">' + esc(it.d) + '</div></button>';
+            });
+
+            el.innerHTML =
+                '<div class="about-dialog">'
+              + chrome('<i class="fa-solid ' + d.icon + '"></i> ' + esc(d.label))
+              + '<div class="about-content solo">'
+              + '<div class="about-pane active"><h2>' + esc(d.label) + ' <span>' + d.items.length + ' project' + (d.items.length === 1 ? '' : 's') + '</span></h2>'
+              + '<p class="lede">' + esc(d.blurb) + '</p>'
+              + '<div class="work-list">' + cards + '</div></div>'
+              + '</div></div>';
+
+            el.querySelectorAll('.work-card').forEach(btn => {
+                btn.addEventListener('click', () => openProject(d.items[+btn.dataset.i], d.label));
+            });
+            wire(el);
+            return el;
+        }
 
         document.querySelectorAll('[data-work-open]').forEach(btn => {
-            btn.addEventListener('click', function (e) { e.preventDefault(); window.openWork(this.dataset.workOpen); });
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const key = this.dataset.workOpen;
+                if (!DISC[key]) return;
+                if (!built[key]) built[key] = buildCategory(key);
+                open(built[key]);
+            });
         });
-        const cb = document.getElementById('workClose');
-        if (cb) cb.addEventListener('click', window.closeWork);
-        backdrop.addEventListener('click', function (e) { if (e.target === backdrop) window.closeWork(); });
+
+        // Escape closes only the topmost dialog, so a project returns you to its category
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && backdrop.classList.contains('open')) window.closeWork();
-        });
-        rail.addEventListener('click', function (e) {
-            const b = e.target.closest('button[data-disc]');
-            if (b) show(b.dataset.disc);
-        });
+            if (e.key !== 'Escape' || !stack.length) return;
+            const top = stack[stack.length - 1];
+            if (top.classList.contains('open')) { e.stopPropagation(); close(top); }
+        }, true);
     })();
     </script>
 
