@@ -441,6 +441,17 @@
     .layout-btn.active svg .f { opacity: 1; }
     .layout-btn:focus-visible { outline: 1px solid var(--terminal-orange); outline-offset: 1px; }
 
+    /* Account avatar in the activity bar, like the VS Code accounts button */
+    .activity-avatar { padding: 0; }
+    .activity-avatar img {
+      width: 26px; height: 26px; border-radius: 50%;
+      object-fit: cover; display: block;
+      border: 1px solid var(--vs-line-strong);
+      transition: border-color 0.18s, transform 0.18s;
+    }
+    .activity-avatar:hover img { border-color: var(--terminal-orange); transform: scale(1.06); }
+    .activity-avatar::before { display: none; }
+
     /* Secondary side bar */
     .sidebar-secondary {
       width: 290px; flex-shrink: 0;
@@ -674,7 +685,7 @@
                     <button class="activity-btn" title="Extensions"><i class="fa-solid fa-puzzle-piece"></i></button>
                 </div>
                 <div class="activity-bottom">
-                    <button type="button" class="activity-btn nav-link" title="About" data-about-open><i class="fa-solid fa-user"></i></button>
+                    <button type="button" class="activity-btn activity-avatar" title="About" aria-label="About Jerome" data-about-open><img src="images/avatar.png" alt=""></button>
                 </div>
             </div>
 
