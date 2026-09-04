@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Unlisted pages — not linked from the landing page and not for indexing.
+Disallow: /creative.html
+Disallow: /typhoons.html
+Disallow: /wolfbird.html
+Disallow: /lakukahekahe.html
+Disallow: /illustrations.html
+Disallow: /webdesign.html
+Disallow: /film.html
+Disallow: /world3d.html
