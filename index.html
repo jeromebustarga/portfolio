@@ -755,6 +755,14 @@
                             <div class="project-item" data-project="uplift"><i class="file-icon fa-solid fa-hand-holding-heart"></i><span class="file-name">uplift</span><span class="file-dot live"></span></div>
                             <div class="project-item" data-project="cubby"><i class="file-icon fa-solid fa-store"></i><span class="file-name">cubby</span><span class="file-dot live"></span></div>
                             <div class="project-item" data-project="r2s"><i class="file-icon fa-solid fa-rocket"></i><span class="file-name">r2s</span><span class="file-dot live"></span></div>
+                            <div class="project-item" data-project="bluejay"><i class="file-icon fa-solid fa-utensils"></i><span class="file-name">bluejay</span><span class="file-dot live"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="tree-folder" data-folder="tools">
+                        <div class="tree-folder-label"><i class="fa-solid fa-chevron-down chev"></i><i class="fa-solid fa-folder"></i> tools</div>
+                        <div class="tree-children">
+                            <div class="project-item" data-project="ledger"><i class="file-icon fa-solid fa-list-check"></i><span class="file-name">ledger</span><span class="file-dot live"></span></div>
                         </div>
                     </div>
 
@@ -1109,6 +1117,28 @@
                 tech: ['Django', 'Python', 'SQLite', 'HTML/CSS/JS'],
                 url: 'https://race2space.pythonanywhere.com',
                 github: 'https://github.com/jhb09808/Project-Race2Space',
+                casestudy: 'race2space.html',
+                status: 'live'
+            },
+            'bluejay': {
+                name: 'BlueJay-Bites',
+                codename: 'bluejay',
+                icon: 'fa-utensils',
+                description: 'A campus food-finder app that surfaces free event food in real time, with separate student, organizer and admin experiences. Built with a team for Creighton.',
+                tech: ['JavaScript', 'HTML/CSS', 'Multi-role Auth', 'GitHub Pages'],
+                url: 'https://creighton4good.github.io/BlueJay-Bites/',
+                github: 'https://github.com/Creighton4Good/BlueJay-Bites',
+                casestudy: 'bluejaybites.html',
+                status: 'live'
+            },
+            'ledger': {
+                name: 'Follow Ledger',
+                codename: 'ledger',
+                icon: 'fa-list-check',
+                description: 'A read-only Chrome extension that finds the Instagram accounts you follow who do not follow you back, using a paced manual flow that respects platform limits. It runs inside your own logged-in session and never asks for a password.',
+                tech: ['JavaScript', 'Chrome Extension', 'Manifest V3', 'Client-side'],
+                github: 'https://github.com/jhb09808/follow-ledger',
+                casestudy: 'followledger.html',
                 status: 'live'
             },
             'decay': {
@@ -1213,7 +1243,9 @@
                 terminalHistory.innerHTML = '';
             } else if (mainCmd === 'ls' || mainCmd === 'list' || mainCmd === 'dir') {
                 addOutput('/web-apps', 'output-dir');
-                addOutput('  uplift    cubby    r2s', 'output');
+                addOutput('  uplift    cubby    r2s    bluejay', 'output');
+                addOutput('/tools', 'output-dir');
+                addOutput('  ledger', 'output');
                 addOutput('/experiments', 'output-dir');
                 addOutput('  decay    mirror', 'output');
                 addOutput('/advocacy', 'output-dir');
@@ -1318,6 +1350,7 @@
                 const hasUrl = project.status === 'live' && project.url;
                 const hasGithub = project.github;
                 const hasResearch = project.research;
+                const hasCase = project.casestudy;
                 
                 previewFrame.innerHTML = `
                     <div class="project-detail">
@@ -1341,6 +1374,12 @@
                                 <a href="${project.research}" class="project-link project-link-secondary">
                                     <i class="fa-solid fa-file-lines"></i>
                                     View Research
+                                </a>
+                            ` : ''}
+                            ${hasCase ? `
+                                <a href="${project.casestudy}" class="project-link ${hasUrl ? 'project-link-secondary' : 'project-link-primary'}">
+                                    <i class="fa-solid fa-book-open"></i>
+                                    Case Study
                                 </a>
                             ` : ''}
                             ${hasGithub ? `
