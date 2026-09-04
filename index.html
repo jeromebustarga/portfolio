@@ -410,6 +410,27 @@
       .mobile-menu { top: calc(var(--title-h) + env(safe-area-inset-top, 0px)); }
     }
     </style>
+    <style>/* app-shell-no-page-scroll */
+    /* Desktop: the IDE shell owns the viewport exactly, like a real editor window.
+       The page itself never scrolls — only the explorer, editor and terminal do.
+       Previously .ide used margin-top, which collapsed through <body> and made the
+       document exactly one title-bar taller than the viewport, producing a scrollbar. */
+    @media (min-width: 769px) {
+      html, body { height: 100%; min-height: 0; overflow: hidden; }
+      .ide {
+        margin-top: 0;
+        padding-top: var(--title-h);
+        height: 100%;
+        box-sizing: border-box;
+      }
+    }
+    @supports (padding: max(0px)) {
+      @media (min-width: 769px) {
+        .ide { padding-top: calc(var(--title-h) + env(safe-area-inset-top, 0px)); margin-top: 0; height: 100%; }
+      }
+    }
+    /* Mobile keeps normal document scrolling for .mobile-layout */
+    </style>
 </head>
 <body>
     <!-- Background Effects -->
