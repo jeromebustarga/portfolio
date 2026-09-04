@@ -431,6 +431,69 @@
     }
     /* Mobile keeps normal document scrolling for .mobile-layout */
     </style>
+    <style>/* layout-toggles — VS Code editor layout controls in the title bar */
+    .layout-btn {
+      width: 30px; height: 26px; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer; border-radius: 5px;
+      color: var(--text-dim);
+      transition: background 0.15s, color 0.15s;
+    }
+    .layout-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+    .layout-btn svg { width: 16px; height: 16px; }
+    .layout-btn svg .o { fill: none; stroke: currentColor; stroke-width: 1.1; }
+    .layout-btn svg .f { fill: currentColor; opacity: 0.35; }
+    .layout-btn.active { color: var(--text-primary); }
+    .layout-btn.active svg .f { opacity: 1; }
+    .layout-btn:focus-visible { outline: 1px solid var(--terminal-orange); outline-offset: 1px; }
+
+    /* Secondary side bar */
+    .sidebar-secondary {
+      width: 290px; flex-shrink: 0;
+      background: var(--vs-sidebar);
+      border-left: 1px solid var(--vs-line);
+      display: none; flex-direction: column; min-height: 0;
+    }
+    .ide.with-secondary .sidebar-secondary { display: flex; }
+    .ide.no-primary .sidebar { display: none; }
+    .ide.no-panel .term-panel { display: none; }
+
+    .ss-body { flex: 1; overflow-y: auto; padding: 12px 14px 20px; }
+    .ss-empty {
+      color: var(--text-dim); font-size: 12.5px; line-height: 1.7;
+      font-family: 'JetBrains Mono', monospace; padding: 10px 4px;
+    }
+    .ss-empty span { color: var(--text-dim); opacity: 0.7; }
+    .ss-name {
+      font-size: 15px; color: var(--text-primary); font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .ss-code {
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+      color: var(--terminal-orange); margin-bottom: 14px;
+    }
+    .ss-sec {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim);
+      margin: 16px 0 8px;
+    }
+    .ss-desc { font-size: 12.5px; line-height: 1.65; color: var(--text-secondary); }
+    .ss-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .ss-tags span {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      padding: 3px 8px; border-radius: 20px;
+      border: 1px solid var(--border-color); color: var(--text-secondary);
+    }
+    .ss-links { display: flex; flex-direction: column; gap: 6px; }
+    .ss-links a {
+      font-size: 12.5px; color: var(--text-secondary); text-decoration: none;
+      display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 5px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .ss-links a:hover { background: rgba(255,255,255,0.05); color: var(--terminal-orange); }
+    .ss-links a i { width: 13px; font-size: 11px; color: var(--text-dim); }
+    .ss-links a:hover i { color: var(--terminal-orange); }
+    </style>
     <style>/* about-modal — VS Code style modal editor dialog */
     button.nav-link, button.mobile-menu-link, button.activity-btn {
       background: none; border: none; font: inherit; cursor: pointer;
@@ -587,7 +650,15 @@
         </div>
         <div class="tb-center"><i class="fa-solid fa-folder-open"></i> jerome-world — repository</div>
         <div class="tb-right">
-            <button type="button" class="nav-link" data-about-open><i class="fa-solid fa-user"></i> About</button>
+            <button type="button" class="layout-btn active" id="tglPrimary" title="Toggle Primary Side Bar (Ctrl+B)" aria-pressed="true">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect class="o" x="1.5" y="2.5" width="13" height="11" rx="1.5"/><rect class="f" x="2.5" y="3.5" width="3.6" height="9"/></svg>
+            </button>
+            <button type="button" class="layout-btn active" id="tglPanel" title="Toggle Panel (Ctrl+J)" aria-pressed="true">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect class="o" x="1.5" y="2.5" width="13" height="11" rx="1.5"/><rect class="f" x="2.5" y="9.4" width="12" height="3.1"/></svg>
+            </button>
+            <button type="button" class="layout-btn" id="tglSecondary" title="Toggle Secondary Side Bar (Ctrl+Alt+B)" aria-pressed="false">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect class="o" x="1.5" y="2.5" width="13" height="11" rx="1.5"/><rect class="f" x="9.9" y="3.5" width="3.6" height="9"/></svg>
+            </button>
         </div>
         <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
     </header>
@@ -719,6 +790,14 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Secondary Side Bar -->
+            <aside class="sidebar-secondary" id="sidebarSecondary">
+                <div class="sidebar-header">Outline</div>
+                <div class="ss-body" id="ssBody">
+                    <div class="ss-empty">No project open.<br><span>Pick one from the Explorer.</span></div>
+                </div>
+            </aside>
         </div>
 
         <!-- Status Bar -->
@@ -994,7 +1073,7 @@
                 tech: ['JavaScript', 'p5.js', 'Canvas API', 'Gemini API'],
                 url: 'https://jeromebustarga.github.io/algorithm-mirror/',
                 paper: 'https://docs.google.com/document/d/1V7ndLPRx0Is2lB1Wk0kGXrQkSlPFbhMlZViS57otasE/edit?usp=sharing',
-                research: 'research.html',
+                research: 'invisible.html',
                 status: 'live'
             },
             'koneksyon': {
@@ -1167,6 +1246,9 @@
             document.querySelectorAll('.project-item').forEach(item => {
                 item.classList.toggle('active', item.dataset.project === projectKey);
             });
+
+            // Mirror the open project into the secondary side bar
+            if (window.renderOutline) window.renderOutline(project);
 
             // Show loading
             previewFrame.innerHTML = `
@@ -1428,6 +1510,85 @@
         </div>
       </div>
     </div>
+
+    <script>
+    /* layout toggles — Primary Side Bar / Panel / Secondary Side Bar */
+    (function () {
+        const ide = document.querySelector('.ide');
+        if (!ide) return;
+
+        function bind(btnId, cls, invert) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return null;
+            const sync = () => {
+                // `invert` means the class HIDES the region, so "on" is the absence of it
+                const on = invert ? !ide.classList.contains(cls) : ide.classList.contains(cls);
+                btn.classList.toggle('active', on);
+                btn.setAttribute('aria-pressed', String(on));
+            };
+            const toggle = () => { ide.classList.toggle(cls); sync(); };
+            btn.addEventListener('click', toggle);
+            sync();
+            return toggle;
+        }
+
+        const togglePrimary   = bind('tglPrimary',   'no-primary',     true);
+        const togglePanel     = bind('tglPanel',     'no-panel',       true);
+        const toggleSecondary = bind('tglSecondary', 'with-secondary', false);
+
+        // VS Code keybindings
+        document.addEventListener('keydown', function (e) {
+            if (!(e.ctrlKey || e.metaKey)) return;
+            const k = e.key.toLowerCase();
+            if (k === 'b' && (e.altKey)) { e.preventDefault(); toggleSecondary && toggleSecondary(); }
+            else if (k === 'b') { e.preventDefault(); togglePrimary && togglePrimary(); }
+            else if (k === 'j') { e.preventDefault(); togglePanel && togglePanel(); }
+        });
+
+        // Keep the existing panel chevron in sync with the Panel toggle
+        const termToggle = document.getElementById('termToggle');
+        if (termToggle) termToggle.addEventListener('click', function () {
+            const btn = document.getElementById('tglPanel');
+            if (!btn) return;
+            const on = !ide.classList.contains('no-panel');
+            btn.classList.toggle('active', on);
+            btn.setAttribute('aria-pressed', String(on));
+        });
+
+        /* Fill the secondary side bar from whichever project is open. */
+        const ssBody = document.getElementById('ssBody');
+        const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+        window.renderOutline = function (p) {
+            if (!ssBody) return;
+            if (!p) {
+                ssBody.innerHTML = '<div class="ss-empty">No project open.<br><span>Pick one from the Explorer.</span></div>';
+                return;
+            }
+            let h = '<div class="ss-name">' + esc(p.name) + '</div>';
+            h += '<div class="ss-code">/' + esc(p.codename) + '</div>';
+            if (p.desc) h += '<div class="ss-sec">Description</div><div class="ss-desc">' + esc(p.desc) + '</div>';
+            if (p.tech && p.tech.length) {
+                h += '<div class="ss-sec">Stack</div><div class="ss-tags">';
+                p.tech.forEach(t => { h += '<span>' + esc(t) + '</span>'; });
+                h += '</div>';
+            }
+            const links = [];
+            if (p.url) links.push(['fa-solid fa-arrow-up-right-from-square', 'Live site', p.url]);
+            if (p.github) links.push(['fa-brands fa-github', 'Source', p.github]);
+            if (p.research) links.push(['fa-solid fa-file-lines', 'Research', p.research]);
+            if (p.paper) links.push(['fa-solid fa-file-lines', 'Paper', p.paper]);
+            if (links.length) {
+                h += '<div class="ss-sec">Links</div><div class="ss-links">';
+                links.forEach(l => {
+                    h += '<a href="' + esc(l[2]) + '" target="_blank" rel="noopener"><i class="' + l[0] + '"></i>' + l[1] + '</a>';
+                });
+                h += '</div>';
+            }
+            ssBody.innerHTML = h;
+        };
+    })();
+    </script>
 
     <script>
     /* about-modal controller */
