@@ -594,5 +594,12 @@
 
     renderAmount();
   </script>
+<style>
+/* Embedded in a dialog: the dialog supplies the chrome, so drop the
+   link that would navigate out of the prototype. The phone's own back
+   buttons are part of the prototype and stay. */
+body.embed-mode .prototype-back { display: none !important; }
+</style>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embed-mode');</script>
 </body>
 </html>
