@@ -454,6 +454,16 @@
 
     /* Opening a project fills the editor pane with the site itself */
     .editor-content.is-preview { overflow: hidden; padding: 0; display: flex; }
+    /* one pane per open tab; only the active one is shown, so switching back
+       to a tab does not reload the site inside it */
+    .editor-content .pane { display: none; }
+    .editor-content .pane.active { display: block; }
+    .editor-content.is-preview .pane { width: 100%; }
+    .editor-content.is-preview .pane.active { display: flex; flex-direction: column; min-height: 0; }
+    .tab-close { display: inline-flex; align-items: center; justify-content: center;
+                 width: 17px; height: 17px; margin-left: 7px; border-radius: 4px;
+                 font-size: 10px; color: var(--text-dim); flex-shrink: 0; }
+    .tab-close:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
     .pv-full { flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--vs-panel); }
     .pv-bar {
       display: flex; align-items: center; gap: 10px; flex-shrink: 0;
@@ -1384,13 +1394,6 @@
             // Mirror the open project into the secondary side bar
             if (window.renderOutline) window.renderOutline(project);
 
-            // Show loading
-            previewFrame.innerHTML = `
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    <div class="loading-text">Loading /${projectKey}...</div>
-                </div>
-            `;
 
             // Show project detail
             setTimeout(() => {
@@ -1443,8 +1446,12 @@
                         <div class="pv-body">${body}</div>
                     </div>`;
                 
-                previewFrame.innerHTML = previewHTML;
-                previewFrame.classList.add('is-preview');
+                if (window.openProjectTab) {
+                    window.openProjectTab(projectKey, previewHTML);
+                } else {
+                    previewFrame.innerHTML = previewHTML;
+                    previewFrame.classList.add('is-preview');
+                }
             }, 600);
         }
 
@@ -1483,71 +1490,103 @@
             const tabBar = document.getElementById('tabBar');
             const welcomeTab = document.getElementById('welcomeTab');
             const breadcrumb = document.getElementById('breadcrumb');
+
+            /* Multiple editors stay open at once, the way VS Code does: each
+               project keeps its own tab and its own pane, so switching back does
+               not reload the site, and each tab closes independently. */
             const WELCOME_HTML = previewFrame ? previewFrame.innerHTML : '';
+            const open = [];              // project keys, in tab order
+            let active = 'welcome';
+
+            if (previewFrame) {
+                previewFrame.innerHTML = '';
+                const w = document.createElement('div');
+                w.className = 'pane active';
+                w.dataset.pane = 'welcome';
+                w.innerHTML = WELCOME_HTML;
+                previewFrame.appendChild(w);
+            }
 
             function fileMeta(key) {
                 const el = document.querySelector('.project-item[data-project="' + key + '"]');
-                const iconEl = el ? el.querySelector('.file-icon') : null;
-                const iconClass = iconEl ? iconEl.className.replace('file-icon', '').trim() : 'fa-solid fa-file';
+                const icon = el ? el.querySelector('.file-icon') : null;
+                const iconClass = icon ? icon.className : 'file-icon fa-solid fa-file';
                 const name = el ? el.querySelector('.file-name').textContent.trim() : key;
-                return { iconClass, name };
+                return { iconClass: iconClass, name: name };
             }
 
-            function showWelcome() {
-                if (previewFrame) {
-                    previewFrame.innerHTML = WELCOME_HTML;
-                    previewFrame.classList.remove('is-preview');
-                }
-                const ft = document.getElementById('fileTab');
-                if (ft) ft.remove();
-                if (welcomeTab) welcomeTab.classList.add('active');
-                document.querySelectorAll('.project-item').forEach(i => i.classList.remove('active'));
-                if (breadcrumb) breadcrumb.innerHTML = '<span>repository</span>';
-                rewire();
-            }
+            function paneOf(key) { return previewFrame.querySelector('.pane[data-pane="' + key + '"]'); }
+            function tabOf(key) { return tabBar.querySelector('.tab[data-tab="' + key + '"]'); }
 
-            function openTab(key) {
+            function setBreadcrumb(key) {
+                if (!breadcrumb) return;
+                if (key === 'welcome') { breadcrumb.innerHTML = '<span>repository</span>'; return; }
                 const meta = fileMeta(key);
-                if (welcomeTab) welcomeTab.classList.remove('active');
-                let ft = document.getElementById('fileTab');
-                if (!ft) {
-                    ft = document.createElement('div');
-                    ft.className = 'tab';
-                    ft.id = 'fileTab';
-                    tabBar.appendChild(ft);
-                }
-                ft.classList.add('active');
-                ft.innerHTML = '<i class="' + meta.iconClass + '"></i><span class="tab-name">' + meta.name + '.md</span><span class="tab-close" id="fileTabClose"><i class="fa-solid fa-xmark"></i></span>';
-                ft.onclick = function (e) {
-                    if (e.target.closest('#fileTabClose')) { showWelcome(); return; }
-                    ft.classList.add('active');
-                    if (welcomeTab) welcomeTab.classList.remove('active');
-                };
-                const folder = FOLDERS[key] || 'repository';
-                if (breadcrumb) {
-                    breadcrumb.innerHTML = '<span>repository</span> <i class="fa-solid fa-chevron-right"></i> ' +
-                        '<span>' + folder + '</span> <i class="fa-solid fa-chevron-right"></i> ' +
-                        '<span class="crumb-active"><i class="' + meta.iconClass + '"></i> ' + meta.name + '.md</span>';
+                breadcrumb.innerHTML = '<span>repository</span> <i class="fa-solid fa-chevron-right"></i> ' +
+                    '<span>' + (FOLDERS[key] || 'repository') + '</span> <i class="fa-solid fa-chevron-right"></i> ' +
+                    '<span class="crumb-active"><i class="' + meta.iconClass + '"></i> ' + meta.name + '.md</span>';
+            }
+
+            function activate(key) {
+                active = key;
+                previewFrame.querySelectorAll('.pane').forEach(function (p) {
+                    p.classList.toggle('active', p.dataset.pane === key);
+                });
+                if (welcomeTab) welcomeTab.classList.toggle('active', key === 'welcome');
+                tabBar.querySelectorAll('.tab[data-tab]').forEach(function (t) {
+                    t.classList.toggle('active', t.dataset.tab === key);
+                });
+                previewFrame.classList.toggle('is-preview', key !== 'welcome');
+                document.querySelectorAll('.project-item').forEach(function (i) {
+                    i.classList.toggle('active', i.dataset.project === key);
+                });
+                setBreadcrumb(key);
+            }
+
+            function closeTab(key) {
+                const i = open.indexOf(key);
+                if (i === -1) return;
+                open.splice(i, 1);
+                const t = tabOf(key); if (t) t.remove();
+                const p = paneOf(key); if (p) p.remove();   // frees the iframe
+                if (active === key) {
+                    // fall to the neighbour on the right, else the left, else Welcome
+                    activate(open[i] || open[i - 1] || 'welcome');
                 }
             }
 
-            // Wrap the existing global loadProject so every open (click or `cd`) updates the tab
-            if (typeof window.loadProject === 'function') {
-                const orig = window.loadProject;
-                window.loadProject = function (key) {
-                    orig(key);
-                    if (key && FOLDERS.hasOwnProperty(key)) openTab(key);
-                };
+            function addTab(key) {
+                const meta = fileMeta(key);
+                const t = document.createElement('div');
+                t.className = 'tab';
+                t.dataset.tab = key;
+                t.innerHTML = '<i class="' + meta.iconClass + '"></i>' +
+                    '<span class="tab-name">' + meta.name + '.md</span>' +
+                    '<span class="tab-close" aria-label="Close ' + meta.name + '.md"><i class="fa-solid fa-xmark"></i></span>';
+                t.addEventListener('click', function (e) {
+                    if (e.target.closest('.tab-close')) { e.stopPropagation(); closeTab(key); return; }
+                    activate(key);
+                });
+                // middle click closes, as in the editor
+                t.addEventListener('auxclick', function (e) { if (e.button === 1) { e.preventDefault(); closeTab(key); } });
+                tabBar.appendChild(t);
+                open.push(key);
             }
 
-            function rewire() {
-                if (welcomeTab) {
-                    welcomeTab.onclick = function () {
-                        showWelcome();
-                    };
+            window.openProjectTab = function (key, paneHTML) {
+                if (!FOLDERS.hasOwnProperty(key)) return;
+                if (!paneOf(key)) {
+                    const p = document.createElement('div');
+                    p.className = 'pane';
+                    p.dataset.pane = key;
+                    p.innerHTML = paneHTML;
+                    previewFrame.appendChild(p);
+                    addTab(key);
                 }
-            }
-            rewire();
+                activate(key);
+            };
+
+            if (welcomeTab) welcomeTab.onclick = function () { activate('welcome'); };
 
             // Folder collapse/expand
             document.querySelectorAll('.tree-folder-label').forEach(label => {
