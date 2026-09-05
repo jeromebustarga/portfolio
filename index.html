@@ -454,6 +454,39 @@
 
     /* Opening a project fills the editor pane with the site itself */
     .editor-content.is-preview { overflow: hidden; padding: 0; display: flex; }
+    /* rendered README */
+    .readme { padding: 34px clamp(24px, 5vw, 60px) 60px; max-width: 900px; margin: 0 auto; text-align: left; }
+    .readme h1 { font-size: 27px; font-weight: 600; letter-spacing: -0.02em; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .readme h1 i { color: var(--terminal-orange); font-size: 21px; }
+    .rm-badge { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .1em;
+                text-transform: uppercase; padding: 3px 9px; border-radius: 100px;
+                border: 1px solid var(--border-color); color: var(--text-dim); font-weight: 400; }
+    .rm-badge.live { color: var(--success-color); border-color: rgba(34,197,94,.4); }
+    .rm-lede { color: var(--text-secondary); font-size: 15px; line-height: 1.75; margin: 16px 0 8px; }
+    .readme h2 { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-dim);
+                 font-family: 'JetBrains Mono', monospace; font-weight: 500;
+                 margin: 30px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--vs-line); }
+    .rm-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .rm-tags span { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; padding: 5px 11px;
+                    border-radius: 100px; border: 1px solid var(--border-color); color: var(--text-secondary); }
+    .rm-links { list-style: none; margin: 0; padding: 0; }
+    .rm-links li { padding: 7px 0; border-bottom: 1px solid var(--vs-line); font-size: 14px; color: var(--text-dim); }
+    .rm-links a { color: var(--terminal-orange); text-decoration: none; }
+    .rm-links a:hover { text-decoration: underline; }
+    .rm-links code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); }
+    .rm-tree { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--text-secondary);
+               background: var(--vs-panel); border: 1px solid var(--vs-line); border-radius: 8px;
+               padding: 14px 16px; margin: 0; line-height: 1.8; }
+    .tab-dir { color: var(--text-dim); font-size: 11px; margin-left: 4px; }
+    .file-item { display: flex; align-items: center; gap: 9px; padding: 5px 8px 5px 26px; border-radius: 5px;
+                 cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+                 color: var(--text-secondary); transition: background .15s, color .15s; }
+    .file-item:hover { background: rgba(255,255,255,0.04); color: var(--text-primary); }
+    .file-item.active { background: rgba(244,121,33,0.12); color: var(--terminal-orange); }
+    .file-item .file-icon { font-size: 11px; color: var(--text-dim); width: 13px; }
+    .file-item.active .file-icon { color: var(--terminal-orange); }
+    .tree-folder-label .file-dot { margin-left: auto; }
+
     /* one pane per open tab; only the active one is shown, so switching back
        to a tab does not reload the site inside it */
     .editor-content .pane { display: none; }
@@ -799,39 +832,10 @@
                     <span>Explorer</span>
                     <span class="dots"><i class="fa-solid fa-ellipsis"></i></span>
                 </div>
-                <div class="explorer">
+                <div class="explorer" id="explorer">
                     <div class="ws-root"><i class="fa-solid fa-chevron-down chev"></i> JEROME-WORLD</div>
-
-                    <div class="tree-folder" data-folder="web-apps">
-                        <div class="tree-folder-label"><i class="fa-solid fa-chevron-down chev"></i><i class="fa-solid fa-folder"></i> web-apps</div>
-                        <div class="tree-children">
-                            <div class="project-item" data-project="uplift"><i class="file-icon fa-solid fa-hand-holding-heart"></i><span class="file-name">uplift</span><span class="file-dot live"></span></div>
-                            <div class="project-item" data-project="r2s"><i class="file-icon fa-solid fa-rocket"></i><span class="file-name">r2s</span><span class="file-dot live"></span></div>
-                            <div class="project-item" data-project="bluejay"><i class="file-icon fa-solid fa-utensils"></i><span class="file-name">bluejay</span><span class="file-dot live"></span></div>
-                        </div>
-                    </div>
-
-                    <div class="tree-folder" data-folder="tools">
-                        <div class="tree-folder-label"><i class="fa-solid fa-chevron-down chev"></i><i class="fa-solid fa-folder"></i> tools</div>
-                        <div class="tree-children">
-                            <div class="project-item" data-project="ledger"><i class="file-icon fa-solid fa-list-check"></i><span class="file-name">ledger</span><span class="file-dot live"></span></div>
-                        </div>
-                    </div>
-
-                    <div class="tree-folder" data-folder="experiments">
-                        <div class="tree-folder-label"><i class="fa-solid fa-chevron-down chev"></i><i class="fa-solid fa-folder"></i> experiments</div>
-                        <div class="tree-children">
-                            <div class="project-item" data-project="decay"><i class="file-icon fa-solid fa-biohazard"></i><span class="file-name">decay</span><span class="file-dot live"></span></div>
-                            <div class="project-item" data-project="mirror"><i class="file-icon fa-solid fa-chart-line"></i><span class="file-name">mirror</span><span class="file-dot live"></span></div>
-                        </div>
-                    </div>
-
-                    <div class="tree-folder" data-folder="advocacy">
-                        <div class="tree-folder-label"><i class="fa-solid fa-chevron-down chev"></i><i class="fa-solid fa-folder"></i> advocacy</div>
-                        <div class="tree-children">
-                            <div class="project-item" data-project="koneksyon"><i class="file-icon fa-solid fa-globe-asia"></i><span class="file-name">koneksyon</span><span class="file-dot live"></span></div>
-                        </div>
-                    </div>
+                    <!-- Each project is its own directory, generated from the project
+                         data so the tree, the tabs and the terminal cannot drift apart. -->
                 </div>
             </aside>
 
@@ -1231,24 +1235,18 @@
 
         /* A small filesystem mirroring the explorer, so cd/ls/pwd behave like a
            shell: the category folders are directories and each project is a file. */
-        const FS = {};
-        document.querySelectorAll('.tree-folder').forEach(function (f) {
-            FS[f.dataset.folder] = Array.prototype.slice
-                .call(f.querySelectorAll('.project-item'))
-                .map(function (i) { return i.dataset.project; });
-        });
+        /* The terminal walks the same tree: each project is a directory and its
+           files are the entries inside. Built lazily so it always matches FILES. */
+        function fsDirs() { return Object.keys(projects); }
+        function fsFiles(dir) {
+            const el = document.querySelector('.tree-folder[data-folder="' + dir + '"]');
+            if (!el) return [];
+            return Array.prototype.slice.call(el.querySelectorAll('.file-item'))
+                .map(function (i) { return i.dataset.file; });
+        }
         let cwd = [];                                   // [] is home
         let prevCwd = [];                               // for `cd -`
         function pathStr(c) { c = c || cwd; return c.length ? '~/' + c.join('/') : '~'; }
-        function dirEntries() { return cwd.length ? (FS[cwd[0]] || []) : Object.keys(FS); }
-        function inCwd(name) {
-            const base = name.replace(/\.md$/, '');
-            return cwd.length && (FS[cwd[0]] || []).indexOf(base) !== -1 ? base : null;
-        }
-        function findAnywhere(name) {
-            const base = name.replace(/\.md$/, '');
-            return projects[base] ? base : null;
-        }
         function syncPrompt() {
             const el = document.getElementById('promptPath');
             if (el) el.textContent = ':' + pathStr() + '$';
@@ -1266,9 +1264,10 @@
             `;
             terminalHistory.appendChild(cmdLine);
 
-            const cmd = command.toLowerCase().trim();
-            const parts = cmd.split(/\s+/);
-            const mainCmd = parts[0];
+            /* Only the command word is case-insensitive; arguments keep their
+               case, because filenames like README.md are case-sensitive. */
+            const parts = command.trim().split(/\s+/);
+            const mainCmd = (parts[0] || '').toLowerCase();
             const arg = parts[1] || '';
 
             if (mainCmd === 'help') {
@@ -1288,50 +1287,48 @@
             } else if (mainCmd === 'clear' || mainCmd === 'cls') {
                 terminalHistory.innerHTML = '';
             } else if (mainCmd === 'ls' || mainCmd === 'list' || mainCmd === 'dir') {
-                const target = arg ? (arg === '~' ? [] : (FS.hasOwnProperty(arg) ? [arg] : null)) : cwd;
+                const target = arg ? (arg === '~' ? [] : (projects[arg.replace(/\/$/, '')] ? [arg.replace(/\/$/, '')] : null)) : cwd;
                 if (target === null) {
                     addOutput('ls: no such directory: ' + arg, 'output-error');
                 } else if (target.length === 0) {
-                    Object.keys(FS).forEach(function (d) { addOutput(d + '/', 'output-dir'); });
+                    fsDirs().forEach(function (d) { addOutput(d + '/', 'output-dir'); });
                 } else {
-                    const files = FS[target[0]] || [];
-                    if (!files.length) addOutput('(empty)', 'output');
-                    else addOutput(files.map(function (f) { return f + '.md'; }).join('    '), 'output');
+                    const files = fsFiles(target[0]);
+                    addOutput(files.length ? files.join('    ') : '(empty)', 'output');
                 }
             } else if (mainCmd === 'tree') {
                 addOutput('~', 'output-dir');
-                const dirs = Object.keys(FS);
+                const dirs = fsDirs();
                 dirs.forEach(function (d, di) {
                     const lastDir = di === dirs.length - 1;
                     addOutput((lastDir ? '└── ' : '├── ') + d + '/', 'output-dir');
-                    (FS[d] || []).forEach(function (f, fi) {
-                        const lastFile = fi === FS[d].length - 1;
-                        addOutput((lastDir ? '    ' : '│   ') + (lastFile ? '└── ' : '├── ') + f + '.md', 'output');
+                    const files = fsFiles(d);
+                    files.forEach(function (f, fi) {
+                        addOutput((lastDir ? '    ' : '│   ') + (fi === files.length - 1 ? '└── ' : '├── ') + f, 'output');
                     });
                 });
             } else if (mainCmd === 'cd') {
-                const dest = arg;
+                const dest = (arg || '').replace(/\/$/, '');
                 if (!dest || dest === '~' || dest === 'home') {
                     prevCwd = cwd; cwd = [];
                 } else if (dest === '-') {
-                    const t = cwd; cwd = prevCwd; prevCwd = t;
-                    addOutput(pathStr(), 'output');
-                } else if (dest === '..' || dest === '../') {
+                    const t = cwd; cwd = prevCwd; prevCwd = t; addOutput(pathStr(), 'output');
+                } else if (dest === '..') {
                     if (!cwd.length) addOutput('Already at ~', 'output');
                     else { prevCwd = cwd; cwd = []; }
                 } else if (dest === '.') {
                     /* stay put */
-                } else if (FS.hasOwnProperty(dest.replace(/\/$/, ''))) {
-                    prevCwd = cwd; cwd = [dest.replace(/\/$/, '')];
-                } else if (inCwd(dest) || findAnywhere(dest)) {
+                } else if (projects[dest]) {
+                    prevCwd = cwd; cwd = [dest];
+                } else if (cwd.length && fsFiles(cwd[0]).indexOf(dest) !== -1) {
                     addOutput('cd: not a directory: ' + dest, 'output-error');
-                    addOutput('Try "open ' + dest.replace(/\.md$/, '') + '" to open it.', 'output');
+                    addOutput('Try "open ' + dest + '" to open it.', 'output');
                 } else {
                     addOutput('cd: no such directory: ' + dest, 'output-error');
                 }
                 syncPrompt();
             } else if (mainCmd === 'info') {
-                if (currentProject && projects[currentProject]) {
+               if (currentProject && projects[currentProject]) {
                     const p = projects[currentProject];
                     addOutput(`Project: ${p.name}`, 'output-success');
                     addOutput(`Codename: /${p.codename}`, 'output');
@@ -1345,18 +1342,25 @@
                     addOutput('Use "cd [name]" to open a project', 'output');
                 }
             } else if (mainCmd === 'open' || mainCmd === 'cat') {
-                /* `open <file>` opens a project; with no argument it opens the
-                   live site of whichever project is already showing. */
                 if (arg) {
-                    const key = inCwd(arg) || findAnywhere(arg);
-                    if (!key) {
+                    const a = arg.replace(/\/$/, '');
+                    if (a.indexOf('/') !== -1) {                       // dir/file
+                        const bits = a.split('/');
+                        if (projects[bits[0]] && fsFiles(bits[0]).indexOf(bits[1]) !== -1) {
+                            window.openFile(bits[0], bits[1]);
+                            addOutput('Opening ' + a + ' ...', 'output-success');
+                        } else {
+                            addOutput(mainCmd + ': no such file: ' + arg, 'output-error');
+                        }
+                    } else if (projects[a]) {                          // a directory: open its README
+                        window.openFile(a);
+                        addOutput('Opening ' + a + '/README.md ...', 'output-success');
+                    } else if (cwd.length && fsFiles(cwd[0]).indexOf(a) !== -1) {
+                        window.openFile(cwd[0], a);
+                        addOutput('Opening ' + cwd[0] + '/' + a + ' ...', 'output-success');
+                    } else {
                         addOutput(mainCmd + ': no such file: ' + arg, 'output-error');
                         addOutput('Type "ls" to see what is here.', 'output');
-                    } else if (FS.hasOwnProperty(arg.replace(/\/$/, ''))) {
-                        addOutput(mainCmd + ': ' + arg + ' is a directory', 'output-error');
-                    } else {
-                        loadProject(key);
-                        addOutput('Opening ' + key + '.md ...', 'output-success');
                     }
                 } else if (currentProject && projects[currentProject] && projects[currentProject].url) {
                     addOutput('Opening ' + projects[currentProject].name + '...', 'output-success');
@@ -1364,8 +1368,6 @@
                 } else if (currentProject && projects[currentProject] && projects[currentProject].github) {
                     addOutput('Opening ' + projects[currentProject].name + ' GitHub...', 'output-success');
                     setTimeout(() => window.open(projects[currentProject].github, '_blank'), 500);
-                } else if (currentProject) {
-                    addOutput('This project has no live URL yet', 'output-warning');
                 } else {
                     addOutput('Usage: open [file]', 'output-error');
                 }
@@ -1398,88 +1400,64 @@
             return div.innerHTML;
         }
 
+        /* Builds the contents of a pane. 'readme' renders the project's README,
+           'site' embeds the live site or its screenshot, 'case' embeds the local
+           case study page. */
+        window.buildPane = function (key, kind) {
+            const project = projects[key];
+            if (!project) return '';
+
+            if (kind === 'readme') {
+                const badge = project.status === 'live'
+                    ? '<span class="rm-badge live">live</span>'
+                    : '<span class="rm-badge">' + project.status + '</span>';
+                let links = '';
+                if (project.url) links += '<li><a href="' + project.url + '" target="_blank" rel="noopener">Live site</a> — <code>' + project.url.replace(/^https?:\/\//, '') + '</code></li>';
+                if (project.github) links += '<li><a href="' + project.github + '" target="_blank" rel="noopener">Source on GitHub</a></li>';
+                if (project.casestudy) links += '<li><a href="' + project.casestudy + '" target="_blank" rel="noopener">Case study</a></li>';
+                if (project.research) links += '<li><a href="' + project.research + '" target="_blank" rel="noopener">Research</a></li>';
+                if (project.paper) links += '<li><a href="' + project.paper + '" target="_blank" rel="noopener">Paper</a></li>';
+
+                return '<div class="readme">' +
+                    '<h1><i class="fa-solid ' + project.icon + '"></i> ' + project.name + ' ' + badge + '</h1>' +
+                    '<p class="rm-lede">' + project.description + '</p>' +
+                    '<h2>Stack</h2><div class="rm-tags">' +
+                        project.tech.map(function (t) { return '<span>' + t + '</span>'; }).join('') +
+                    '</div>' +
+                    (links ? '<h2>Links</h2><ul class="rm-links">' + links + '</ul>' : '') +
+                    '<h2>Directory</h2><pre class="rm-tree">' + key + '/\n' +
+                        ((window.FILES && window.FILES[key]) || []).map(function (f, i, a) {
+                            return (i === a.length - 1 ? '└── ' : '├── ') + f.name;
+                        }).join('\n') +
+                    '</pre></div>';
+            }
+
+            const src = kind === 'case'
+                ? { kind: 'frame', src: project.casestudy + '?embed=1', label: project.casestudy }
+                : project.previewImage
+                    ? { kind: 'img', src: project.previewImage, label: (project.url || '').replace(/^https?:\/\//, '') }
+                    : { kind: 'frame', src: project.url, label: (project.url || '').replace(/^https?:\/\//, '') };
+
+            const openHref = kind === 'case' ? project.casestudy : (project.url || project.github);
+            const body = src.kind === 'img'
+                ? '<img src="' + src.src + '" alt="' + project.name + '">'
+                : '<iframe src="' + src.src + '" title="' + project.name + '" referrerpolicy="no-referrer"></iframe>';
+
+            return '<div class="pv-full">' +
+                '<div class="pv-bar"><span class="pv-dots"><i></i><i></i><i></i></span>' +
+                '<span class="pv-url">' + (src.label || key) + '</span>' +
+                (openHref ? '<a class="pv-open" href="' + openHref + '" target="_blank" rel="noopener">Open in new tab <i class="fa-solid fa-arrow-up-right-from-square"></i></a>' : '') +
+                '</div><div class="pv-body">' + body + '</div></div>';
+        };
+
+        /* Kept for the terminal and anything else that opens a project by name. */
         function loadProject(projectKey) {
-            const project = projects[projectKey];
-            if (!project) return;
-
+            if (!projects[projectKey]) return;
             currentProject = projectKey;
-
-            // Update active state
-            document.querySelectorAll('.project-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.project === projectKey);
-            });
-
-            // Mirror the open project into the secondary side bar
-            if (window.renderOutline) window.renderOutline(project);
-
-
-            // Show project detail
-            setTimeout(() => {
-                const hasUrl = project.status === 'live' && project.url;
-                const hasGithub = project.github;
-                const hasResearch = project.research;
-                const hasCase = project.casestudy;
-
-                /* Opening a project fills the editor pane with the site itself.
-                   Live embedding is opt-in via preview:'live', because most hosts
-                   send X-Frame-Options and the frame would show "refused to
-                   connect". Django defaults to DENY, so the PythonAnywhere apps
-                   use a screenshot instead. */
-                const previewSrc = project.previewImage
-                    ? { kind: 'img', src: project.previewImage }
-                    : (project.preview === 'live' && project.status === 'live' && project.url)
-                        ? { kind: 'live', src: project.url }
-                        : project.casestudy
-                            ? { kind: 'case', src: project.casestudy + '?embed=1' }
-                            : null;
-
-                const host = project.url
-                    ? project.url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-                    : (project.casestudy || project.codename);
-                const openHref = project.url || project.casestudy || project.github;
-                const openLink = openHref
-                    ? `<a class="pv-open" href="${openHref}" target="_blank" rel="noopener">Open in new tab <i class="fa-solid fa-arrow-up-right-from-square"></i></a>`
-                    : '';
-
-                let body;
-                if (previewSrc && previewSrc.kind === 'img') {
-                    body = `<img src="${previewSrc.src}" alt="${project.name}">`;
-                } else if (previewSrc) {
-                    body = `<iframe src="${previewSrc.src}" title="${project.name}" referrerpolicy="no-referrer"></iframe>`;
-                } else {
-                    body = `<div class="pv-empty"><div>
-                        <i class="fa-solid ${project.icon}"></i>
-                        <p>${project.url ? 'This site cannot be shown in a frame.' : 'No hosted preview for this one.'}</p>
-                        <span>${project.url ? 'Open it in a new tab to see it running.' : 'See the source, or the details in the Outline panel.'}</span>
-                    </div></div>`;
-                }
-
-                const previewHTML = `
-                    <div class="pv-full">
-                        <div class="pv-bar">
-                            <span class="pv-dots"><i></i><i></i><i></i></span>
-                            <span class="pv-url">${host}</span>
-                            ${openLink}
-                        </div>
-                        <div class="pv-body">${body}</div>
-                    </div>`;
-                
-                if (window.openProjectTab) {
-                    window.openProjectTab(projectKey, previewHTML);
-                } else {
-                    previewFrame.innerHTML = previewHTML;
-                    previewFrame.classList.add('is-preview');
-                }
-            }, 600);
+            if (window.renderOutline) window.renderOutline(projects[projectKey]);
+            if (window.openFile) window.openFile(projectKey);
         }
 
-        // Project item clicks
-        document.querySelectorAll('.project-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const projectKey = this.dataset.project;
-                loadProject(projectKey);
-            });
-        });
 
         // Keep focus on terminal
         document.addEventListener('click', function(e) {
@@ -1497,23 +1475,50 @@
     <script>
         /* ===== VS Code chrome enhancements (additive; wraps existing behavior) ===== */
         (function () {
-            // Derived from the explorer tree rather than hardcoded, so adding a
-            // project to the markup is enough for its tab and breadcrumb to work.
-            const FOLDERS = {};
-            document.querySelectorAll('.project-item[data-project]').forEach(function (el) {
-                const folder = el.closest('.tree-folder');
-                FOLDERS[el.dataset.project] = folder ? (folder.dataset.folder || 'repository') : 'repository';
+            /* Every project is a directory holding a README and, when it has one,
+               the site itself. The tree, the tabs and the terminal are all built
+               from this one table. */
+            const FILES = {};
+            Object.keys(projects).forEach(function (key) {
+                const p = projects[key];
+                const list = [{ name: 'README.md', kind: 'readme', icon: 'fa-solid fa-book' }];
+                if (p.previewImage || (p.preview === 'live' && p.status === 'live' && p.url)) {
+                    list.push({ name: 'index.html', kind: 'site', icon: 'fa-brands fa-html5' });
+                }
+                if (p.casestudy) {
+                    list.push({ name: 'case-study.html', kind: 'case', icon: 'fa-solid fa-book-open' });
+                }
+                FILES[key] = list;
             });
+            window.FILES = FILES;
+
             const previewFrame = document.getElementById('previewFrame');
             const tabBar = document.getElementById('tabBar');
             const welcomeTab = document.getElementById('welcomeTab');
             const breadcrumb = document.getElementById('breadcrumb');
+            const explorer = document.getElementById('explorer');
 
-            /* Multiple editors stay open at once, the way VS Code does: each
-               project keeps its own tab and its own pane, so switching back does
-               not reload the site, and each tab closes independently. */
+            /* ---- build the explorer ---- */
+            Object.keys(projects).forEach(function (key) {
+                const p = projects[key];
+                const folder = document.createElement('div');
+                folder.className = 'tree-folder';
+                folder.dataset.folder = key;
+                let html = '<div class="tree-folder-label">' +
+                    '<i class="fa-solid fa-chevron-down chev"></i>' +
+                    '<i class="fa-solid ' + p.icon + '"></i> ' + key +
+                    '<span class="file-dot ' + p.status + '"></span></div><div class="tree-children">';
+                FILES[key].forEach(function (f) {
+                    html += '<div class="file-item" data-project="' + key + '" data-file="' + f.name + '">' +
+                        '<i class="file-icon ' + f.icon + '"></i>' +
+                        '<span class="file-name">' + f.name + '</span></div>';
+                });
+                folder.innerHTML = html + '</div>';
+                explorer.appendChild(folder);
+            });
+
             const WELCOME_HTML = previewFrame ? previewFrame.innerHTML : '';
-            const open = [];              // project keys, in tab order
+            const open = [];              // "project/file" keys, in tab order
             let active = 'welcome';
 
             if (previewFrame) {
@@ -1525,84 +1530,111 @@
                 previewFrame.appendChild(w);
             }
 
-            function fileMeta(key) {
-                const el = document.querySelector('.project-item[data-project="' + key + '"]');
-                const icon = el ? el.querySelector('.file-icon') : null;
-                const iconClass = icon ? icon.className : 'file-icon fa-solid fa-file';
-                const name = el ? el.querySelector('.file-name').textContent.trim() : key;
-                return { iconClass: iconClass, name: name };
+            function meta(id) {
+                const parts = id.split('/');
+                const key = parts[0], file = parts[1];
+                const f = (FILES[key] || []).filter(function (x) { return x.name === file; })[0];
+                return { key: key, file: file, icon: f ? f.icon : 'fa-solid fa-file', kind: f ? f.kind : 'readme' };
             }
+            function paneOf(id) { return previewFrame.querySelector('.pane[data-pane="' + id + '"]'); }
+            function tabOf(id) { return tabBar.querySelector('.tab[data-tab="' + id + '"]'); }
 
-            function paneOf(key) { return previewFrame.querySelector('.pane[data-pane="' + key + '"]'); }
-            function tabOf(key) { return tabBar.querySelector('.tab[data-tab="' + key + '"]'); }
-
-            function setBreadcrumb(key) {
+            function setBreadcrumb(id) {
                 if (!breadcrumb) return;
-                if (key === 'welcome') { breadcrumb.innerHTML = '<span>repository</span>'; return; }
-                const meta = fileMeta(key);
+                if (id === 'welcome') { breadcrumb.innerHTML = '<span>repository</span>'; return; }
+                const m = meta(id);
                 breadcrumb.innerHTML = '<span>repository</span> <i class="fa-solid fa-chevron-right"></i> ' +
-                    '<span>' + (FOLDERS[key] || 'repository') + '</span> <i class="fa-solid fa-chevron-right"></i> ' +
-                    '<span class="crumb-active"><i class="' + meta.iconClass + '"></i> ' + meta.name + '.md</span>';
+                    '<span>' + m.key + '</span> <i class="fa-solid fa-chevron-right"></i> ' +
+                    '<span class="crumb-active"><i class="' + m.icon + '"></i> ' + m.file + '</span>';
             }
 
-            function activate(key) {
-                active = key;
+            /* When two open tabs share a filename, show the directory beside it,
+               the way the editor disambiguates index.html from index.html. */
+            function relabelTabs() {
+                const counts = {};
+                open.forEach(function (id) { const f = id.split('/')[1]; counts[f] = (counts[f] || 0) + 1; });
+                open.forEach(function (id) {
+                    const t = tabOf(id); if (!t) return;
+                    const m = meta(id);
+                    const label = t.querySelector('.tab-name');
+                    if (label) label.innerHTML = m.file +
+                        (counts[m.file] > 1 ? ' <span class="tab-dir">' + m.key + '</span>' : '');
+                });
+            }
+
+            function activate(id) {
+                active = id;
                 previewFrame.querySelectorAll('.pane').forEach(function (p) {
-                    p.classList.toggle('active', p.dataset.pane === key);
+                    p.classList.toggle('active', p.dataset.pane === id);
                 });
-                if (welcomeTab) welcomeTab.classList.toggle('active', key === 'welcome');
+                if (welcomeTab) welcomeTab.classList.toggle('active', id === 'welcome');
                 tabBar.querySelectorAll('.tab[data-tab]').forEach(function (t) {
-                    t.classList.toggle('active', t.dataset.tab === key);
+                    t.classList.toggle('active', t.dataset.tab === id);
                 });
-                previewFrame.classList.toggle('is-preview', key !== 'welcome');
-                document.querySelectorAll('.project-item').forEach(function (i) {
-                    i.classList.toggle('active', i.dataset.project === key);
+                previewFrame.classList.toggle('is-preview', id !== 'welcome' && meta(id).kind !== 'readme');
+                document.querySelectorAll('.file-item').forEach(function (i) {
+                    i.classList.toggle('active', i.dataset.project + '/' + i.dataset.file === id);
                 });
-                setBreadcrumb(key);
+                setBreadcrumb(id);
+                if (id !== 'welcome' && window.renderOutline) window.renderOutline(projects[meta(id).key]);
             }
 
-            function closeTab(key) {
-                const i = open.indexOf(key);
+            function closeTab(id) {
+                const i = open.indexOf(id);
                 if (i === -1) return;
                 open.splice(i, 1);
-                const t = tabOf(key); if (t) t.remove();
-                const p = paneOf(key); if (p) p.remove();   // frees the iframe
-                if (active === key) {
-                    // fall to the neighbour on the right, else the left, else Welcome
-                    activate(open[i] || open[i - 1] || 'welcome');
-                }
+                const t = tabOf(id); if (t) t.remove();
+                const p = paneOf(id); if (p) p.remove();
+                relabelTabs();
+                if (active === id) activate(open[i] || open[i - 1] || 'welcome');
             }
 
-            function addTab(key) {
-                const meta = fileMeta(key);
+            function addTab(id) {
+                const m = meta(id);
                 const t = document.createElement('div');
                 t.className = 'tab';
-                t.dataset.tab = key;
-                t.innerHTML = '<i class="' + meta.iconClass + '"></i>' +
-                    '<span class="tab-name">' + meta.name + '.md</span>' +
-                    '<span class="tab-close" aria-label="Close ' + meta.name + '.md"><i class="fa-solid fa-xmark"></i></span>';
+                t.dataset.tab = id;
+                t.innerHTML = '<i class="' + m.icon + '"></i><span class="tab-name">' + m.file + '</span>' +
+                    '<span class="tab-close" aria-label="Close ' + m.file + '"><i class="fa-solid fa-xmark"></i></span>';
                 t.addEventListener('click', function (e) {
-                    if (e.target.closest('.tab-close')) { e.stopPropagation(); closeTab(key); return; }
-                    activate(key);
+                    if (e.target.closest('.tab-close')) { e.stopPropagation(); closeTab(id); return; }
+                    activate(id);
                 });
-                // middle click closes, as in the editor
-                t.addEventListener('auxclick', function (e) { if (e.button === 1) { e.preventDefault(); closeTab(key); } });
+                t.addEventListener('auxclick', function (e) { if (e.button === 1) { e.preventDefault(); closeTab(id); } });
                 tabBar.appendChild(t);
-                open.push(key);
+                open.push(id);
+                relabelTabs();
             }
 
-            window.openProjectTab = function (key, paneHTML) {
-                if (!FOLDERS.hasOwnProperty(key)) return;
-                if (!paneOf(key)) {
+            window.openFile = function (key, file) {
+                if (!projects[key]) return;
+                const list = FILES[key] || [];
+                if (!file) file = list[0].name;
+                if (!list.some(function (f) { return f.name === file; })) return;
+                const id = key + '/' + file;
+                if (!paneOf(id)) {
                     const p = document.createElement('div');
                     p.className = 'pane';
-                    p.dataset.pane = key;
-                    p.innerHTML = paneHTML;
+                    p.dataset.pane = id;
+                    p.innerHTML = window.buildPane(key, meta(id).kind);
                     previewFrame.appendChild(p);
-                    addTab(key);
+                    addTab(id);
                 }
-                activate(key);
+                activate(id);
+                if (typeof currentProject !== 'undefined') currentProject = key;
             };
+
+            explorer.addEventListener('click', function (e) {
+                const item = e.target.closest('.file-item');
+                if (item) { window.openFile(item.dataset.project, item.dataset.file); return; }
+                const label = e.target.closest('.tree-folder-label');
+                if (label) {
+                    const folder = label.closest('.tree-folder');
+                    folder.classList.toggle('collapsed');
+                    const chev = label.querySelector('.chev');
+                    if (chev) chev.style.transform = folder.classList.contains('collapsed') ? 'rotate(-90deg)' : '';
+                }
+            });
 
             if (welcomeTab) welcomeTab.onclick = function () { activate('welcome'); };
 
