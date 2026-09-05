@@ -857,7 +857,7 @@
             <!-- Activity Bar -->
             <div class="activity-bar">
                 <div class="activity-top">
-                    <button class="activity-btn active" title="Explorer"><i class="fa-solid fa-files"></i><i class="fa-regular fa-copy" style="display:none"></i></button>
+                    <button type="button" class="activity-btn active" id="actExplorer" title="Explorer (Ctrl+B)" aria-label="Toggle Explorer"><i class="fa-regular fa-copy"></i></button>
                     <button type="button" class="activity-btn" title="Graphic Design" aria-label="Graphic Design" data-work-open="graphic"><i class="fa-solid fa-pen-nib"></i></button>
                     <button type="button" class="activity-btn" title="Motion Design" aria-label="Motion Design" data-work-open="motion"><i class="fa-solid fa-film"></i></button>
                     <button type="button" class="activity-btn" title="Web Design" aria-label="Web Design" data-work-open="web"><i class="fa-solid fa-window-maximize"></i></button>
@@ -1819,12 +1819,25 @@
                 btn.setAttribute('aria-pressed', String(on));
             };
             const toggle = () => { ide.classList.toggle(cls); sync(); };
-            btn.addEventListener('click', toggle);
+            btn.addEventListener('click', function () {
+                toggle();
+                if (cls === 'no-primary' && typeof syncExplorerBtn === 'function') syncExplorerBtn();
+            });
             sync();
             return toggle;
         }
 
         const togglePrimary   = bind('tglPrimary',   'no-primary',     true);
+
+        /* The Explorer button in the activity bar drives the same side bar, and
+           lights up only while it is showing, as the editor does. */
+        const actExplorer = document.getElementById('actExplorer');
+        function syncExplorerBtn() {
+            if (actExplorer) actExplorer.classList.toggle('active', !ide.classList.contains('no-primary'));
+        }
+        if (actExplorer && togglePrimary) {
+            actExplorer.addEventListener('click', function () { togglePrimary(); syncExplorerBtn(); });
+        }
         const togglePanel     = bind('tglPanel',     'no-panel',       true);
         const toggleSecondary = bind('tglSecondary', 'with-secondary', false);
 
@@ -1833,7 +1846,7 @@
             if (!(e.ctrlKey || e.metaKey)) return;
             const k = e.key.toLowerCase();
             if (k === 'b' && (e.altKey)) { e.preventDefault(); toggleSecondary && toggleSecondary(); }
-            else if (k === 'b') { e.preventDefault(); togglePrimary && togglePrimary(); }
+            else if (k === 'b') { e.preventDefault(); togglePrimary && togglePrimary(); syncExplorerBtn(); }
             else if (k === 'j') { e.preventDefault(); togglePanel && togglePanel(); }
         });
 
