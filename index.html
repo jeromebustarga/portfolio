@@ -645,6 +645,39 @@
       background: var(--vs-activity);
       overflow-y: auto;
     }
+    /* Portrait in the rail: illustrated by default, hover glitches to the photo,
+       the same swap the old about page used. */
+    .rail-portrait {
+      width: 96px; height: 96px; margin: 2px auto 16px; position: relative;
+      border-radius: 50%; overflow: hidden; cursor: pointer;
+      border: 1px solid rgba(244,121,33,0.35);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.04), 0 0 26px rgba(244,121,33,0.18);
+    }
+    .rail-portrait img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; transition: opacity 0.35s ease;
+    }
+    .rail-portrait .pr-anime { opacity: 1; z-index: 2; }
+    .rail-portrait .pr-real  { opacity: 0; z-index: 1; }
+    .rail-portrait:hover .pr-anime { opacity: 0; }
+    .rail-portrait:hover .pr-real  { opacity: 1; z-index: 3; }
+    .rail-portrait.glitch { animation: railGlitch 0.55s ease; }
+    @keyframes railGlitch {
+      0%, 100% { transform: translate(0,0); filter: none; }
+      15% { transform: translate(-3px,-2px); filter: hue-rotate(90deg) brightness(1.2); }
+      30% { transform: translate(3px,2px);  filter: hue-rotate(-90deg) brightness(0.85); }
+      45% { transform: translate(-2px,2px); filter: contrast(2) saturate(2); }
+      60% { transform: translate(2px,-2px);
+            box-shadow: -4px -4px 0 rgba(244,121,33,0.7), 4px 4px 0 rgba(255,255,255,0.6), 0 0 40px rgba(244,121,33,0.5); }
+      80% { transform: translate(-1px,1px); filter: brightness(1.3); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rail-portrait.glitch { animation: none; }
+    }
+    @media (max-width: 768px) {
+      .rail-portrait { width: 62px; height: 62px; margin: 0 8px 0 0; flex-shrink: 0; }
+    }
+
     .about-rail .rail-label {
       font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
       letter-spacing: 0.12em; text-transform: uppercase;
@@ -1681,6 +1714,10 @@
 
         <div class="about-body">
           <div class="about-rail" id="aboutRail">
+            <div class="rail-portrait" id="railPortrait" title="Hover to unmask">
+              <img class="pr-anime" src="images/portrait-anime.jpg" alt="Jerome Bustarga, illustrated">
+              <img class="pr-real" src="images/portrait-real.jpg" alt="" aria-hidden="true">
+            </div>
             <div class="rail-label">Jerome Bustarga</div>
             <button type="button" class="active" data-pane="profile"><i class="fa-solid fa-user"></i> Profile</button>
             <button type="button" data-pane="story"><i class="fa-solid fa-book-open"></i> Background</button>
@@ -2063,6 +2100,21 @@
             const b = e.target.closest('button[data-pane]');
             if (b) showPane(b.dataset.pane);
         });
+
+        // glitch on the way in and on the way back out
+        const portrait = document.getElementById('railPortrait');
+        if (portrait) {
+            let t = null;
+            const glitch = function () {
+                portrait.classList.remove('glitch');
+                void portrait.offsetWidth;
+                portrait.classList.add('glitch');
+                clearTimeout(t);
+                t = setTimeout(function () { portrait.classList.remove('glitch'); }, 600);
+            };
+            portrait.addEventListener('mouseenter', glitch);
+            portrait.addEventListener('mouseleave', glitch);
+        }
     })();
     </script>
 </body>
