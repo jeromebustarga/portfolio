@@ -896,7 +896,7 @@
                         <div class="terminal-history" id="terminalHistory"></div>
                         <div class="terminal-line">
                             <span class="prompt">
-                                <span class="prompt-user">jerome</span><span class="prompt-symbol">@</span><span class="prompt-path">repo</span><span class="prompt-symbol">:~$</span>
+                                <span class="prompt-user">jerome</span><span class="prompt-symbol">@</span><span class="prompt-path">repo</span><span class="prompt-symbol" id="promptPath">:~$</span>
                             </span>
                             <div class="terminal-input-wrapper">
                                 <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -1267,13 +1267,38 @@
             }
         });
 
+        /* A small filesystem mirroring the explorer, so cd/ls/pwd behave like a
+           shell: the category folders are directories and each project is a file. */
+        const FS = {};
+        document.querySelectorAll('.tree-folder').forEach(function (f) {
+            FS[f.dataset.folder] = Array.prototype.slice
+                .call(f.querySelectorAll('.project-item'))
+                .map(function (i) { return i.dataset.project; });
+        });
+        let cwd = [];                                   // [] is home
+        let prevCwd = [];                               // for `cd -`
+        function pathStr(c) { c = c || cwd; return c.length ? '~/' + c.join('/') : '~'; }
+        function dirEntries() { return cwd.length ? (FS[cwd[0]] || []) : Object.keys(FS); }
+        function inCwd(name) {
+            const base = name.replace(/\.md$/, '');
+            return cwd.length && (FS[cwd[0]] || []).indexOf(base) !== -1 ? base : null;
+        }
+        function findAnywhere(name) {
+            const base = name.replace(/\.md$/, '');
+            return projects[base] ? base : null;
+        }
+        function syncPrompt() {
+            const el = document.getElementById('promptPath');
+            if (el) el.textContent = ':' + pathStr() + '$';
+        }
+
         function executeCommand(command) {
             // Add command to display
             const cmdLine = document.createElement('div');
             cmdLine.className = 'terminal-line';
             cmdLine.innerHTML = `
                 <span class="prompt">
-                    <span class="prompt-user">jerome</span><span class="prompt-symbol">@</span><span class="prompt-path">repo</span><span class="prompt-symbol">:~$</span>
+                    <span class="prompt-user">jerome</span><span class="prompt-symbol">@</span><span class="prompt-path">repo</span><span class="prompt-symbol">:${pathStr()}$</span>
                 </span>
                 <span style="color: var(--text-primary)">${escapeHtml(command)}</span>
             `;
@@ -1287,10 +1312,12 @@
             if (mainCmd === 'help') {
                 addOutput('Available commands:', 'output');
                 addOutput('  help          Show this help', 'output');
-                addOutput('  ls            List all projects', 'output');
-                addOutput('  cd [name]     Open project', 'output');
+                addOutput('  ls [dir]      List this directory', 'output');
+                addOutput('  cd [dir]      Change directory (.. and - work)', 'output');
+                addOutput('  tree          Show the whole tree', 'output');
+                addOutput('  pwd           Print working directory', 'output');
+                addOutput('  open [file]   Open a project', 'output');
                 addOutput('  info          Current project info', 'output');
-                addOutput('  open          Open current project URL', 'output');
                 addOutput('  about         Open the about dialog', 'output');
                 addOutput('  clear         Clear terminal', 'output');
             } else if (mainCmd === 'about' || mainCmd === 'whoami') {
@@ -1299,32 +1326,48 @@
             } else if (mainCmd === 'clear' || mainCmd === 'cls') {
                 terminalHistory.innerHTML = '';
             } else if (mainCmd === 'ls' || mainCmd === 'list' || mainCmd === 'dir') {
-                addOutput('/web-apps', 'output-dir');
-                addOutput('  uplift    cubby    r2s    bluejay', 'output');
-                addOutput('/tools', 'output-dir');
-                addOutput('  ledger', 'output');
-                addOutput('/experiments', 'output-dir');
-                addOutput('  decay    mirror', 'output');
-                addOutput('/advocacy', 'output-dir');
-                addOutput('  koneksyon', 'output');
-            } else if (mainCmd === 'cd') {
-                if (!arg) {
-                    addOutput('Usage: cd [project-name]', 'output-error');
-                    addOutput('Type "ls" to see available projects', 'output');
-                } else if (arg === '~' || arg === 'home') {
-                    addOutput('Already home.', 'output');
-                } else if (arg === 'about') {
-                    addOutput('Opening about...', 'output-success');
-                    setTimeout(() => openAbout(), 400);
-                } else if (arg === '..' || arg === '-') {
-                    addOutput('Already at root directory', 'output');
-                } else if (projects[arg]) {
-                    loadProject(arg);
-                    addOutput(`Opening /${arg}...`, 'output-success');
+                const target = arg ? (arg === '~' ? [] : (FS.hasOwnProperty(arg) ? [arg] : null)) : cwd;
+                if (target === null) {
+                    addOutput('ls: no such directory: ' + arg, 'output-error');
+                } else if (target.length === 0) {
+                    Object.keys(FS).forEach(function (d) { addOutput(d + '/', 'output-dir'); });
                 } else {
-                    addOutput(`Directory not found: ${arg}`, 'output-error');
-                    addOutput('Type "ls" to see available projects', 'output');
+                    const files = FS[target[0]] || [];
+                    if (!files.length) addOutput('(empty)', 'output');
+                    else addOutput(files.map(function (f) { return f + '.md'; }).join('    '), 'output');
                 }
+            } else if (mainCmd === 'tree') {
+                addOutput('~', 'output-dir');
+                const dirs = Object.keys(FS);
+                dirs.forEach(function (d, di) {
+                    const lastDir = di === dirs.length - 1;
+                    addOutput((lastDir ? '└── ' : '├── ') + d + '/', 'output-dir');
+                    (FS[d] || []).forEach(function (f, fi) {
+                        const lastFile = fi === FS[d].length - 1;
+                        addOutput((lastDir ? '    ' : '│   ') + (lastFile ? '└── ' : '├── ') + f + '.md', 'output');
+                    });
+                });
+            } else if (mainCmd === 'cd') {
+                const dest = arg;
+                if (!dest || dest === '~' || dest === 'home') {
+                    prevCwd = cwd; cwd = [];
+                } else if (dest === '-') {
+                    const t = cwd; cwd = prevCwd; prevCwd = t;
+                    addOutput(pathStr(), 'output');
+                } else if (dest === '..' || dest === '../') {
+                    if (!cwd.length) addOutput('Already at ~', 'output');
+                    else { prevCwd = cwd; cwd = []; }
+                } else if (dest === '.') {
+                    /* stay put */
+                } else if (FS.hasOwnProperty(dest.replace(/\/$/, ''))) {
+                    prevCwd = cwd; cwd = [dest.replace(/\/$/, '')];
+                } else if (inCwd(dest) || findAnywhere(dest)) {
+                    addOutput('cd: not a directory: ' + dest, 'output-error');
+                    addOutput('Try "open ' + dest.replace(/\.md$/, '') + '" to open it.', 'output');
+                } else {
+                    addOutput('cd: no such directory: ' + dest, 'output-error');
+                }
+                syncPrompt();
             } else if (mainCmd === 'info') {
                 if (currentProject && projects[currentProject]) {
                     const p = projects[currentProject];
@@ -1339,20 +1382,33 @@
                     addOutput('No project selected', 'output-error');
                     addOutput('Use "cd [name]" to open a project', 'output');
                 }
-            } else if (mainCmd === 'open') {
-                if (currentProject && projects[currentProject] && projects[currentProject].url) {
-                    addOutput(`Opening ${projects[currentProject].name}...`, 'output-success');
+            } else if (mainCmd === 'open' || mainCmd === 'cat') {
+                /* `open <file>` opens a project; with no argument it opens the
+                   live site of whichever project is already showing. */
+                if (arg) {
+                    const key = inCwd(arg) || findAnywhere(arg);
+                    if (!key) {
+                        addOutput(mainCmd + ': no such file: ' + arg, 'output-error');
+                        addOutput('Type "ls" to see what is here.', 'output');
+                    } else if (FS.hasOwnProperty(arg.replace(/\/$/, ''))) {
+                        addOutput(mainCmd + ': ' + arg + ' is a directory', 'output-error');
+                    } else {
+                        loadProject(key);
+                        addOutput('Opening ' + key + '.md ...', 'output-success');
+                    }
+                } else if (currentProject && projects[currentProject] && projects[currentProject].url) {
+                    addOutput('Opening ' + projects[currentProject].name + '...', 'output-success');
                     setTimeout(() => window.open(projects[currentProject].url, '_blank'), 500);
                 } else if (currentProject && projects[currentProject] && projects[currentProject].github) {
-                    addOutput(`Opening ${projects[currentProject].name} GitHub...`, 'output-success');
+                    addOutput('Opening ' + projects[currentProject].name + ' GitHub...', 'output-success');
                     setTimeout(() => window.open(projects[currentProject].github, '_blank'), 500);
                 } else if (currentProject) {
                     addOutput('This project has no live URL yet', 'output-warning');
                 } else {
-                    addOutput('No project selected', 'output-error');
+                    addOutput('Usage: open [file]', 'output-error');
                 }
             } else if (mainCmd === 'pwd') {
-                addOutput(currentProject ? `/repo/${currentProject}` : '/repo', 'output');
+                addOutput(pathStr(), 'output');
             } else if (mainCmd === 'whoami') {
                 addOutput('jerome', 'output');
             } else if (mainCmd === 'date') {
