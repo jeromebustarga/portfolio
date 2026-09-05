@@ -657,10 +657,19 @@
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; transition: opacity 0.35s ease;
     }
+    .rail-portrait video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; transition: opacity 0.35s ease;
+    }
     .rail-portrait .pr-anime { opacity: 1; z-index: 2; }
+    .rail-portrait .pr-video { opacity: 0; z-index: 3; }
     .rail-portrait .pr-real  { opacity: 0; z-index: 1; }
-    .rail-portrait:hover .pr-anime { opacity: 0; }
-    .rail-portrait:hover .pr-real  { opacity: 1; z-index: 3; }
+    /* while the clip runs it sits above the still */
+    .rail-portrait.playing .pr-video { opacity: 1; }
+    .rail-portrait.playing .pr-anime { opacity: 0; }
+    /* hovering always wins, mid-clip included */
+    .rail-portrait:hover .pr-anime, .rail-portrait:hover .pr-video { opacity: 0; }
+    .rail-portrait:hover .pr-real  { opacity: 1; z-index: 5; }
     .rail-portrait.glitch { animation: railGlitch 0.55s ease; }
     @keyframes railGlitch {
       0%, 100% { transform: translate(0,0); filter: none; }
@@ -1716,6 +1725,10 @@
           <div class="about-rail" id="aboutRail">
             <div class="rail-portrait" id="railPortrait" title="Hover to unmask">
               <img class="pr-anime" src="images/portrait-anime.jpg" alt="Jerome Bustarga, illustrated">
+              <video class="pr-video" id="railVideo" muted playsinline preload="none" aria-hidden="true">
+                <source src="images/portrait-anime.webm" type="video/webm">
+                <source src="images/portrait-anime.mp4" type="video/mp4">
+              </video>
               <img class="pr-real" src="images/portrait-real.jpg" alt="" aria-hidden="true">
             </div>
             <div class="rail-label">Jerome Bustarga</div>
@@ -2069,6 +2082,7 @@
             requestAnimationFrame(() => backdrop.classList.add('open'));
             const close = document.getElementById('aboutClose');
             if (close) close.focus();
+            if (window.playRailVideo) window.playRailVideo();
             // close the mobile menu if it is open behind the dialog
             const mm = document.getElementById('mobileMenu');
             if (mm) mm.classList.remove('open', 'active');
@@ -2112,8 +2126,41 @@
                 clearTimeout(t);
                 t = setTimeout(function () { portrait.classList.remove('glitch'); }, 600);
             };
-            portrait.addEventListener('mouseenter', glitch);
-            portrait.addEventListener('mouseleave', glitch);
+            portrait.addEventListener('mouseenter', function () {
+                glitch();
+                const v = document.getElementById('railVideo');
+                if (v) v.pause();
+            });
+            portrait.addEventListener('mouseleave', function () {
+                glitch();
+                // hovering paused it; pick the clip back up unless it already finished
+                const v = document.getElementById('railVideo');
+                if (v && portrait.classList.contains('playing') && !v.ended) {
+                    const pr = v.play();
+                    if (pr && pr.catch) pr.catch(function () { portrait.classList.remove('playing'); });
+                }
+            });
+
+            /* The clip plays once whenever About opens, then settles on the
+               illustration. Cropped to the same framing, 88 KB, and not
+               fetched at all until the dialog is first opened. */
+            const vid = document.getElementById('railVideo');
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (vid && !reduce) {
+                vid.addEventListener('ended', function () { portrait.classList.remove('playing'); });
+                const start = function () {
+                    try { vid.currentTime = 0; } catch (e) { /* not seekable yet */ }
+                    portrait.classList.add('playing');
+                    const pr = vid.play();
+                    if (pr && pr.catch) pr.catch(function () { portrait.classList.remove('playing'); });
+                };
+                window.playRailVideo = function () {
+                    // preload is off, so the first open has no metadata to seek with yet
+                    if (vid.readyState >= 1) { start(); return; }
+                    vid.addEventListener('loadedmetadata', start, { once: true });
+                    vid.load();
+                };
+            }
         }
     })();
     </script>
