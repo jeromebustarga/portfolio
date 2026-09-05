@@ -742,6 +742,18 @@
     .about-facts .v a { color: var(--terminal-orange); text-decoration: none; }
     .about-facts .v a:hover { text-decoration: underline; }
 
+    .exp-list { list-style: none; margin: 0 0 4px; padding: 0; }
+    .exp-list li {
+      position: relative; padding: 0 0 11px 18px;
+      font-size: 13.5px; line-height: 1.7; color: var(--text-secondary);
+    }
+    .exp-list li::before {
+      content: ''; position: absolute; left: 2px; top: 9px;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--terminal-orange); opacity: 0.75;
+    }
+    .exp-list strong { color: var(--text-primary); font-weight: 500; }
+
     .about-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 6px; }
     .about-tags span {
       font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
@@ -1733,6 +1745,7 @@
             </div>
             <div class="rail-label">Jerome Bustarga</div>
             <button type="button" class="active" data-pane="profile"><i class="fa-solid fa-user"></i> Profile</button>
+            <button type="button" data-pane="experience"><i class="fa-solid fa-briefcase"></i> Experience</button>
             <button type="button" data-pane="story"><i class="fa-solid fa-book-open"></i> Background</button>
             <button type="button" data-pane="skills"><i class="fa-solid fa-code"></i> Skills</button>
             <button type="button" data-pane="contact"><i class="fa-solid fa-paper-plane"></i> Contact</button>
@@ -1742,10 +1755,10 @@
             <!-- Profile -->
             <div class="about-pane active" data-pane="profile">
               <h2>Jerome Bustarga <span>Built-in</span></h2>
-              <p class="lede">Software developer and multidisciplinary creator working across computer science, design and digital humanities. I build things that ship, and I care about who they leave out.</p>
+              <p class="lede">Software developer working across backend services, cloud infrastructure and the front end. I build things that ship, I document them so someone else can run them, and I care about who they leave out.</p>
               <div class="about-facts">
                 <div><span class="k">Role</span><span class="v">Software Developer</span></div>
-                <div><span class="k">Focus</span><span class="v">Full-stack, web tools, data visualization</span></div>
+                <div><span class="k">Focus</span><span class="v">Backend and cloud infrastructure, full-stack, data visualization</span></div>
                 <div><span class="k">Education</span><span class="v">Creighton University, Computer Science</span></div>
                 <div><span class="k">Status</span><span class="v">Open to opportunities</span></div>
                 <div><span class="k">GitHub</span><span class="v"><a href="https://github.com/jhb09808" target="_blank" rel="noopener">@jhb09808</a></span></div>
@@ -1753,6 +1766,38 @@
               </div>
               <h3>Currently</h3>
               <p>Building <strong>The Algorithm Mirror</strong>, a privacy-first tool that turns YouTube watch histories into interactive visualizations. It reached <strong>91.2% categorization accuracy with an 89.7% cost reduction</strong> using a hybrid AI approach.</p>
+            </div>
+
+            <!-- Experience -->
+            <div class="about-pane" data-pane="experience">
+              <h2>C4G <span>Backend &amp; Infrastructure</span></h2>
+              <p class="lede">Built and shipped the team's first shared staging environment on AWS, then handed it over documented so the remaining developer could run it alone.</p>
+
+              <h3>Infrastructure &amp; deployment</h3>
+              <ul class="exp-list">
+                <li>Designed and deployed a containerized <strong>Spring Boot</strong> backend to <strong>AWS ECS Fargate</strong>, with RDS MySQL, S3, an Application Load Balancer, ECR, IAM roles and CloudWatch logging, giving the team its first shared staging environment.</li>
+                <li>Authored a <strong>multi-stage Dockerfile</strong> that cut image size by separating build and runtime stages, and established a repeatable deployment process the team adopted.</li>
+                <li>Diagnosed a load balancer <strong>health check misconfiguration</strong> that was silently failing every deployment, reasoning from rollout behaviour back to threshold timing against application startup.</li>
+              </ul>
+
+              <h3>Security &amp; identity</h3>
+              <ul class="exp-list">
+                <li>Implemented <strong>HTTPS end to end</strong> for staging: generated the certificate signing request, coordinated issuance with Information Security, and configured TLS termination at the load balancer.</li>
+                <li>Debugged and fixed <strong>OAuth redirect URI</strong> generation behind a reverse proxy, unblocking <strong>Microsoft Entra</strong> single sign-on on web and mobile after months of being blocked.</li>
+                <li>Narrowed publicly exposed monitoring endpoints that were leaking configuration data on a public URL.</li>
+              </ul>
+
+              <h3>Application development</h3>
+              <ul class="exp-list">
+                <li>Migrated photo storage from ephemeral container disk to <strong>Amazon S3</strong> with a scoped IAM task role, preserving the existing API contracts so no frontend changes were needed.</li>
+                <li>Implemented a scheduled job to close expired events, choosing a stored-status approach over read-time filtering to keep the database the single source of truth.</li>
+              </ul>
+
+              <h3>Collaboration &amp; ownership</h3>
+              <ul class="exp-list">
+                <li>Reviewed pull requests across backend and frontend, catching authorization gaps, cross-platform inconsistencies and merge conflicts before they reached production.</li>
+                <li>Wrote the documentation for deployment, monitoring, certificate renewal, cost and known limitations, and led a handoff session so the remaining developer could maintain the environment independently.</li>
+              </ul>
             </div>
 
             <!-- Background -->
@@ -1771,13 +1816,19 @@
               <h2>Skills</h2>
               <p class="lede">What I reach for, roughly in order of how often I use it.</p>
               <h3>Languages</h3>
-              <div class="about-tags"><span>Python</span><span>JavaScript</span><span>Java</span><span>HTML</span><span>CSS</span><span>SQL</span></div>
-              <h3>Frameworks &amp; Libraries</h3>
-              <div class="about-tags"><span>Django</span><span>Flask</span><span>p5.js</span><span>Three.js</span><span>GSAP</span><span>Canvas API</span></div>
+              <div class="about-tags"><span>Java</span><span>Python</span><span>JavaScript</span><span>TypeScript</span><span>SQL</span><span>HTML</span><span>CSS</span></div>
+              <h3>Cloud &amp; Infrastructure</h3>
+              <div class="about-tags"><span>AWS ECS Fargate</span><span>RDS</span><span>S3</span><span>ALB</span><span>ECR</span><span>IAM</span><span>ACM</span><span>CloudWatch</span><span>Docker</span></div>
+              <h3>Backend</h3>
+              <div class="about-tags"><span>Spring Boot</span><span>Django</span><span>Flask</span><span>REST APIs</span><span>MySQL</span><span>SQLite</span><span>Scheduled jobs</span></div>
+              <h3>Security &amp; Identity</h3>
+              <div class="about-tags"><span>OAuth 2.0</span><span>Microsoft Entra ID</span><span>TLS / HTTPS</span><span>Certificate signing</span><span>Scoped IAM roles</span></div>
+              <h3>Frontend &amp; Mobile</h3>
+              <div class="about-tags"><span>React Native</span><span>Expo</span><span>Three.js</span><span>p5.js</span><span>GSAP</span><span>Canvas API</span><span>Chrome Extensions (MV3)</span></div>
               <h3>AI &amp; Data</h3>
               <div class="about-tags"><span>Gemini API</span><span>Data visualization</span><span>Categorization pipelines</span><span>Prompt design</span></div>
-              <h3>Platform &amp; Tools</h3>
-              <div class="about-tags"><span>Git</span><span>Chrome Extensions (MV3)</span><span>PythonAnywhere</span><span>MySQL</span><span>REST APIs</span></div>
+              <h3>Practice</h3>
+              <div class="about-tags"><span>Git</span><span>Code review</span><span>Technical documentation</span><span>Deployment runbooks</span></div>
               <h3>Design</h3>
               <div class="about-tags"><span>Figma</span><span>Illustrator</span><span>Photoshop</span><span>InDesign</span><span>After Effects</span></div>
             </div>
