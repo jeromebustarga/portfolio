@@ -670,27 +670,16 @@
     /* hovering always wins, mid-clip included */
     .rail-portrait:hover .pr-anime, .rail-portrait:hover .pr-video { opacity: 0; }
     .rail-portrait:hover .pr-real  { opacity: 1; z-index: 5; }
-    .rail-portrait.glitch { animation: railGlitch 0.72s steps(1, end) 1; }
+    .rail-portrait.glitch { animation: railGlitch 0.55s ease; }
     @keyframes railGlitch {
-      0%   { transform: translate(0,0) scale(1); filter: none; }
-      8%   { transform: translate(-7px,-4px) scale(1.06);
-             filter: hue-rotate(90deg) saturate(3) drop-shadow(3px 0 #f47921) drop-shadow(-3px 0 #22d3ee); }
-      16%  { transform: translate(7px,4px) scale(0.96); filter: invert(1) hue-rotate(180deg); }
-      24%  { transform: translate(-5px,5px) scale(1.04);
-             filter: contrast(3) brightness(1.6) drop-shadow(-4px 0 #ec4899); }
-      32%  { transform: translate(6px,-5px) scale(1); filter: hue-rotate(-120deg) saturate(4); }
-      40%  { transform: translate(-4px,2px) scale(1.03); filter: brightness(1.9) contrast(2.2); }
-      50%  { transform: translate(4px,-2px) scale(0.98); filter: invert(1) brightness(1.3); }
-      62%  { transform: translate(-3px,-2px) scale(1.02);
-             filter: hue-rotate(60deg) drop-shadow(2px 0 #f47921) drop-shadow(-2px 0 #22d3ee); }
-      74%  { transform: translate(2px,2px) scale(1); filter: brightness(1.4) saturate(2); }
-      86%  { transform: translate(-1px,1px); filter: contrast(1.6); }
-      100% { transform: translate(0,0) scale(1); filter: none; }
+      0%, 100% { transform: translate(0,0); filter: none; }
+      15% { transform: translate(-3px,-2px); filter: hue-rotate(90deg) brightness(1.2); }
+      30% { transform: translate(3px,2px);  filter: hue-rotate(-90deg) brightness(0.85); }
+      45% { transform: translate(-2px,2px); filter: contrast(2) saturate(2); }
+      60% { transform: translate(2px,-2px);
+            box-shadow: -4px -4px 0 rgba(244,121,33,0.7), 4px 4px 0 rgba(255,255,255,0.6), 0 0 40px rgba(244,121,33,0.5); }
+      80% { transform: translate(-1px,1px); filter: brightness(1.3); }
     }
-    /* the intro holds on the photo before the glitch hands over to the drawing */
-    .rail-portrait.show-real .pr-real  { opacity: 1; z-index: 4; }
-    .rail-portrait.show-real .pr-anime { opacity: 0; }
-
     @media (prefers-reduced-motion: reduce) {
       .rail-portrait.glitch { animation: none; }
     }
@@ -2167,21 +2156,11 @@
                     const pr = vid.play();
                     if (pr && pr.catch) pr.catch(function () { portrait.classList.remove('playing'); });
                 };
-                const runClip = function () {
+                window.playRailVideo = function () {
                     // preload is off, so the first open has no metadata to seek with yet
                     if (vid.readyState >= 1) { start(); return; }
                     vid.addEventListener('loadedmetadata', start, { once: true });
                     vid.load();
-                };
-                /* Opening About replays the old page's reveal: hold on the photo,
-                   glitch, hand over to the drawing, then run the clip. */
-                window.playRailVideo = function () {
-                    portrait.classList.add('show-real');
-                    setTimeout(function () {
-                        glitch();
-                        portrait.classList.remove('show-real');
-                        setTimeout(runClip, 420);
-                    }, 700);
                 };
             }
         }
