@@ -485,9 +485,10 @@
     .pv-body iframe { width: 100%; height: 100%; border: 0; display: block; }
     .pv-body img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
     .pv-empty {
+      position: absolute; inset: 0;
       background: var(--vs-editor);
       display: flex; align-items: center; justify-content: center; text-align: center;
-      color: var(--text-dim);
+      color: var(--text-dim); padding: 24px;
     }
     .pv-empty i { font-size: 26px; opacity: 0.4; }
     .pv-empty p { margin: 14px 0 6px; font-size: 14px; color: var(--text-secondary); }
@@ -1139,7 +1140,6 @@
                 tech: ['Django', 'Python', 'SQLite', 'HTML/CSS/JS'],
                 url: 'https://upliftksmo.pythonanywhere.com',
                 github: 'https://github.com/jhb09808/Capstone-UpliftReimagined',
-                preview: 'live',
                 status: 'live'
             },
             'cubby': {
@@ -1161,6 +1161,7 @@
                 url: 'https://race2space.pythonanywhere.com',
                 github: 'https://github.com/jhb09808/Project-Race2Space',
                 casestudy: 'race2space.html',
+                previewImage: 'images/race2space-cover.jpg',
                 status: 'live'
             },
             'bluejay': {
@@ -1172,6 +1173,7 @@
                 url: 'https://creighton4good.github.io/BlueJay-Bites/',
                 github: 'https://github.com/Creighton4Good/BlueJay-Bites',
                 casestudy: 'bluejaybites.html',
+                preview: 'live',
                 status: 'live'
             },
             'ledger': {
@@ -1202,6 +1204,7 @@
                 url: 'https://jeromebustarga.github.io/algorithm-mirror/',
                 paper: 'https://docs.google.com/document/d/1V7ndLPRx0Is2lB1Wk0kGXrQkSlPFbhMlZViS57otasE/edit?usp=sharing',
                 research: 'invisible.html',
+                preview: 'live',
                 status: 'live'
             },
             'koneksyon': {
@@ -1396,11 +1399,13 @@
                 const hasCase = project.casestudy;
 
                 /* Opening a project fills the editor pane with the site itself.
-                   Order of preference: a screenshot, the live site, then the local
-                   case study page. Only a slim bar sits above it. */
+                   Live embedding is opt-in via preview:'live', because most hosts
+                   send X-Frame-Options and the frame would show "refused to
+                   connect". Django defaults to DENY, so the PythonAnywhere apps
+                   use a screenshot instead. */
                 const previewSrc = project.previewImage
                     ? { kind: 'img', src: project.previewImage }
-                    : (project.status === 'live' && project.url)
+                    : (project.preview === 'live' && project.status === 'live' && project.url)
                         ? { kind: 'live', src: project.url }
                         : project.casestudy
                             ? { kind: 'case', src: project.casestudy + '?embed=1' }
@@ -1408,37 +1413,34 @@
 
                 const host = project.url
                     ? project.url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-                    : (project.casestudy ? project.casestudy : '');
+                    : (project.casestudy || project.codename);
                 const openHref = project.url || project.casestudy || project.github;
+                const openLink = openHref
+                    ? `<a class="pv-open" href="${openHref}" target="_blank" rel="noopener">Open in new tab <i class="fa-solid fa-arrow-up-right-from-square"></i></a>`
+                    : '';
 
-                let previewHTML;
-                if (previewSrc) {
-                    const inner = previewSrc.kind === 'img'
-                        ? `<img src="${previewSrc.src}" alt="${project.name}">`
-                        : `<iframe src="${previewSrc.src}" title="${project.name}" referrerpolicy="no-referrer"></iframe>`;
-                    previewHTML = `
-                        <div class="pv-full">
-                            <div class="pv-bar">
-                                <span class="pv-dots"><i></i><i></i><i></i></span>
-                                <span class="pv-url">${host}</span>
-                                ${openHref ? `<a class="pv-open" href="${openHref}" target="_blank" rel="noopener">Open in new tab <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
-                            </div>
-                            <div class="pv-body">${inner}</div>
-                        </div>`;
+                let body;
+                if (previewSrc && previewSrc.kind === 'img') {
+                    body = `<img src="${previewSrc.src}" alt="${project.name}">`;
+                } else if (previewSrc) {
+                    body = `<iframe src="${previewSrc.src}" title="${project.name}" referrerpolicy="no-referrer"></iframe>`;
                 } else {
-                    previewHTML = `
-                        <div class="pv-full">
-                            <div class="pv-bar">
-                                <span class="pv-dots"><i></i><i></i><i></i></span>
-                                <span class="pv-url">${project.codename}</span>
-                                ${openHref ? `<a class="pv-open" href="${openHref}" target="_blank" rel="noopener">Open in new tab <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
-                            </div>
-                            <div class="pv-body pv-empty">
-                                <div><i class="fa-solid fa-code"></i><p>No hosted preview for this one.</p>
-                                <span>See the source, or the details in the Outline panel.</span></div>
-                            </div>
-                        </div>`;
+                    body = `<div class="pv-empty"><div>
+                        <i class="fa-solid ${project.icon}"></i>
+                        <p>${project.url ? 'This site cannot be shown in a frame.' : 'No hosted preview for this one.'}</p>
+                        <span>${project.url ? 'Open it in a new tab to see it running.' : 'See the source, or the details in the Outline panel.'}</span>
+                    </div></div>`;
                 }
+
+                const previewHTML = `
+                    <div class="pv-full">
+                        <div class="pv-bar">
+                            <span class="pv-dots"><i></i><i></i><i></i></span>
+                            <span class="pv-url">${host}</span>
+                            ${openLink}
+                        </div>
+                        <div class="pv-body">${body}</div>
+                    </div>`;
                 
                 previewFrame.innerHTML = previewHTML;
                 previewFrame.classList.add('is-preview');
