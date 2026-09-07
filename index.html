@@ -2370,6 +2370,12 @@
         window.closeAbout = function () {
             backdrop.classList.remove('open');
             setTimeout(() => { backdrop.hidden = true; }, 240);
+            // Stop the portrait clip. Left running, it held a video decoder and
+            // kept the battery busy behind a closed dialog.
+            const v = document.getElementById('railVideo');
+            if (v) { try { v.pause(); v.currentTime = 0; } catch (e) {} }
+            const rp = document.getElementById('railPortrait');
+            if (rp) rp.classList.remove('playing');
             if (lastFocus && lastFocus.focus) lastFocus.focus();
         };
 
@@ -2424,7 +2430,10 @@
                illustration. Cropped to the same framing, 88 KB, and not
                fetched at all until the dialog is first opened. */
             const vid = document.getElementById('railVideo');
-            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            // Skip the clip on phones as well as for reduced motion: it is video
+            // decoding for a 96px circle, and phones pay for that.
+            const mq = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
+            const reduce = mq('(prefers-reduced-motion: reduce)') || mq('(max-width: 768px)');
             if (vid && !reduce) {
                 vid.addEventListener('ended', function () { portrait.classList.remove('playing'); });
                 const start = function () {
