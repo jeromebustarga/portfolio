@@ -755,6 +755,14 @@
     .about-facts .v a { color: var(--terminal-orange); text-decoration: none; }
     .about-facts .v a:hover { text-decoration: underline; }
 
+    .hon-list { margin-bottom: 4px; }
+    .hon-item { padding: 9px 0; border-bottom: 1px solid var(--vs-line); }
+    .hon-item:last-child { border-bottom: none; }
+    .hon-row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+    .hon-name { font-size: 13.5px; color: var(--text-primary); font-weight: 500; }
+    .hon-when { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); white-space: nowrap; }
+    .hon-org { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; }
+
     /* one block per role */
     .exp-role { padding: 0 0 22px; margin-bottom: 22px; border-bottom: 1px solid var(--vs-line); }
     .exp-role:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 4px; }
@@ -1772,6 +1780,7 @@
             <button type="button" data-pane="experience"><i class="fa-solid fa-briefcase"></i> Experience</button>
             <button type="button" data-pane="story"><i class="fa-solid fa-book-open"></i> Background</button>
             <button type="button" data-pane="skills"><i class="fa-solid fa-code"></i> Skills</button>
+            <button type="button" data-pane="honors"><i class="fa-solid fa-award"></i> Honors</button>
             <button type="button" data-pane="contact"><i class="fa-solid fa-paper-plane"></i> Contact</button>
             <a class="rail-resume" href="Jerome_Bustarga_Resume.pdf" download>
               <i class="fa-solid fa-file-arrow-down"></i> Download resume
@@ -1925,6 +1934,33 @@
               <div class="about-tags"><span>Git</span><span>Code review</span><span>Technical documentation</span><span>Deployment runbooks</span></div>
               <h3>Design</h3>
               <div class="about-tags"><span>Figma</span><span>Illustrator</span><span>Photoshop</span><span>InDesign</span><span>After Effects</span><span>Accessibility (WCAG)</span><span>Usability testing</span></div>
+            </div>
+
+            <!-- Honors -->
+            <div class="about-pane" data-pane="honors">
+              <h2>Honors &amp; Service</h2>
+              <p class="lede">Recognition for the work, and the volunteering that runs alongside it.</p>
+
+              <h3>Honors, awards &amp; certificates</h3>
+              <div class="hon-list">
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Outstanding Graduate in Graphic Design &amp; Film</span><span class="hon-when">May 2026</span></div><div class="hon-org">Creighton University</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Kappa Pi International Art Honors Society</span><span class="hon-when">Mar 2026</span></div><div class="hon-org">Creighton University Chapter</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Phi Alpha Theta International Honor Society in History</span><span class="hon-when">Apr 2026</span></div><div class="hon-org">Creighton University Chapter</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Data+ Analytics Certificate</span><span class="hon-when">Oct 2025</span></div><div class="hon-org">gener8tor Skills</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Film Festival Selections</span><span class="hon-when">2025</span></div><div class="hon-org">Flatwater Film Festival · Omaha Film Festival</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Joella Cohen Scholarship</span><span class="hon-when">Apr 2024</span></div><div class="hon-org">Creighton CSDJ</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Camarines Sur International Scholarship</span><span class="hon-when">Jul 2022</span></div><div class="hon-org">Provincial Government of Camarines Sur</div></div>
+              </div>
+
+              <h3>Service</h3>
+              <div class="hon-list">
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">GivePulse Ambassador Program</span><span class="hon-when">Oct 2024 – May 2025</span></div><div class="hon-org">Remote</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Cortina Living-Learning Community</span><span class="hon-when">Jan – May 2025</span></div><div class="hon-org">Omaha, NE</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Schlegel Center for Service and Justice</span><span class="hon-when">Jan – Dec 2023</span></div><div class="hon-org">Omaha, NE</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">+iMPACT Leadership</span><span class="hon-when">Jan 2021 – Jan 2022</span></div><div class="hon-org">Manila, Philippines</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Effective Altruism Blue</span><span class="hon-when">Mar – Jun 2021</span></div><div class="hon-org">Ateneo de Manila University · Manila, Philippines</div></div>
+                <div class="hon-item"><div class="hon-row"><span class="hon-name">Office of Senator Francis Pangilinan</span><span class="hon-when">Oct – Nov 2020</span></div><div class="hon-org">Manila, Philippines</div></div>
+              </div>
             </div>
 
             <!-- Contact -->
