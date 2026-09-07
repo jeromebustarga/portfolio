@@ -755,8 +755,16 @@
     .about-facts .v a { color: var(--terminal-orange); text-decoration: none; }
     .about-facts .v a:hover { text-decoration: underline; }
 
-    .rm-sub { font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
-              color: var(--text-dim); margin: -4px 0 18px; }
+    /* one block per role */
+    .exp-role { padding: 0 0 22px; margin-bottom: 22px; border-bottom: 1px solid var(--vs-line); }
+    .exp-role:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 4px; }
+    .exp-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .exp-co { font-size: 17px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+    .exp-when { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+    .exp-title { color: var(--terminal-orange); font-size: 13.5px; font-weight: 500; margin-top: 3px; }
+    .exp-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); margin: 4px 0 12px; }
+    .exp-group { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em;
+                 text-transform: uppercase; color: var(--text-dim); margin: 16px 0 8px; }
     .exp-list { list-style: none; margin: 0 0 4px; padding: 0; }
     .exp-list li {
       position: relative; padding: 0 0 11px 18px;
@@ -1789,35 +1797,99 @@
 
             <!-- Experience -->
             <div class="about-pane" data-pane="experience">
-              <h2>Creighton4Good <span>Software Development Intern · Feb–Aug 2026</span></h2>
-              <p class="rm-sub">Open-Source Software Lab · Omaha, NE (Remote) · 30 hrs/week</p>
-              <p class="lede">Built and shipped the team's first shared staging environment on AWS, then handed it over documented so the remaining developer could run it alone.</p>
+              <h2>Experience</h2>
+              <p class="lede">Five roles across software, infrastructure and design — most recently standing up a team's first cloud environment.</p>
 
-              <h3>Infrastructure &amp; deployment</h3>
-              <ul class="exp-list">
-                <li>Designed and deployed a containerized <strong>Spring Boot</strong> backend to <strong>AWS ECS Fargate</strong>, with RDS MySQL, S3, an Application Load Balancer, ECR, IAM roles and CloudWatch logging, giving the team its first shared staging environment.</li>
-                <li>Authored a <strong>multi-stage Dockerfile</strong> that cut image size by separating build and runtime stages, and established a repeatable deployment process the team adopted.</li>
-                <li>Diagnosed a load balancer <strong>health check misconfiguration</strong> that was silently failing every deployment, reasoning from rollout behaviour back to threshold timing against application startup.</li>
-              </ul>
+              <article class="exp-role">
+                <div class="exp-head">
+                  <span class="exp-co">Creighton4Good</span>
+                  <span class="exp-when">Feb – Aug 2026</span>
+                </div>
+                <div class="exp-title">Software Development Intern</div>
+                <div class="exp-meta">Open-Source Software Lab · Omaha, NE (Remote) · 30 hrs/week</div>
 
-              <h3>Security &amp; identity</h3>
-              <ul class="exp-list">
-                <li>Implemented <strong>HTTPS end to end</strong> for staging: generated the certificate signing request, coordinated issuance with Information Security, and configured TLS termination at the load balancer.</li>
-                <li>Debugged and fixed <strong>OAuth redirect URI</strong> generation behind a reverse proxy, unblocking <strong>Microsoft Entra</strong> single sign-on on web and mobile after months of being blocked.</li>
-                <li>Narrowed publicly exposed monitoring endpoints that were leaking configuration data on a public URL.</li>
-              </ul>
+                <div class="exp-group">Infrastructure &amp; deployment</div>
+                <ul class="exp-list">
+                  <li>Designed and deployed a containerized <strong>Spring Boot</strong> backend to <strong>AWS ECS Fargate</strong>, with RDS MySQL, S3, an Application Load Balancer, ECR, IAM roles and CloudWatch logging, giving the team its first shared staging environment.</li>
+                  <li>Authored a <strong>multi-stage Dockerfile</strong> that cut image size by separating build and runtime stages, and established a repeatable deployment process the team adopted.</li>
+                  <li>Diagnosed a load balancer <strong>health check misconfiguration</strong> that was silently failing every deployment, reasoning from rollout behaviour back to threshold timing against application startup.</li>
+                </ul>
 
-              <h3>Application development</h3>
-              <ul class="exp-list">
-                <li>Migrated photo storage from ephemeral container disk to <strong>Amazon S3</strong> with a scoped IAM task role, preserving the existing API contracts so no frontend changes were needed.</li>
-                <li>Implemented a scheduled job to close expired events, choosing a stored-status approach over read-time filtering to keep the database the single source of truth.</li>
-              </ul>
+                <div class="exp-group">Security &amp; identity</div>
+                <ul class="exp-list">
+                  <li>Implemented <strong>HTTPS end to end</strong> for staging: generated the certificate signing request, coordinated issuance with Information Security, and configured TLS termination at the load balancer.</li>
+                  <li>Debugged and fixed <strong>OAuth redirect URI</strong> generation behind a reverse proxy, unblocking <strong>Microsoft Entra</strong> single sign-on on web and mobile after months of being blocked.</li>
+                  <li>Narrowed publicly exposed monitoring endpoints that were leaking configuration data on a public URL.</li>
+                </ul>
 
-              <h3>Collaboration &amp; ownership</h3>
-              <ul class="exp-list">
-                <li>Reviewed pull requests across backend and frontend, catching authorization gaps, cross-platform inconsistencies and merge conflicts before they reached production.</li>
-                <li>Wrote the documentation for deployment, monitoring, certificate renewal, cost and known limitations, and led a handoff session so the remaining developer could maintain the environment independently.</li>
-              </ul>
+                <div class="exp-group">Application development</div>
+                <ul class="exp-list">
+                  <li>Migrated photo storage from ephemeral container disk to <strong>Amazon S3</strong> with a scoped IAM task role, preserving the existing API contracts so no frontend changes were needed.</li>
+                  <li>Implemented a scheduled job to close expired events, choosing a stored-status approach over read-time filtering to keep the database the single source of truth.</li>
+                </ul>
+
+                <div class="exp-group">Collaboration &amp; ownership</div>
+                <ul class="exp-list">
+                  <li>Reviewed pull requests across backend and frontend, catching authorization gaps, cross-platform inconsistencies and merge conflicts before they reached production.</li>
+                  <li>Wrote the documentation for deployment, monitoring, certificate renewal, cost and known limitations, and led a handoff session so the remaining developer could maintain the environment independently.</li>
+                </ul>
+              </article>
+
+              <article class="exp-role">
+                <div class="exp-head">
+                  <span class="exp-co">GRO</span>
+                  <span class="exp-when">Jun – Aug 2026</span>
+                </div>
+                <div class="exp-title">Web Design Intern</div>
+                <div class="exp-meta">Evansville, IN (Remote) · 20 hrs/week</div>
+                <ul class="exp-list">
+                  <li>Built custom, responsive <strong>WordPress</strong> pages from Figma mockups using Elementor Pro and Bricks Builder, with pixel-accurate implementation across desktop, tablet and mobile.</li>
+                  <li>Applied SEO and performance practices including semantic heading hierarchy, image optimization, metadata and <strong>Core Web Vitals</strong>, while building to accessibility and usability standards.</li>
+                  <li>Worked with UX/UI designers on handoff, ran QA for responsiveness and cross-device consistency, and resolved layout and Elementor issues.</li>
+                </ul>
+              </article>
+
+              <article class="exp-role">
+                <div class="exp-head">
+                  <span class="exp-co">HDR, Inc.</span>
+                  <span class="exp-when">May 2025 – Jan 2026</span>
+                </div>
+                <div class="exp-title">Corporate Marketing Services Intern</div>
+                <div class="exp-meta">Omaha, NE · 40 hrs/week</div>
+                <ul class="exp-list">
+                  <li>Created the Environmental Science and Planning onboarding document and designed assets for monthly internal events across cross-sector services.</li>
+                  <li>Produced graphics, digital assets and award submittals, and edited Arizona office headshots in InDesign, Photoshop and Illustrator, aligned to HDR's global brand standards.</li>
+                  <li>Edited engineering project feature videos, wrote internal articles and maintained SharePoint pages, supporting HDR Foundation initiatives with multidisciplinary teams.</li>
+                </ul>
+              </article>
+
+              <article class="exp-role">
+                <div class="exp-head">
+                  <span class="exp-co">BrookHaven Tax &amp; Accounting</span>
+                  <span class="exp-when">Jul – Dec 2025</span>
+                </div>
+                <div class="exp-title">Data Analytics &amp; Design Assistant</div>
+                <div class="exp-meta">Hartwell, GA (Remote) · 15 hrs/week</div>
+                <ul class="exp-list">
+                  <li>Built Excel automation tools including <strong>VBA macros</strong> and formula-driven dashboards, integrated with brand-compliant templates to streamline recurring client reporting.</li>
+                  <li>Designed brand-compliant graphics for client presentations, tax-season marketing and internal communications.</li>
+                  <li>Reported directly to the CEO, turning complex financial data into accessible dashboards and visual summaries for small-business clients and non-technical stakeholders.</li>
+                </ul>
+              </article>
+
+              <article class="exp-role">
+                <div class="exp-head">
+                  <span class="exp-co">Creighton iJay Store</span>
+                  <span class="exp-when">Jan – May 2025</span>
+                </div>
+                <div class="exp-title">Web Developer</div>
+                <div class="exp-meta">Apple Authorized Campus Store · Omaha, NE · 10 hrs/week</div>
+                <ul class="exp-list">
+                  <li>Led design and development of the iJay Alumni page in <strong>Shopify</strong>, a responsive landing experience connecting Creighton alumni with the campus Apple store.</li>
+                  <li>Built and maintained responsive pages in HTML, CSS, JavaScript, Java and Python as <strong>lead developer on a two-person team</strong>.</li>
+                  <li>Ran code reviews and tested across Chrome, Safari, Firefox and mobile for cross-browser compatibility and performance.</li>
+                </ul>
+              </article>
             </div>
 
             <!-- Background -->
