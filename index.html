@@ -108,7 +108,7 @@
         .nav-link:hover { background: rgba(244, 121, 33, 0.1); color: var(--terminal-orange); }
 
         /* Hamburger (mobile) */
-        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
+        .hamburger { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; min-width: 44px; min-height: 44px; }   /* 44px touch target */
         .hamburger span { width: 22px; height: 2px; background: var(--text-primary); transition: all 0.3s ease; border-radius: 2px; }
         .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
         .hamburger.active span:nth-child(2) { opacity: 0; }
@@ -423,6 +423,124 @@
         .ide { padding-top: calc(var(--title-h) + env(safe-area-inset-top, 0px)); margin-top: 0; height: 100%; }
       }
     }
+    /* ================= Mobile UI ================= */
+    /* Every control clears the 44px touch target minimum, focus is always
+       visible, and motion is dropped for anyone who asks for that. */
+    .skip-link {
+      position: absolute; left: 8px; top: -60px; z-index: 6000;
+      background: var(--terminal-orange); color: #0a0a0a;
+      padding: 12px 18px; border-radius: 8px; font-weight: 600;
+      text-decoration: none; transition: top 0.18s ease;
+    }
+    .skip-link:focus { top: 8px; }
+
+    :where(a, button, [tabindex]):focus-visible {
+      outline: 2px solid var(--terminal-orange);
+      outline-offset: 2px; border-radius: 6px;
+    }
+
+    .mobile-layout { -webkit-overflow-scrolling: touch; }
+    .m-hero { padding: 8px 0 30px; }
+    .m-eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--terminal-orange);
+    }
+    .m-title {
+      font-size: clamp(30px, 9vw, 42px); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.08; margin: 12px 0 0;
+    }
+    .m-title span { color: var(--text-dim); }
+    .m-lede { color: var(--text-secondary); font-size: 15px; line-height: 1.65; margin-top: 14px; }
+    .m-actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+    .m-btn {
+      flex: 1 1 auto; min-height: 48px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      padding: 13px 18px; border-radius: 10px; font-size: 14.5px; font-weight: 500;
+      text-decoration: none; cursor: pointer;
+      border: 1px solid var(--border-color); background: rgba(255,255,255,0.04);
+      color: var(--text-primary); font-family: inherit;
+    }
+    .m-btn-primary { background: var(--terminal-orange); border-color: var(--terminal-orange); color: #0a0a0a; }
+    .m-btn:active { transform: scale(0.985); }
+
+    .m-section { margin-top: 40px; }
+    .m-section-title {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
+      padding-bottom: 10px; border-bottom: 1px solid var(--vs-line); margin-bottom: 18px;
+    }
+
+    .m-card {
+      border: 1px solid var(--vs-line); border-radius: 14px;
+      padding: 18px; margin-bottom: 14px; background: rgba(255,255,255,0.015);
+    }
+    .m-card-name {
+      font-size: 17px; font-weight: 600; color: var(--text-primary);
+      display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin: 0;
+    }
+    .m-card-name i { color: var(--terminal-orange); font-size: 14px; }
+    .m-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 400;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--success-color);
+      border: 1px solid rgba(34,197,94,0.4); border-radius: 100px; padding: 2px 8px;
+    }
+    .m-card-desc { color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin: 10px 0 12px; }
+    .m-tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0 0 14px; }
+    .m-tags li {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      padding: 4px 9px; border-radius: 100px;
+      border: 1px solid var(--border-color); color: var(--text-secondary);
+    }
+    .m-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .m-link {
+      min-height: 44px; display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 15px; border-radius: 9px; font-size: 13.5px; font-weight: 500;
+      text-decoration: none; border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+    .m-link-primary { color: var(--terminal-orange); border-color: rgba(244,121,33,0.4); background: rgba(244,121,33,0.07); }
+
+    .m-disc { border: 1px solid var(--vs-line); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+    .m-disc-btn {
+      width: 100%; min-height: 52px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 15px 17px; background: none; border: none; cursor: pointer;
+      color: var(--text-primary); font-family: inherit; font-size: 15px; font-weight: 500;
+      text-align: left;
+    }
+    .m-disc-btn i { color: var(--text-dim); font-size: 12px; transition: transform 0.25s ease; }
+    .m-disc-btn[aria-expanded="true"] i { transform: rotate(180deg); }
+    .m-disc-btn[aria-expanded="true"] { color: var(--terminal-orange); }
+    .m-disc-body { padding: 0 17px 8px; border-top: 1px solid var(--vs-line); }
+    .m-disc-blurb { color: var(--text-dim); font-size: 13px; line-height: 1.6; margin: 13px 0; }
+    .m-disc-item {
+      display: block; min-height: 44px; padding: 11px 0;
+      border-top: 1px solid var(--vs-line); text-decoration: none;
+    }
+    .m-disc-name { display: block; color: var(--text-primary); font-size: 14.5px; }
+    .m-disc-meta {
+      display: block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--terminal-orange); margin-top: 3px;
+    }
+
+    .m-footer { margin-top: 46px; padding-top: 26px; border-top: 1px solid var(--vs-line); text-align: center; }
+    .m-footer > a { color: var(--terminal-orange); text-decoration: none; font-size: 15px;
+                    display: inline-flex; align-items: center; justify-content: center;
+                    min-height: 44px; padding: 0 12px; }   /* 44px touch target */
+    .m-social { display: flex; justify-content: center; gap: 10px; margin: 18px 0; }
+    .m-social a {
+      width: 46px; height: 46px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border-color); color: var(--text-secondary); text-decoration: none;
+    }
+    .m-copy { font-size: 12px; color: var(--text-dim); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .m-btn:active { transform: none; }
+      .m-disc-btn i { transition: none; }
+    }
+
     /* Mobile keeps normal document scrolling for .mobile-layout */
     </style>
     <style>/* layout-toggles — VS Code editor layout controls in the title bar */
@@ -860,6 +978,7 @@
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#mobileMain">Skip to content</a>
     <!-- Background Effects -->
     <div class="bg-effects">
         <div class="bg-grid"></div>
@@ -887,7 +1006,7 @@
                 <svg viewBox="0 0 16 16" aria-hidden="true"><rect class="o" x="1.5" y="2.5" width="13" height="11" rx="1.5"/><rect class="f" x="9.9" y="3.5" width="3.6" height="9"/></svg>
             </button>
         </div>
-        <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
     </header>
 
     <!-- Mobile Menu -->
@@ -1022,162 +1141,41 @@
     </div>
 
     <!-- ==================== MOBILE LAYOUT ==================== -->
-    <div class="mobile-layout">
-        <div class="mobile-header">
-            <div class="mobile-header-icon">
-                <i class="fa-solid fa-folder-tree"></i>
-            </div>
-            <h1 class="mobile-header-title">Project Repository</h1>
-            <p class="mobile-header-subtitle">Browse my work and experiments</p>
+    <!-- Mobile: generated from the same project data as the desktop tree -->
+    <main class="mobile-layout" id="mobileMain">
+      <header class="m-hero">
+        <p class="m-eyebrow">Jerome Bustarga</p>
+        <h1 class="m-title">Software developer<span> &amp; designer</span></h1>
+        <p class="m-lede">Backend services, cloud infrastructure and the front end. I build things that ship and document them so someone else can run them.</p>
+        <div class="m-actions">
+          <button type="button" class="m-btn m-btn-primary" data-about-open>
+            <i class="fa-solid fa-user" aria-hidden="true"></i> About me
+          </button>
+          <a class="m-btn" href="Jerome_Bustarga_Resume.pdf" download>
+            <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Resume
+          </a>
         </div>
+      </header>
 
-        <div class="mobile-terminal-notice">
-            <i class="fa-solid fa-terminal"></i>
-            <div class="mobile-terminal-notice-text">
-                Terminal interface available on desktop for the full experience
-            </div>
+      <section class="m-section" aria-labelledby="m-projects-h">
+        <h2 class="m-section-title" id="m-projects-h">Software</h2>
+        <div id="mProjects"></div>
+      </section>
+
+      <section class="m-section" aria-labelledby="m-design-h">
+        <h2 class="m-section-title" id="m-design-h">Design</h2>
+        <div id="mDesign"></div>
+      </section>
+
+      <footer class="m-footer">
+        <a href="mailto:jeromehadebustarga@gmail.com">jeromehadebustarga@gmail.com</a>
+        <div class="m-social">
+          <a href="https://github.com/jhb09808" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+          <a href="https://huggingface.co/jhb09808" target="_blank" rel="noopener" aria-label="Hugging Face"><i class="fa-solid fa-robot" aria-hidden="true"></i></a>
         </div>
-
-        <div class="mobile-projects-list">
-            <!-- Web Apps -->
-            <div class="mobile-section-title">/web-apps</div>
-            
-            <div class="mobile-project-card">
-                <div class="mobile-project-header">
-                    <div class="mobile-project-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
-                    <div class="mobile-project-title-wrap">
-                        <div class="mobile-project-name">Uplift KSMO</div>
-                        <div class="mobile-project-codename">/uplift</div>
-                    </div>
-                    <div class="mobile-project-status live"></div>
-                </div>
-                <div class="mobile-project-desc">
-                    Resource management platform for distributing essentials to the homeless. Features inventory tracking and volunteer coordination.
-                </div>
-                <div class="mobile-project-tech">
-                    <span class="mobile-tech-tag">Django</span>
-                    <span class="mobile-tech-tag">Python</span>
-                    <span class="mobile-tech-tag">SQLite</span>
-                </div>
-                <div class="mobile-project-actions">
-                    <a href="https://upliftksmo.pythonanywhere.com" target="_blank" class="mobile-project-btn mobile-project-btn-primary">
-                        <i class="fa-solid fa-external-link"></i> View Site
-                    </a>
-                    <a href="https://github.com/jhb09808/Capstone-UpliftReimagined" target="_blank" class="mobile-project-btn mobile-project-btn-secondary">
-                        <i class="fa-brands fa-github"></i> GitHub
-                    </a>
-                </div>
-            </div>
-
-            <div class="mobile-project-card">
-                <div class="mobile-project-header">
-                    <div class="mobile-project-icon"><i class="fa-solid fa-rocket"></i></div>
-                    <div class="mobile-project-title-wrap">
-                        <div class="mobile-project-name">Race2Space</div>
-                        <div class="mobile-project-codename">/r2s</div>
-                    </div>
-                    <div class="mobile-project-status live"></div>
-                </div>
-                <div class="mobile-project-desc">
-                    Platform highlighting achievements of developing countries in space exploration with interactive profiles.
-                </div>
-                <div class="mobile-project-tech">
-                    <span class="mobile-tech-tag">Django</span>
-                    <span class="mobile-tech-tag">Python</span>
-                    <span class="mobile-tech-tag">SQLite</span>
-                </div>
-                <div class="mobile-project-actions">
-                    <a href="https://race2space.pythonanywhere.com" target="_blank" class="mobile-project-btn mobile-project-btn-primary">
-                        <i class="fa-solid fa-external-link"></i> View Site
-                    </a>
-                    <a href="https://github.com/jhb09808/Project-Race2Space" target="_blank" class="mobile-project-btn mobile-project-btn-secondary">
-                        <i class="fa-brands fa-github"></i> GitHub
-                    </a>
-                </div>
-            </div>
-
-            <!-- Experiments -->
-            <div class="mobile-section-title">/experiments</div>
-
-            <div class="mobile-project-card">
-                <div class="mobile-project-header">
-                    <div class="mobile-project-icon"><i class="fa-solid fa-biohazard"></i></div>
-                    <div class="mobile-project-title-wrap">
-                        <div class="mobile-project-name">Digital Decay</div>
-                        <div class="mobile-project-codename">/decay</div>
-                    </div>
-                    <div class="mobile-project-status live"></div>
-                </div>
-                <div class="mobile-project-desc">
-                    Real-time image corruption simulator exploring digital preservation themes. Watch images rot through various decay algorithms.
-                </div>
-                <div class="mobile-project-tech">
-                    <span class="mobile-tech-tag">Rust</span>
-                    <span class="mobile-tech-tag">WebAssembly</span>
-                    <span class="mobile-tech-tag">React</span>
-                </div>
-                <div class="mobile-project-actions">
-                    <a href="https://github.com/jhb09808/digital-decay" target="_blank" class="mobile-project-btn mobile-project-btn-secondary">
-                        <i class="fa-brands fa-github"></i> GitHub
-                    </a>
-                </div>
-            </div>
-
-            <div class="mobile-project-card">
-                <div class="mobile-project-header">
-                    <div class="mobile-project-icon"><i class="fa-solid fa-chart-line"></i></div>
-                    <div class="mobile-project-title-wrap">
-                        <div class="mobile-project-name">The Algorithm Mirror</div>
-                        <div class="mobile-project-codename">/mirror</div>
-                    </div>
-                    <div class="mobile-project-status live"></div>
-                </div>
-                <div class="mobile-project-desc">
-                    A web-based tool that transforms YouTube watch histories into interactive visualizations, revealing how recommendation algorithms shape our viewing habits.
-                </div>
-                <div class="mobile-project-tech">
-                    <span class="mobile-tech-tag">JavaScript</span>
-                    <span class="mobile-tech-tag">p5.js</span>
-                    <span class="mobile-tech-tag">Gemini API</span>
-                </div>
-                <div class="mobile-project-actions">
-                    <a href="https://jeromebustarga.github.io/algorithm-mirror/" target="_blank" class="mobile-project-btn mobile-project-btn-primary">
-                        <i class="fa-solid fa-external-link"></i> Try Tool
-                    </a>
-                    <a href="invisible.html" class="mobile-project-btn mobile-project-btn-secondary">
-                        <i class="fa-solid fa-file-lines"></i> Research
-                    </a>
-                </div>
-            </div>
-
-            <!-- Advocacy -->
-            <div class="mobile-section-title">/advocacy</div>
-
-            <div class="mobile-project-card">
-                <div class="mobile-project-header">
-                    <div class="mobile-project-icon"><i class="fa-solid fa-globe-asia"></i></div>
-                    <div class="mobile-project-title-wrap">
-                        <div class="mobile-project-name">Koneksyon</div>
-                        <div class="mobile-project-codename">/koneksyon</div>
-                    </div>
-                    <div class="mobile-project-status live"></div>
-                </div>
-                <div class="mobile-project-desc">
-                    Interactive visualization of internet connectivity disparities across Philippine regions using 2024 government survey data.
-                </div>
-                <div class="mobile-project-tech">
-                    <span class="mobile-tech-tag">React</span>
-                    <span class="mobile-tech-tag">Leaflet</span>
-                    <span class="mobile-tech-tag">GeoJSON</span>
-                </div>
-                <div class="mobile-project-actions">
-                    <a href="https://github.com/jhb09808/philippine-internet-map" target="_blank" class="mobile-project-btn mobile-project-btn-secondary">
-                        <i class="fa-brands fa-github"></i> GitHub
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+        <p class="m-copy">&copy; 2026 Jerome Bustarga</p>
+      </footer>
+    </main>
 
     <script>
         // Page load
@@ -1189,17 +1187,32 @@
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
 
+        function setMenu(open) {
+            hamburgerBtn.classList.toggle('active', open);
+            mobileMenu.classList.toggle('active', open);
+            hamburgerBtn.setAttribute('aria-expanded', String(open));
+            if (open) {
+                const first = mobileMenu.querySelector('a, button');
+                if (first) first.focus();
+            }
+        }
         hamburgerBtn.addEventListener('click', () => {
-            hamburgerBtn.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
+            setMenu(hamburgerBtn.getAttribute('aria-expanded') !== 'true');
         });
 
-        // Close menu when clicking outside
+        // Close on outside click, and on Escape with focus handed back to the button
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.hamburger') && !e.target.closest('.mobile-menu')) {
-                hamburgerBtn.classList.remove('active');
-                mobileMenu.classList.remove('active');
+            if (!e.target.closest('.hamburger') && !e.target.closest('.mobile-menu')) setMenu(false);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && hamburgerBtn.getAttribute('aria-expanded') === 'true') {
+                setMenu(false);
+                hamburgerBtn.focus();
             }
+        });
+        // Choosing something closes the menu
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target.closest('a, button')) setMenu(false);
         });
 
         // Project Data with codenames
@@ -1724,6 +1737,75 @@
 
             if (welcomeTab) welcomeTab.onclick = function () { activate('welcome'); };
 
+            /* ---- Mobile: same data, built as accessible cards ---- */
+            (function buildMobile() {
+                const mp = document.getElementById('mProjects');
+                const md = document.getElementById('mDesign');
+                if (!mp || !md) return;
+                const esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+
+                Object.keys(projects).forEach(function (key) {
+                    const p = projects[key];
+                    const art = document.createElement('article');
+                    art.className = 'm-card';
+                    let links = '';
+                    if (p.status === 'live' && p.url) links += '<a class="m-link m-link-primary" href="' + p.url + '" target="_blank" rel="noopener">Live site <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>';
+                    if (p.casestudy) links += '<a class="m-link" href="' + p.casestudy + '">Case study</a>';
+                    if (p.github) links += '<a class="m-link" href="' + p.github + '" target="_blank" rel="noopener">Source</a>';
+                    art.innerHTML =
+                        '<h3 class="m-card-name"><i class="fa-solid ' + p.icon + '" aria-hidden="true"></i> ' + esc(p.name) +
+                        (p.status === 'live' ? ' <span class="m-badge">live</span>' : '') + '</h3>' +
+                        '<p class="m-card-desc">' + esc(p.description) + '</p>' +
+                        '<ul class="m-tags" aria-label="Stack">' + p.tech.map(function (t) {
+                            return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+                        (links ? '<div class="m-links">' + links + '</div>' : '');
+                    mp.appendChild(art);
+                });
+
+                /* Disciplines as disclosure panels — no dialogs to trap focus in */
+                const DISC_M = {
+                    graphic: 'Graphic Design', motion: 'Motion Design',
+                    web: 'Web Design', three: '3D Design'
+                };
+                Object.keys(DISC_M).forEach(function (k, i) {
+                    const src = document.querySelector('[data-work-open="' + k + '"]');
+                    if (!src) return;
+                    const wrap = document.createElement('div');
+                    wrap.className = 'm-disc';
+                    const id = 'm-disc-' + k;
+                    wrap.innerHTML =
+                        '<button type="button" class="m-disc-btn" aria-expanded="false" aria-controls="' + id + '">' +
+                          '<span>' + DISC_M[k] + '</span>' +
+                          '<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>' +
+                        '</button><div class="m-disc-body" id="' + id + '" hidden></div>';
+                    md.appendChild(wrap);
+                });
+
+                md.addEventListener('click', function (e) {
+                    const btn = e.target.closest('.m-disc-btn');
+                    if (!btn) return;
+                    const body = document.getElementById(btn.getAttribute('aria-controls'));
+                    const open = btn.getAttribute('aria-expanded') === 'true';
+                    // fill on first open, from the same table the dialogs use
+                    if (!open && !body.dataset.filled) {
+                        const key = body.id.replace('m-disc-', '');
+                        const d = window.DISC && window.DISC[key];
+                        if (d) {
+                            body.innerHTML = '<p class="m-disc-blurb">' + esc(d.blurb) + '</p>' +
+                                d.items.map(function (it) {
+                                    return '<a class="m-disc-item" href="' + it.h + '">' +
+                                        '<span class="m-disc-name">' + esc(it.n) + '</span>' +
+                                        '<span class="m-disc-meta">' + esc(it.m) + '</span></a>';
+                                }).join('');
+                            body.dataset.filled = '1';
+                        }
+                    }
+                    btn.setAttribute('aria-expanded', String(!open));
+                    body.hidden = open;
+                });
+            })();
+
             // Folder collapse/expand
             document.querySelectorAll('.tree-folder-label').forEach(label => {
                 label.addEventListener('click', function () {
@@ -2135,6 +2217,7 @@
             }
         };
 
+        window.DISC = DISC;
         const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
         const stack = [];   // open dialogs, topmost last
         let z = 5000;
