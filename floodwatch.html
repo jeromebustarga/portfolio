@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flood Watch PH · Jerome Bustarga</title>
+<meta name="description" content="An anomaly-detection system that flags statistically unusual Philippine government flood-control contracts across roughly 68,000 real DPWH projects, with a dashboard and a Tagalog/English RAG assistant.">
+<link rel="icon" type="image/png" href="images/favicon.png?v=26">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#05080f; --panel:#0b1020; --line:rgba(255,255,255,0.09);
+    --text:#f2f5fa; --dim:#9aa4bd; --faint:#6a7590;
+    --accent:#f47921; --cyan:#38bdf8; --green:#2ec27e; --amber:#eab308;
+    --serif:'Instrument Serif',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);background:radial-gradient(130% 60% at 50% 0%,#0a1226 0%,var(--bg) 58%);
+       color:var(--text);line-height:1.68;font-weight:300;overflow-x:hidden}
+  a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
+
+  .pf-nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 26px;background:rgba(5,8,15,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .pf-nav a{color:var(--text);font-size:13px}
+  .pf-nav .pf-logo{display:flex;align-items:center;gap:9px;font-weight:600}
+  .pf-nav .pf-logo img{width:24px;height:24px;border-radius:6px}
+  .pf-nav .pf-links{display:flex;gap:22px;align-items:center}
+  .pf-nav .pf-links a{opacity:.82;transition:opacity .25s,color .25s}
+  .pf-nav .pf-links a:hover{opacity:1;color:var(--accent)}
+  body.pf-embed .pf-nav{display:none!important}
+  body.pf-embed .wrap{padding-top:46px}
+
+  .wrap{max-width:960px;margin:0 auto;padding:118px 26px 90px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,7vw,74px);line-height:1.02;letter-spacing:-.02em;margin:16px 0 0}
+  h1 em{font-style:italic;color:var(--cyan)}
+  .lede{font-size:clamp(16px,2vw,19px);color:var(--dim);max-width:60ch;margin-top:22px}
+
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+  .btn{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:12px 20px;border-radius:100px;
+       font-size:14px;border:1px solid var(--line);color:var(--text);transition:.25s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:#08070a;font-weight:500}
+  .btn-primary:hover{color:#08070a;filter:brightness(1.08)}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:52px 0}
+  .stat{border:1px solid var(--line);border-radius:14px;padding:20px;background:rgba(255,255,255,.02)}
+  .stat b{display:block;font-family:var(--serif);font-size:32px;font-weight:400;color:var(--cyan);line-height:1}
+  .stat span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:8px}
+
+  section{margin-top:56px}
+  h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.6vw,38px);letter-spacing:-.01em;margin-bottom:8px}
+  h3{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+     font-weight:600;margin:32px 0 12px}
+  p{color:var(--dim);margin-top:14px;max-width:68ch}
+  p strong{color:var(--text);font-weight:500}
+  ul{list-style:none;margin-top:14px;max-width:68ch}
+  li{position:relative;padding:0 0 11px 20px;color:var(--dim)}
+  li::before{content:'';position:absolute;left:2px;top:10px;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.8}
+  li strong{color:var(--text);font-weight:500}
+
+  .note{border-left:2px solid var(--amber);background:rgba(234,179,8,.06);border-radius:0 12px 12px 0;
+        padding:18px 22px;margin-top:26px}
+  .note b{color:var(--amber);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .note p{margin-top:0;color:var(--dim)}
+
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .tags span{font-family:var(--mono);font-size:11.5px;padding:6px 13px;border-radius:100px;
+             border:1px solid var(--line);color:var(--dim)}
+
+  footer{border-top:1px solid var(--line);margin-top:70px;padding-top:26px;color:var(--faint);font-size:13px}
+  @media(max-width:640px){.wrap{padding:96px 20px 70px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="pf-nav">
+  <a class="pf-logo" href="index.html"><img src="images/logo.png?v=26" alt=""><span>Jerome Bustarga</span></a>
+  <div class="pf-links">
+    <a href="index.html">Repository</a>
+    <a href="about.html">About</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <span class="eyebrow">Machine Learning · Anomaly Detection · RAG</span>
+  <h1>Flood Watch <em>PH</em></h1>
+  <p class="lede">An anomaly-detection system that flags statistically unusual Philippine government
+     flood-control contracts, with a dashboard to explore the results and a Tagalog/English assistant
+     to ask questions about them.</p>
+
+  <div class="actions">
+    <a class="btn btn-primary" href="https://floodwatch.jeromebustarga.com" target="_blank" rel="noopener">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i> Open the live system
+    </a>
+    <a class="btn" href="https://huggingface.co/spaces/jhb09808/flood-watch-ph" target="_blank" rel="noopener">
+      <i class="fa-solid fa-code"></i> Source on Hugging Face
+    </a>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>~68,000</b><span>DPWH projects analysed</span></div>
+    <div class="stat"><b>₱3.34T</b><span>total approved budget</span></div>
+    <div class="stat"><b>~2,000</b><span>projects flagged</span></div>
+    <div class="stat"><b>139 MB</b><span>source dataset ingested</span></div>
+  </div>
+
+  <section>
+    <h2>The model</h2>
+    <p>An unsupervised <strong>Isolation Forest</strong> scores every project from 0 to 1 on how
+       statistically unusual it is. The signal comes from engineered features rather than any labelled
+       set of known-bad contracts, because no such labelled set exists.</p>
+    <h3>Features it scores on</h3>
+    <ul>
+      <li><strong>Budget size</strong> and where a project sits in the overall budget percentile.</li>
+      <li><strong>Round-number pricing</strong>, where an approved amount lands suspiciously evenly.</li>
+      <li><strong>Repeated identical descriptions and amounts</strong> across separate contracts.</li>
+      <li><strong>Contractor concentration</strong> within a region or district.</li>
+    </ul>
+    <p>Around 2,000 projects scored high enough to be flagged. Run blind against the real data, the
+       highest-scoring contractors turned out to be firms <strong>already under official
+       investigation</strong> — which is what validates the approach. The model was not told who they
+       were; it found them from the shape of the contracts alone.</p>
+
+    <div class="note">
+      <b>How to read a flag</b>
+      <p>A flag means <strong>statistically unusual, worth review</strong>. It is not a finding of
+         wrongdoing, and this project makes no such claim about any company. Official findings are for
+         the COA, the ICI and the Ombudsman to make. The underlying data is public and CC0.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Asking it questions</h2>
+    <p>A retrieval-augmented assistant sits on top of the same records. Multilingual embeddings
+       (<strong>multilingual-e5-small</strong>) index all 68,000 projects for retrieval, and a
+       multilingual model answers in <strong>Tagalog or English</strong>, grounded only in the records
+       actually retrieved rather than on its own recollection.</p>
+    <p>That grounding matters here more than usual: an assistant that improvises about public spending
+       would be worse than no assistant at all.</p>
+  </section>
+
+  <section>
+    <h2>Getting the data usable</h2>
+    <ul>
+      <li>Ingested a <strong>139 MB</strong> government dataset and filtered it down to flood control.</li>
+      <li>Recovered missing region and province for roughly <strong>35,000 rows</strong> by reverse
+          geocoding from coordinates, since the source left them blank.</li>
+      <li>Precomputed anomaly scores into the served data, so the dashboard stays responsive instead of
+          scoring on every request.</li>
+    </ul>
+    <p>Source: the DPWH transparency portal, via BetterGov.ph, released CC0.</p>
+  </section>
+
+  <section>
+    <h2>Stack</h2>
+    <div class="tags">
+      <span>Python</span><span>pandas</span><span>scikit-learn</span><span>Isolation Forest</span>
+      <span>sentence-transformers</span><span>multilingual-e5-small</span><span>Hugging Face Spaces</span>
+      <span>Hugging Face Inference</span><span>Hugging Face Datasets</span><span>Gradio</span>
+      <span>Leaflet</span><span>reverse geocoding</span><span>Google Colab</span>
+    </div>
+  </section>
+
+  <footer>
+    Data from the DPWH transparency portal via BetterGov.ph (CC0). Flags indicate statistical
+    outliers only.
+  </footer>
+</div>
+
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('pf-embed');</script>
+</body>
+</html>
