@@ -962,6 +962,9 @@
     }
     .wc-desc { font-size: 13px; line-height: 1.65; color: var(--text-secondary); }
 
+    /* the mobile-only sheet furniture stays out of the way on desktop */
+    .m-about-hero, .m-sec { display: none; }
+
     @media (max-width: 768px) {
       .about-backdrop { padding: 0; }
       .about-dialog {
@@ -970,37 +973,81 @@
       }
       .about-body { flex-direction: column; min-height: 0; }
 
-      /* The nav becomes a compact chip strip instead of a stacked list that
-         pushed the content off the first screen. */
-      .about-rail {
-        flex-direction: row; align-items: center; gap: 6px;
-        width: 100%; flex-shrink: 0; padding: 9px 12px;
-        border-right: none; border-bottom: 1px solid var(--vs-line);
-        overflow-x: auto; overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      .about-rail::-webkit-scrollbar { display: none; }
-      .about-rail .rail-label, .about-rail .rail-portrait { display: none; }
-      .about-rail button {
-        width: auto; margin: 0; flex-shrink: 0; white-space: nowrap;
-        min-height: 42px; padding: 10px 15px; border-radius: 100px;
-        background: rgba(255,255,255,0.04); font-size: 13px;
-      }
-      .about-rail button i { display: none; }
-      .about-rail button.active { background: rgba(244,121,33,0.14); }
+      /* one continuous scroll: no tab strip, every section stacked */
+      .about-rail { display: none; }
+      .about-content { padding: 0 0 92px; }
+      .about-pane { display: block !important; animation: none; }
 
-      /* Resume sits in a bar at the bottom, within thumb reach */
-      .rail-resume {
-        position: absolute; left: 14px; right: 14px; bottom: 14px;
-        margin: 0; min-height: 50px; z-index: 5;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+      /* hero */
+      .m-about-hero {
+        display: block; text-align: center;
+        padding: 30px 22px 26px;
+        background:
+          radial-gradient(120% 90% at 50% 0%, rgba(244,121,33,0.16), transparent 62%),
+          var(--vs-panel);
+        border-bottom: 1px solid var(--vs-line);
       }
-      .about-content { padding: 22px 18px 86px; }
-      .about-pane h2 { font-size: 23px; }
-      .about-facts .k { width: 96px; font-size: 11px; }
-      .exp-head { gap: 6px; }
+      .m-about-photo {
+        width: 108px; height: 108px; margin: 0 auto 16px; position: relative;
+        border-radius: 50%; overflow: hidden; cursor: pointer;
+        border: 2px solid rgba(244,121,33,0.4);
+        box-shadow: 0 10px 34px rgba(0,0,0,0.5);
+      }
+      .m-about-photo img {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; transition: opacity 0.4s ease;
+      }
+      .m-about-photo .ph-anime { opacity: 1; }
+      .m-about-photo .ph-real  { opacity: 0; }
+      .m-about-photo.show-real .ph-anime { opacity: 0; }
+      .m-about-photo.show-real .ph-real  { opacity: 1; }
+      .m-about-name { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+      .m-about-role { color: var(--terminal-orange); font-size: 14px; margin: 5px 0 0; }
+      .m-about-status {
+        display: inline-flex; align-items: center; gap: 7px; margin: 14px 0 0;
+        font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-secondary);
+        border: 1px solid var(--vs-line); border-radius: 100px; padding: 6px 14px;
+      }
+      .m-about-status .dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--success-color); box-shadow: 0 0 7px var(--success-color);
+      }
+
+      /* sticky section header per stacked pane */
+      .m-sec {
+        display: block; position: sticky; top: 0; z-index: 4;
+        padding: 13px 22px; margin: 0 0 4px;
+        font-family: 'JetBrains Mono', monospace; font-size: 11px;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--terminal-orange);
+        background: rgba(10,10,10,0.94);
+        -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+        border-bottom: 1px solid var(--vs-line);
+      }
+      .about-pane > *:not(.m-sec) { padding-left: 22px; padding-right: 22px; }
+      .about-pane { padding-bottom: 26px; }
+
+      /* the sticky label already names the section, so drop the heading under it */
+      .about-pane > h2 { display: none; }
+      .about-pane .lede { font-size: 15px; line-height: 1.7; margin-top: 16px; }
+      .about-pane h3 { margin-top: 26px; }
+
+      /* facts read as stacked rows rather than a squeezed two-column table */
+      .about-facts div { flex-direction: column; gap: 3px; padding: 11px 0; }
+      .about-facts .k { width: auto; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+      .about-facts .v { font-size: 15px; }
+
+      .exp-head { flex-direction: column; align-items: flex-start; gap: 3px; }
+      .exp-co { font-size: 18px; }
       .hon-row { flex-direction: column; gap: 2px; }
+      .about-tags span { font-size: 12px; padding: 6px 12px; }
+
+      /* resume stays in thumb reach */
+      .rail-resume {
+        display: flex; position: fixed; left: 14px; right: 14px; bottom: 14px;
+        margin: 0; min-height: 52px; z-index: 20; font-size: 13.5px;
+        background: var(--terminal-orange); border-color: var(--terminal-orange); color: #0a0a0a;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      }
     }
     </style>
 </head>
@@ -2426,6 +2473,46 @@
             const b = e.target.closest('button[data-pane]');
             if (b) showPane(b.dataset.pane);
         });
+        /* ---- Mobile: one continuous sheet, no tabs ----
+           The panes are stacked and every one is shown; a hero and sticky
+           section headers are inserted once and hidden on desktop by CSS. */
+        (function buildAboutSheet() {
+            const content = backdrop.querySelector('.about-content');
+            if (!content) return;
+
+            const hero = document.createElement('div');
+            hero.className = 'm-about-hero';
+            hero.innerHTML =
+                '<div class="m-about-photo">' +
+                  '<img class="ph-anime" src="images/portrait-anime.jpg" alt="Jerome Bustarga, illustrated">' +
+                  '<img class="ph-real" src="images/portrait-real.jpg" alt="" aria-hidden="true">' +
+                '</div>' +
+                '<h2 class="m-about-name">Jerome Bustarga</h2>' +
+                '<p class="m-about-role">Software Developer</p>' +
+                '<p class="m-about-status"><span class="dot"></span> Open to opportunities</p>';
+            content.insertBefore(hero, content.firstChild);
+
+            // tap the photo to flip between the drawing and the photograph
+            const photo = hero.querySelector('.m-about-photo');
+            photo.addEventListener('click', function () { photo.classList.toggle('show-real'); });
+
+            rail.querySelectorAll('button[data-pane]').forEach(function (btn) {
+                const pane = backdrop.querySelector('.about-pane[data-pane="' + btn.dataset.pane + '"]');
+                if (!pane) return;
+                const h2 = pane.querySelector('h2');
+                // the pane's own heading is more specific than the rail label
+                // ("Honors & Service" rather than just "Honors")
+                let label = btn.textContent.trim();
+                if (h2) {
+                    const own = (h2.childNodes[0] && h2.childNodes[0].textContent || '').trim();
+                    if (own && !/^Jerome/.test(own)) label = own;
+                }
+                const h = document.createElement('div');
+                h.className = 'm-sec';
+                h.textContent = label;
+                pane.insertBefore(h, pane.firstChild);
+            });
+        })();
 
         // glitch on the way in and on the way back out
         const portrait = document.getElementById('railPortrait');
