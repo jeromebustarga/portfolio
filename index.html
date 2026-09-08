@@ -1588,6 +1588,15 @@
         /* Builds the contents of a pane. 'readme' renders the project's README,
            'site' embeds the live site or its screenshot, 'case' embeds the local
            case study page. */
+        /* The source link is not always GitHub — Flood Watch lives on a Hugging
+           Face Space — so label and icon come from the host. */
+        window.sourceMeta = function (url) {
+            if (/huggingface\.co/.test(url)) return { label: 'Hugging Face', icon: 'fa-solid fa-code' };
+            if (/gitlab\.com/.test(url))     return { label: 'GitLab',       icon: 'fa-brands fa-gitlab' };
+            if (/github\.com/.test(url))     return { label: 'GitHub',       icon: 'fa-brands fa-github' };
+            return { label: 'source', icon: 'fa-solid fa-code' };
+        };
+
         window.buildPane = function (key, kind) {
             const project = projects[key];
             if (!project) return '';
@@ -1598,7 +1607,10 @@
                     : '<span class="rm-badge">' + project.status + '</span>';
                 let links = '';
                 if (project.url) links += '<li><a href="' + project.url + '" target="_blank" rel="noopener">Live site</a> — <code>' + project.url.replace(/^https?:\/\//, '') + '</code></li>';
-                if (project.github) links += '<li><a href="' + project.github + '" target="_blank" rel="noopener">Source on GitHub</a></li>';
+                if (project.github) {
+                    const sm = window.sourceMeta(project.github);
+                    links += '<li><a href="' + project.github + '" target="_blank" rel="noopener">Source on ' + sm.label + '</a></li>';
+                }
                 if (project.casestudy) links += '<li><a href="' + project.casestudy + '" target="_blank" rel="noopener">Case study</a></li>';
                 if (project.research) links += '<li><a href="' + project.research + '" target="_blank" rel="noopener">Research</a></li>';
                 if (project.paper) links += '<li><a href="' + project.paper + '" target="_blank" rel="noopener">Paper</a></li>';
@@ -1838,7 +1850,10 @@
                     let links = '';
                     if (p.status === 'live' && p.url) links += '<a class="m-link m-link-primary" href="' + p.url + '" target="_blank" rel="noopener">Live site <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>';
                     if (p.casestudy) links += '<a class="m-link" href="' + p.casestudy + '">Case study</a>';
-                    if (p.github) links += '<a class="m-link" href="' + p.github + '" target="_blank" rel="noopener">Source</a>';
+                    if (p.github) {
+                        const sm = window.sourceMeta ? window.sourceMeta(p.github) : { label: 'source' };
+                        links += '<a class="m-link" href="' + p.github + '" target="_blank" rel="noopener">Source on ' + sm.label + '</a>';
+                    }
                     art.innerHTML =
                         '<h3 class="m-card-name"><i class="fa-solid ' + p.icon + '" aria-hidden="true"></i> ' + esc(p.name) +
                         (p.status === 'live' ? ' <span class="m-badge">live</span>' : '') + '</h3>' +
@@ -2229,7 +2244,10 @@
             }
             const links = [];
             if (p.url) links.push(['fa-solid fa-arrow-up-right-from-square', 'Live site', p.url]);
-            if (p.github) links.push(['fa-brands fa-github', 'Source', p.github]);
+            if (p.github) {
+                const sm = window.sourceMeta ? window.sourceMeta(p.github) : { label: 'Source', icon: 'fa-solid fa-code' };
+                links.push([sm.icon, 'Source on ' + sm.label, p.github]);
+            }
             if (p.research) links.push(['fa-solid fa-file-lines', 'Research', p.research]);
             if (p.paper) links.push(['fa-solid fa-file-lines', 'Paper', p.paper]);
             if (links.length) {
