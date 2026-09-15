@@ -962,6 +962,69 @@
     }
     .wc-desc { font-size: 13px; line-height: 1.65; color: var(--text-secondary); }
 
+    /* ================= Guided tour ================= */
+    .tour-mask {
+      position: fixed; inset: 0; z-index: 7000; pointer-events: auto;
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .tour-mask.on { opacity: 1; }
+    /* the cutout is a box-shadow spread big enough to cover the rest of the page */
+    .tour-hole {
+      position: fixed; border-radius: 10px; pointer-events: none;
+      box-shadow: 0 0 0 9999px rgba(4,4,6,0.78), 0 0 0 2px var(--terminal-orange),
+                  0 0 26px rgba(244,121,33,0.4);
+      transition: top 0.3s cubic-bezier(.16,1,.3,1), left 0.3s cubic-bezier(.16,1,.3,1),
+                  width 0.3s cubic-bezier(.16,1,.3,1), height 0.3s cubic-bezier(.16,1,.3,1);
+    }
+    .tour-pop {
+      position: fixed; z-index: 7010; width: 320px; max-width: calc(100vw - 32px);
+      background: var(--vs-sidebar); border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 18px 19px 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+      transition: top 0.3s cubic-bezier(.16,1,.3,1), left 0.3s cubic-bezier(.16,1,.3,1);
+    }
+    .tour-step {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
+    }
+    .tour-pop h4 {
+      font-size: 16px; font-weight: 600; color: var(--text-primary);
+      margin: 7px 0 7px; letter-spacing: -0.01em;
+    }
+    .tour-pop p { font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+    .tour-pop code {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      color: var(--terminal-orange); background: rgba(244,121,33,0.1);
+      padding: 1px 6px; border-radius: 4px;
+    }
+    .tour-nav { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+    .tour-dots { display: flex; gap: 5px; margin-right: auto; }
+    .tour-dots i {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.2); display: block;
+    }
+    .tour-dots i.on { background: var(--terminal-orange); }
+    .tour-btn {
+      min-height: 34px; padding: 8px 15px; border-radius: 7px; cursor: pointer;
+      font-family: inherit; font-size: 12.5px; font-weight: 500;
+      border: 1px solid var(--border-color); background: none; color: var(--text-secondary);
+    }
+    .tour-btn:hover { color: var(--text-primary); border-color: var(--border-hover); }
+    .tour-btn.primary {
+      background: var(--terminal-orange); border-color: var(--terminal-orange); color: #0a0a0a;
+    }
+    .tour-skip {
+      position: fixed; z-index: 7010; right: 22px; bottom: 20px;
+      font-size: 12.5px; color: var(--text-dim); background: none; border: none;
+      cursor: pointer; font-family: inherit; padding: 10px 14px;
+    }
+    .tour-skip:hover { color: var(--text-primary); }
+    @media (prefers-reduced-motion: reduce) {
+      .tour-mask, .tour-hole, .tour-pop { transition: none; }
+    }
+    /* the IDE metaphor is desktop-only, and so is the tour */
+    @media (max-width: 768px) { .tour-mask, .tour-hole, .tour-pop, .tour-skip { display: none !important; } }
+
     /* the mobile-only sheet furniture stays out of the way on desktop */
     .m-about-hero, .m-sec { display: none; }
 
@@ -1135,6 +1198,7 @@
                             <div class="welcome-cols">
                                 <div class="welcome-start">
                                     <div class="welcome-h">Start</div>
+                                    <div class="welcome-action" onclick="window.startTour && window.startTour()"><i class="fa-solid fa-route"></i> Take the tour <span class="desc">— 5 stops, 30 seconds</span></div>
                                     <div class="welcome-action" onclick="document.getElementById('terminalInput').focus()"><i class="fa-solid fa-terminal"></i> Use the terminal <span class="desc">— type <code style="color:inherit">help</code></span></div>
                                     <div class="welcome-action" onclick="loadProject('uplift')"><i class="fa-solid fa-folder-open"></i> Open a project <span class="desc">— pick from Explorer</span></div>
                                     <a class="welcome-action" href="https://github.com/jhb09808" target="_blank" style="text-decoration:none"><i class="fa-brands fa-github"></i> Browse GitHub <span class="desc">— @jhb09808</span></a>
@@ -1465,7 +1529,11 @@
                 addOutput('  open [file]   Open a project', 'output');
                 addOutput('  info          Current project info', 'output');
                 addOutput('  about         Open the about dialog', 'output');
+                addOutput('  tour          Replay the guided tour', 'output');
                 addOutput('  clear         Clear terminal', 'output');
+            } else if (mainCmd === 'tour') {
+                addOutput('Starting the tour...', 'output-success');
+                setTimeout(function () { if (window.startTour) window.startTour(); }, 300);
             } else if (mainCmd === 'about' || mainCmd === 'whoami') {
                 addOutput('Opening about...', 'output-success');
                 setTimeout(() => openAbout(), 300);
@@ -2439,6 +2507,151 @@
             const top = stack[stack.length - 1];
             if (top.classList.contains('open')) { e.stopPropagation(); close(top); }
         }, true);
+    })();
+    </script>
+
+    <script>
+    /* Guided tour — points out the parts of the layout a first-time visitor
+       would otherwise never open: the other disciplines, the Outline, About,
+       and the fact that the terminal is real. */
+    (function () {
+        const KEY = 'jw-tour-seen-v1';
+        const ide = document.querySelector('.ide');
+        if (!ide) return;
+
+        const STEPS = [
+            {
+                el: '.sidebar',
+                title: 'Every project is a folder',
+                body: 'Open a project to read its README, see the live site, or jump to the case study.',
+                place: 'right'
+            },
+            {
+                el: '.activity-top',
+                title: 'There is more than software',
+                body: 'Graphic design, motion, web design and real-time 3D each open their own set of projects.',
+                place: 'right'
+            },
+            {
+                el: '.sidebar-secondary',
+                title: 'Outline shows the details',
+                body: 'Whatever project you have open, its stack and every related link appear here.',
+                place: 'left',
+                before: function () { ide.classList.add('with-secondary'); syncLayoutButtons(); }
+            },
+            {
+                el: '.activity-avatar',
+                title: 'Click to learn more about Jerome',
+                body: 'Experience, background, skills, honours and a downloadable resume.',
+                place: 'right'
+            },
+            {
+                el: '.term-panel',
+                title: 'The terminal is real',
+                body: 'Try <code>ls</code>, <code>cd floodwatch</code>, <code>open README.md</code> or <code>about</code>.',
+                place: 'top'
+            }
+        ];
+
+        function syncLayoutButtons() {
+            const t = document.getElementById('tglSecondary');
+            if (t) { t.classList.add('active'); t.setAttribute('aria-pressed', 'true'); }
+        }
+
+        let i = 0, mask, hole, pop, skip, lastFocus;
+
+        function place(step) {
+            const target = document.querySelector(step.el);
+            if (!target) { next(); return; }
+            const r = target.getBoundingClientRect();
+            const pad = 6;
+            hole.style.top = (r.top - pad) + 'px';
+            hole.style.left = (r.left - pad) + 'px';
+            hole.style.width = (r.width + pad * 2) + 'px';
+            hole.style.height = (r.height + pad * 2) + 'px';
+
+            pop.querySelector('.tour-step').textContent = 'Step ' + (i + 1) + ' of ' + STEPS.length;
+            pop.querySelector('h4').textContent = step.title;
+            pop.querySelector('p').innerHTML = step.body;
+            pop.querySelectorAll('.tour-dots i').forEach(function (d, n) { d.classList.toggle('on', n === i); });
+            pop.querySelector('.tour-next').textContent = (i === STEPS.length - 1) ? 'Done' : 'Next';
+            pop.querySelector('.tour-back').style.visibility = i === 0 ? 'hidden' : 'visible';
+
+            // position the bubble against the highlighted area, kept on screen
+            const pr = pop.getBoundingClientRect();
+            let top, left;
+            if (step.place === 'right')      { top = r.top; left = r.right + 18; }
+            else if (step.place === 'left')  { top = r.top; left = r.left - pr.width - 18; }
+            else                             { top = r.top - pr.height - 18; left = r.left + 24; }
+            top = Math.max(14, Math.min(top, window.innerHeight - pr.height - 14));
+            left = Math.max(14, Math.min(left, window.innerWidth - pr.width - 14));
+            pop.style.top = top + 'px';
+            pop.style.left = left + 'px';
+        }
+
+        function show() {
+            const step = STEPS[i];
+            if (step.before) step.before();
+            requestAnimationFrame(function () { place(step); });
+        }
+        function next() { if (i < STEPS.length - 1) { i++; show(); } else end(); }
+        function back() { if (i > 0) { i--; show(); } }
+
+        function end() {
+            try { localStorage.setItem(KEY, '1'); } catch (e) {}
+            [mask, hole, pop, skip].forEach(function (n) { if (n) n.remove(); });
+            mask = hole = pop = skip = null;
+            document.removeEventListener('keydown', onKey, true);
+            window.removeEventListener('resize', onResize);
+            if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+        function onKey(e) {
+            if (e.key === 'Escape') { e.stopPropagation(); end(); }
+            else if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); next(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); back(); }
+        }
+        function onResize() { if (pop) place(STEPS[i]); }
+
+        window.startTour = function () {
+            if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) return;
+            if (pop) return;
+            lastFocus = document.activeElement;
+            i = 0;
+
+            mask = document.createElement('div'); mask.className = 'tour-mask';
+            hole = document.createElement('div'); hole.className = 'tour-hole';
+            pop = document.createElement('div');
+            pop.className = 'tour-pop';
+            pop.setAttribute('role', 'dialog');
+            pop.setAttribute('aria-live', 'polite');
+            pop.setAttribute('aria-label', 'Site tour');
+            pop.innerHTML =
+                '<div class="tour-step"></div><h4></h4><p></p>' +
+                '<div class="tour-nav"><div class="tour-dots">' +
+                    STEPS.map(function () { return '<i></i>'; }).join('') +
+                '</div>' +
+                '<button type="button" class="tour-btn tour-back">Back</button>' +
+                '<button type="button" class="tour-btn primary tour-next">Next</button></div>';
+            skip = document.createElement('button');
+            skip.type = 'button'; skip.className = 'tour-skip'; skip.textContent = 'Skip tour';
+
+            document.body.append(mask, hole, pop, skip);
+            requestAnimationFrame(function () { mask.classList.add('on'); });
+
+            pop.querySelector('.tour-next').addEventListener('click', next);
+            pop.querySelector('.tour-back').addEventListener('click', back);
+            skip.addEventListener('click', end);
+            mask.addEventListener('click', end);
+            document.addEventListener('keydown', onKey, true);
+            window.addEventListener('resize', onResize);
+            pop.querySelector('.tour-next').focus();
+            show();
+        };
+
+        // first visit only, and never on a phone
+        let seen = true;
+        try { seen = localStorage.getItem(KEY) === '1'; } catch (e) { seen = true; }
+        if (!seen) setTimeout(function () { window.startTour(); }, 1400);
     })();
     </script>
 
