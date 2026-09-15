@@ -962,6 +962,12 @@
     }
     .wc-desc { font-size: 13px; line-height: 1.65; color: var(--text-secondary); }
 
+    .sb-tour {
+      background: none; border: none; font: inherit; cursor: pointer;
+      color: var(--terminal-orange); display: inline-flex; align-items: center; gap: 6px;
+    }
+    .sb-tour:hover { background: rgba(244,121,33,0.16); }
+
     /* ================= Guided tour ================= */
     /* Four blurred panels fence off the target instead of one dim sheet, so the
        highlighted control stays sharp while everything else goes soft. */
@@ -1292,6 +1298,9 @@
                 <span class="sb-item ok"><i class="fa-solid fa-circle-check"></i> 0 <i class="fa-solid fa-triangle-exclamation" style="margin-left:8px"></i> 0</span>
             </div>
             <div class="sb-right">
+                <button type="button" class="sb-item sb-tour" id="sbTour" title="Replay the guided tour">
+                    <i class="fa-solid fa-circle-question"></i> Tour
+                </button>
                 <span class="sb-item" id="sbLang"><i class="fa-solid fa-folder"></i> repository</span>
                 <span class="sb-item">UTF-8</span>
                 <span class="sb-item">Jerome's World</span>
@@ -2537,7 +2546,7 @@
        would otherwise never open: the other disciplines, the Outline, About,
        and the fact that the terminal is real. */
     (function () {
-        const KEY = 'jw-tour-seen-v1';
+        const KEY = 'jw-tour-seen-v2';
         const ide = document.querySelector('.ide');
         if (!ide) return;
 
@@ -2675,11 +2684,13 @@
             if (step.before) step.before();
             requestAnimationFrame(function () { place(step); });
         }
-        function next() { if (i < STEPS.length - 1) { i++; show(); } else end(); }
+        function next() { if (i < STEPS.length - 1) { i++; show(); } else end(true); }
         function back() { if (i > 0) { i--; show(); } }
 
-        function end() {
-            try { localStorage.setItem(KEY, '1'); } catch (e) {}
+        function end(remember) {
+            // only a deliberate finish or skip counts; a stray backdrop click
+            // should not stop the tour ever appearing again
+            if (remember) { try { localStorage.setItem(KEY, '1'); } catch (e) {} }
             Object.keys(blur).forEach(function (k) { if (blur[k]) blur[k].remove(); });
             blur = {};
             [ring, arrow, pop, skip].forEach(function (n) { if (n) n.remove(); });
@@ -2689,7 +2700,7 @@
             if (lastFocus && lastFocus.focus) lastFocus.focus();
         }
         function onKey(e) {
-            if (e.key === 'Escape') { e.stopPropagation(); end(); }
+            if (e.key === 'Escape') { e.stopPropagation(); end(false); }
             else if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); next(); }
             else if (e.key === 'ArrowLeft') { e.preventDefault(); back(); }
         }
@@ -2730,13 +2741,16 @@
 
             pop.querySelector('.tour-next').addEventListener('click', next);
             pop.querySelector('.tour-back').addEventListener('click', back);
-            skip.addEventListener('click', end);
-            Object.keys(blur).forEach(function (k) { blur[k].addEventListener('click', end); });
+            skip.addEventListener('click', function () { end(true); });
+            Object.keys(blur).forEach(function (k) { blur[k].addEventListener('click', function () { end(false); }); });
             document.addEventListener('keydown', onKey, true);
             window.addEventListener('resize', onResize);
             pop.querySelector('.tour-next').focus();
             show();
         };
+
+        const sbTour = document.getElementById('sbTour');
+        if (sbTour) sbTour.addEventListener('click', function () { window.startTour(); });
 
         // first visit only, and never on a phone
         let seen = true;
