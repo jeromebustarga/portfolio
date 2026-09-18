@@ -1407,6 +1407,7 @@
                 github: 'https://github.com/jhb09808',
                 casestudy: 'pandelino.html',
                 previewImage: 'images/pandelino-erd.jpg',
+                previewFile: 'erd.png',
                 status: 'live'
             },
             'uplift': {
@@ -1790,7 +1791,14 @@
                 const p = projects[key];
                 const list = [{ name: 'README.md', kind: 'readme', icon: 'fa-solid fa-book' }];
                 if (p.previewImage || (p.preview === 'live' && p.status === 'live' && p.url)) {
-                    list.push({ name: 'index.html', kind: 'site', icon: 'fa-brands fa-html5' });
+                    // a live site is index.html; a project with only a screenshot is not a
+                    // website, so it names its preview after what the file really is
+                    const isSite = !p.previewImage;
+                    list.push({
+                        name: p.previewFile || (isSite ? 'index.html' : 'preview.png'),
+                        kind: 'site',
+                        icon: isSite ? 'fa-brands fa-html5' : 'fa-solid fa-image'
+                    });
                 }
                 if (p.casestudy) {
                     list.push({ name: 'case-study.html', kind: 'case', icon: 'fa-solid fa-book-open' });
