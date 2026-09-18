@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Pandelino — Order Management System · Jerome Bustarga</title>
+<meta name="description" content="A normalized relational database running the ordering, menu, pricing and payment operations of a family-run Philippine pizzeria. Eleven tables, date-effective pricing, price snapshotting. Presented at Creighton University Research Week 2026.">
+<link rel="icon" type="image/png" href="images/favicon.png?v=26">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06090d; --panel:#0b1118; --line:rgba(255,255,255,0.09);
+    --text:#f2f5f8; --dim:#98a3b3; --faint:#67728a;
+    --accent:#f47921; --teal:#2ec4a6; --blue:#4a9fe0;
+    --serif:'Instrument Serif',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);background:radial-gradient(130% 55% at 50% 0%,#0b1524 0%,var(--bg) 58%);
+       color:var(--text);line-height:1.68;font-weight:300;overflow-x:hidden}
+  a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
+
+  .pf-nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 26px;background:rgba(6,9,13,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .pf-nav a{color:var(--text);font-size:13px}
+  .pf-nav .pf-logo{display:flex;align-items:center;gap:9px;font-weight:600}
+  .pf-nav .pf-logo img{width:24px;height:24px;border-radius:6px}
+  .pf-nav .pf-links{display:flex;gap:22px;align-items:center}
+  .pf-nav .pf-links a{opacity:.82;transition:opacity .25s,color .25s}
+  .pf-nav .pf-links a:hover{opacity:1;color:var(--accent)}
+  body.pf-embed .pf-nav{display:none!important}
+  body.pf-embed .wrap{padding-top:46px}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:118px 26px 90px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,7vw,72px);line-height:1.02;letter-spacing:-.02em;margin:16px 0 0}
+  h1 em{font-style:italic;color:var(--teal)}
+  .lede{font-size:clamp(16px,2vw,19px);color:var(--dim);max-width:62ch;margin-top:22px}
+
+  .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;margin-top:38px;
+        background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .meta div{background:var(--bg);padding:16px 18px}
+  .meta dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .meta dd{font-size:14px;color:var(--text);margin-top:5px}
+
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+  .btn{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:12px 20px;border-radius:100px;
+       font-size:14px;border:1px solid var(--line);color:var(--text);transition:.25s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:46px 0}
+  .stat{border:1px solid var(--line);border-radius:14px;padding:20px;background:rgba(255,255,255,.02)}
+  .stat b{display:block;font-family:var(--serif);font-size:32px;font-weight:400;color:var(--teal);line-height:1}
+  .stat span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:8px}
+
+  section{margin-top:56px}
+  h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.6vw,38px);letter-spacing:-.01em}
+  h3{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:30px 0 12px}
+  p{color:var(--dim);margin-top:14px;max-width:70ch}
+  p strong{color:var(--text);font-weight:500}
+  ul{list-style:none;margin-top:14px;max-width:70ch}
+  li{position:relative;padding:0 0 11px 20px;color:var(--dim)}
+  li::before{content:'';position:absolute;left:2px;top:10px;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.85}
+  li strong{color:var(--text);font-weight:500}
+
+  figure{margin-top:26px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+  figure img{width:100%}
+  figcaption{font-family:var(--mono);font-size:11px;color:var(--faint);padding:12px 16px;border-top:1px solid var(--line)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.two{grid-template-columns:1fr}}
+
+  .layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:20px}
+  .layer{border:1px solid var(--line);border-radius:12px;padding:18px;background:rgba(255,255,255,.02)}
+  .layer b{display:block;font-size:14px;color:var(--text);margin-bottom:4px}
+  .layer em{font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .layer p{font-size:13px;margin-top:10px}
+  .layer code{font-family:var(--mono);font-size:11.5px;color:var(--blue);display:block;margin-top:8px;line-height:1.9}
+
+  pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin-top:16px}
+  code{font-family:var(--mono);font-size:12.5px;color:var(--dim)}
+  pre .k{color:var(--accent)}
+
+  .note{border-left:2px solid var(--blue);background:rgba(74,159,224,.06);border-radius:0 12px 12px 0;padding:18px 22px;margin-top:26px}
+  .note b{color:var(--blue);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .note p{margin-top:0}
+
+  footer{border-top:1px solid var(--line);margin-top:70px;padding-top:26px;color:var(--faint);font-size:13px}
+  @media(max-width:640px){.wrap{padding:96px 20px 70px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="pf-nav">
+  <a class="pf-logo" href="index.html"><img src="images/logo.png?v=26" alt=""><span>Jerome Bustarga</span></a>
+  <div class="pf-links">
+    <a href="index.html">Repository</a>
+    <a href="about.html">About</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <span class="eyebrow">Relational Database Design · Case Study</span>
+  <h1>Pizza <em>Pandelino</em></h1>
+  <p class="lede">A normalized relational database that runs the ordering, menu, pricing and payment
+     operations of a family-run Philippine pizzeria — designed, built and documented end to end.</p>
+
+  <div class="meta">
+    <div><dt>Role</dt><dd>Database design, data modeling, SQL, documentation</dd></div>
+    <div><dt>Tools</dt><dd>LibreOffice Base · HSQLDB (embedded) · SQL</dd></div>
+    <div><dt>Client</dt><dd>Pizza Pandelino, operated by Sarah and Lino Hade</dd></div>
+    <div><dt>Presented</dt><dd>Creighton University Research Week, 2026</dd></div>
+    <div><dt>Mentor</dt><dd>Dr. Sherri Weitl-Harms</dd></div>
+    <div><dt>Course</dt><dd>CSC 542 Database Systems</dd></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>11</b><span>tables, normalized</span></div>
+    <div class="stat"><b>$0</b><span>software cost</span></div>
+    <div class="stat"><b>100%</b><span>offline capable</span></div>
+    <div class="stat"><b>$500+</b><span>saved per year</span></div>
+  </div>
+
+  <section>
+    <h2>The problem</h2>
+    <p>The restaurant took orders across several channels — walk-ins, phone calls and social media
+       messages — and tracked them on paper and in staff memory. Three constraints shaped everything
+       that followed:</p>
+    <ul>
+      <li><strong>Limited budget.</strong> Commercial systems like Square, Toast or QuickBooks POS run
+          $500+ a year, which the business could not justify.</li>
+      <li><strong>Unreliable internet.</strong> Connectivity in the area is intermittent, so anything
+          cloud-dependent would stop the shop.</li>
+      <li><strong>Low technical literacy.</strong> Staff were unfamiliar with computers, so the
+          interface had to be forgiving.</li>
+    </ul>
+    <p>Underneath those was a data problem: no single source of truth, pricing that could not be
+       reconstructed after a change, and no record of customer allergies, preferences or repeat history.</p>
+  </section>
+
+  <section>
+    <h2>The schema</h2>
+    <p>Eleven tables in three functional layers. The layering is the mental model for the whole
+       system: reference data at the bottom, the things the business owns in the middle, and the
+       activity those things generate on top.</p>
+
+    <div class="layers">
+      <div class="layer">
+        <em>Lookup layer</em><b>Reference values</b>
+        <p>Rarely change. Keep categorical data consistent everywhere it is referenced.</p>
+        <code>OrderType · OrderStatus<br>MenuCategory · PaymentMethod</code>
+      </div>
+      <div class="layer">
+        <em>Entity layer</em><b>Core business objects</b>
+        <p>The nouns of the business. Referenced by transactions but exist independently.</p>
+        <code>Customer · MenuItem<br>PizzaItem · ItemPrice</code>
+      </div>
+      <div class="layer">
+        <em>Transaction layer</em><b>Recorded activity</b>
+        <p>Generated as customers order and pay. The high-volume, ever-growing tables.</p>
+        <code>Order · OrderDetail<br>Payment</code>
+      </div>
+    </div>
+
+    <figure>
+      <img src="images/pandelino-erd.jpg" alt="Entity-relationship diagram showing eleven tables and their relationships" loading="lazy">
+      <figcaption>Entity-relationship diagram — eleven tables, with cardinalities on every relationship.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Design decisions</h2>
+    <p>These are the choices that make the schema more than a set of tables.</p>
+
+    <h3>Normalization</h3>
+    <p>Every non-key column depends on its table's key and nothing else. Statuses, categories, order
+       types and payment methods are not repeated as free text across thousands of rows — they live
+       once in lookup tables and are referenced by ID. Renaming <strong>"Preparing"</strong> to
+       <strong>"In the oven"</strong> is a one-row update, not a find-and-replace.</p>
+
+    <h3>Supertype / subtype specialization</h3>
+    <p>Every product is a <strong>MenuItem</strong>, but pizzas carry attributes drinks do not —
+       whether they come in multiple sizes, how many toppings are allowed. Rather than clutter
+       MenuItem with pizza-only columns sitting empty for every beverage, those move to a
+       <strong>PizzaItem</strong> table sharing MenuItem's primary key in a strict 1:1. It is the
+       relational way of saying "a PizzaItem <em>is a</em> MenuItem, with more".</p>
+
+    <h3>Date-effective pricing</h3>
+    <p>Prices do not live on MenuItem. They live in <strong>ItemPrice</strong> with a size and an
+       effective date, so one item can have many price rows — Small, Medium, Large, and a full history
+       as prices change. Raising a price is an <strong>insert, not an overwrite</strong>, so the old
+       price is never lost.</p>
+
+    <h3>Price snapshotting</h3>
+    <p>Each order line stores the exact ItemPrice row that was charged. Even after menu prices change,
+       an order placed last month still reflects last month's price. The order total is always
+       reconstructable and always correct — which matters for anything that touches money.</p>
+
+    <h3>A documented trade-off</h3>
+    <p>Order source (walk-in, phone, Facebook, Instagram, other) is stored as a plain integer code
+       rather than a foreign key to a twelfth lookup table, to respect a deliberate scope ceiling. The
+       cost is that the code-to-label mapping lives in documentation instead of the database. Writing
+       the trade-off down, rather than hiding it, is part of the design.</p>
+  </section>
+
+  <section>
+    <h2>What the staff actually see</h2>
+    <p>The schema is only half of it. The database is driven entirely through forms built in
+       LibreOffice Base, with Basic macros providing searchable dropdowns, auto-fill and validation, so
+       nobody has to type an ID by hand or remember what a foreign key is.</p>
+    <div class="two">
+      <figure>
+        <img src="images/pandelino-menu.jpg" alt="Menu management form with categories, items and date-effective prices" loading="lazy">
+        <figcaption>Menu management — items, categories and per-size prices.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/pandelino-form.jpg" alt="Order entry form" loading="lazy">
+        <figcaption>Order entry, driven by dropdowns rather than typed IDs.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>What you can ask it</h2>
+    <p>The payoff of a clean schema is that real business questions become short, reliable queries.</p>
+    <pre><code><span class="k">SELECT</span> mi.ItemName, <span class="k">SUM</span>(od.Quantity) <span class="k">AS</span> UnitsSold
+<span class="k">FROM</span> OrderDetail od
+<span class="k">JOIN</span> MenuItem mi <span class="k">ON</span> od.MenuItemID = mi.MenuItemID
+<span class="k">GROUP BY</span> mi.ItemName
+<span class="k">ORDER BY</span> UnitsSold <span class="k">DESC</span>
+<span class="k">FETCH FIRST</span> 5 <span class="k">ROWS ONLY</span>;</code></pre>
+    <p>Today's sales total, revenue by payment method, a single customer's full order history, and the
+       current menu with active prices are all a join or two away.</p>
+
+    <div class="note">
+      <b>Why the totals stay right</b>
+      <p>Because each order line points at the price row that was actually charged, a sales report run
+         today over orders from six months ago returns what the customer paid then — not what the item
+         costs now.</p>
+    </div>
+  </section>
+
+  <footer>
+    Built for Pizza Pandelino, operated by Sarah and Lino Hade. Presented at Creighton University
+    Research Week 2026 under Dr. Sherri Weitl-Harms, CSC 542 Database Systems.
+  </footer>
+</div>
+
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('pf-embed');</script>
+</body>
+</html>
