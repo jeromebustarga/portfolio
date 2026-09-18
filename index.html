@@ -1404,7 +1404,6 @@
                 icon: 'fa-database',
                 description: 'A normalized relational database running the ordering, menu, pricing and payment operations of a family-run Philippine pizzeria. Eleven tables across lookup, entity and transaction layers, normalized to BCNF, with date-effective pricing and price snapshotting so historical orders stay reconstructable. Presented at Creighton University Research Week 2026.',
                 tech: ['SQL', 'HSQLDB', 'LibreOffice Base', 'LibreOffice Basic', 'Data Modeling', 'Normalization (BCNF)'],
-                github: 'https://github.com/jhb09808',
                 casestudy: 'pandelino.html',
                 status: 'live'
             },
@@ -2364,6 +2363,7 @@
                 const sm = window.sourceMeta ? window.sourceMeta(p.github) : { label: 'Source', icon: 'fa-solid fa-code' };
                 links.push([sm.icon, 'Source on ' + sm.label, p.github]);
             }
+            if (p.casestudy) links.push(['fa-solid fa-book-open', 'Case study', p.casestudy]);
             if (p.research) links.push(['fa-solid fa-file-lines', 'Research', p.research]);
             if (p.paper) links.push(['fa-solid fa-file-lines', 'Paper', p.paper]);
             if (links.length) {
