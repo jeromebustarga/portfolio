@@ -68,6 +68,8 @@
   figure img{width:100%}
   figcaption{font-family:var(--mono);font-size:11px;color:var(--faint);padding:12px 16px;border-top:1px solid var(--line)}
   .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .hero-shot{margin-top:34px}
+  .hero-shot img{max-height:520px;object-fit:cover;object-position:center 40%}
   @media(max-width:760px){.two{grid-template-columns:1fr}}
 
   .layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:20px}
@@ -106,6 +108,11 @@
   <p class="lede">A relational database, normalized to BCNF, that runs the ordering, menu, pricing and payment
      operations of a family-run Philippine pizzeria — designed, built and documented end to end.</p>
 
+  <figure class="hero-shot">
+    <img src="images/pandelino-researchweek.jpg" alt="Jerome Bustarga presenting the project beside his faculty mentor Dr. Sherri Weitl-Harms at Creighton University Research Week">
+    <figcaption>Presenting at Creighton University Research Week with Dr. Sherri Weitl-Harms.</figcaption>
+  </figure>
+
   <div class="meta">
     <div><dt>Role</dt><dd>Database design, data modeling, SQL, documentation</dd></div>
     <div><dt>Tools</dt><dd>LibreOffice Base · HSQLDB (embedded) · SQL</dd></div>
@@ -127,16 +134,10 @@
     <p>The system was presented at <strong>Creighton University Research Week</strong>, 31 March to
        1 April 2026 at the Harper Center in Omaha, under the mentorship of
        <strong>Dr. Sherri Weitl-Harms</strong>, as part of CSC 542 Database Systems.</p>
-    <div class="two">
-      <figure>
-        <img src="images/pandelino-researchweek.jpg" alt="Jerome Bustarga presenting the project beside his faculty mentor Dr. Sherri Weitl-Harms at Creighton University Research Week" loading="lazy">
-        <figcaption>Presenting at Research Week with Dr. Sherri Weitl-Harms.</figcaption>
-      </figure>
-      <figure>
-        <img src="images/pandelino-poster.jpg" alt="Research poster: Order Management System, A Database Solution for Small Restaurant Operations" loading="lazy">
-        <figcaption>The poster — problem, goals, ERD, results and future work.</figcaption>
-      </figure>
-    </div>
+    <figure>
+      <img src="images/pandelino-poster.jpg" alt="Research poster: Order Management System, A Database Solution for Small Restaurant Operations" loading="lazy">
+      <figcaption>The poster — problem, goals, ERD, results and future work.</figcaption>
+    </figure>
   </section>
 
   <section>
