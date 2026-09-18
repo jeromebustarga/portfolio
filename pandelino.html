@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pizza Pandelino — Order Management System · Jerome Bustarga</title>
-<meta name="description" content="A normalized relational database running the ordering, menu, pricing and payment operations of a family-run Philippine pizzeria. Eleven tables, date-effective pricing, price snapshotting. Presented at Creighton University Research Week 2026.">
+<meta name="description" content="A BCNF-normalized relational database running the ordering, menu, pricing and payment operations of a family-run Philippine pizzeria. Eleven tables, date-effective pricing, price snapshotting. Presented at Creighton University Research Week 2026.">
 <link rel="icon" type="image/png" href="images/favicon.png?v=26">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,7 +103,7 @@
 <div class="wrap">
   <span class="eyebrow">Relational Database Design · Case Study</span>
   <h1>Pizza <em>Pandelino</em></h1>
-  <p class="lede">A normalized relational database that runs the ordering, menu, pricing and payment
+  <p class="lede">A relational database, normalized to BCNF, that runs the ordering, menu, pricing and payment
      operations of a family-run Philippine pizzeria — designed, built and documented end to end.</p>
 
   <div class="meta">
@@ -116,7 +116,7 @@
   </div>
 
   <div class="stats">
-    <div class="stat"><b>11</b><span>tables, normalized</span></div>
+    <div class="stat"><b>11</b><span>tables, BCNF</span></div>
     <div class="stat"><b>$0</b><span>software cost</span></div>
     <div class="stat"><b>100%</b><span>offline capable</span></div>
     <div class="stat"><b>$500+</b><span>saved per year</span></div>
@@ -184,8 +184,11 @@
     <h2>Design decisions</h2>
     <p>These are the choices that make the schema more than a set of tables.</p>
 
-    <h3>Normalization</h3>
-    <p>Every non-key column depends on its table's key and nothing else. Statuses, categories, order
+    <h3>Normalization to BCNF</h3>
+    <p>The schema is normalized to <strong>Boyce-Codd Normal Form</strong>: every determinant is a
+       candidate key, which is a stricter condition than third normal form and rules out the anomalies
+       3NF still permits. In practice that means every non-key column depends on its table's key and
+       nothing else. Statuses, categories, order
        types and payment methods are not repeated as free text across thousands of rows — they live
        once in lookup tables and are referenced by ID. Renaming <strong>"Preparing"</strong> to
        <strong>"In the oven"</strong> is a one-row update, not a find-and-replace.</p>
