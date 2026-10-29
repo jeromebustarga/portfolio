@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: iJay Notable Alumni Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.7;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 10%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .hero-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #0066ff;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            max-width: 900px;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(135deg, #0066ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #a0a0a0;
+            max-width: 600px;
+            margin-bottom: 50px;
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+        }
+        
+        .meta-value {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .live-site-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 40px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #0066ff, #00d4ff);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .live-site-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 100px 10%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #0066ff;
+            margin-bottom: 15px;
+        }
+        
+        section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        section > p {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            max-width: 700px;
+            margin-bottom: 50px;
+        }
+        
+        /* Problem Section */
+        .problem-section {
+            background: #111;
+        }
+        
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .problem-card {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 30px;
+        }
+        
+        .problem-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .problem-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .problem-card p {
+            font-size: 0.95rem;
+            color: #888;
+        }
+        
+        /* Goals Section */
+        .goals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .goal-item {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+            padding: 25px;
+            background: #111;
+            border-radius: 12px;
+            border: 1px solid #1a1a1a;
+        }
+        
+        .goal-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0066ff;
+            line-height: 1;
+        }
+        
+        .goal-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .goal-content p {
+            font-size: 0.95rem;
+            color: #888;
+        }
+        
+        /* Process Section */
+        .process-section {
+            background: #0d0d0d;
+        }
+        
+        .process-timeline {
+            position: relative;
+            padding-left: 60px;
+        }
+        
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #0066ff, #00d4ff);
+        }
+        
+        .process-step {
+            position: relative;
+            display: flex;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .process-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-marker {
+            position: absolute;
+            left: -60px;
+            width: 50px;
+            height: 50px;
+            background: #0066ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .step-content {
+            flex: 1;
+            padding-top: 5px;
+        }
+        
+        .step-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .step-content p {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 15px;
+        }
+        
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tag {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        /* Solution Section */
+        .solution-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .feature-card {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 35px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #0066ff;
+        }
+        
+        .feature-card > p {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .feature-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #0066ff;
+        }
+        
+        /* Results Section */
+        .results-section {
+            background: linear-gradient(135deg, #0a1628 0%, #0d0d0d 100%);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+        
+        .result-stat {
+            padding: 30px;
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0066ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.95rem;
+            color: #888;
+        }
+        
+        /* Learnings Section */
+        .learnings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .learning-card {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 30px;
+        }
+        
+        .learning-card h4 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .learning-card h4::before {
+            content: '💡';
+        }
+        
+        .learning-card p {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 0;
+        }
+        
+        /* Footer */
+        .case-footer {
+            padding: 80px 10%;
+            background: #050505;
+            text-align: center;
+        }
+        
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: #0066ff;
+        }
+        
+        .footer-credit {
+            font-size: 0.85rem;
+            color: #444;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .solution-features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .learnings-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 6%;
+                min-height: auto;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            section {
+                padding: 60px 6%;
+            }
+            
+            section h2 {
+                font-size: 1.5rem;
+            }
+            
+            .hero-meta {
+                gap: 20px;
+                flex-direction: column;
+            }
+            
+            .meta-item {
+                flex-direction: row;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .live-site-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 24px;
+            }
+            
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .goal-item {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .goal-number {
+                font-size: 1.5rem;
+            }
+            
+            .process-timeline {
+                padding-left: 50px;
+            }
+            
+            .process-timeline::before {
+                left: 15px;
+            }
+            
+            .step-marker {
+                left: -50px;
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+            
+            .process-step {
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+            
+            .step-content h3 {
+                font-size: 1.1rem;
+            }
+            
+            .step-tags {
+                gap: 6px;
+            }
+            
+            .tag {
+                font-size: 0.7rem;
+                padding: 4px 10px;
+            }
+            
+            .solution-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .learnings-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 50px 5%;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            section {
+                padding: 50px 5%;
+            }
+            
+            section h2 {
+                font-size: 1.3rem;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .problem-card,
+            .feature-card,
+            .learning-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <span class="hero-label">UX Case Study</span>
+        <h1>Connecting Students with <span>Alumni Success Stories</span></h1>
+        <p class="hero-subtitle">Designing and developing an interactive alumni directory for the iJay Practicum at Creighton University — bridging the gap between current students and professional alumni.</p>
+        
+        <div class="hero-meta">
+            <div class="meta-item">
+                <span class="meta-label">Role</span>
+                <span class="meta-value">UX/UI Developer</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Duration</span>
+                <span class="meta-value">Fall 2024 Semester</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Platform</span>
+                <span class="meta-value">Shopify (Be Yours Theme)</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Team</span>
+                <span class="meta-value">2 Developers + Supervisor</span>
+            </div>
+        </div>
+        
+        <a href="https://ijay.creighton.edu/pages/ijay_alumni" target="_blank" class="live-site-btn">
+            View Live Site →
+        </a>
+    </section>
+    
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <span class="section-label">The Challenge</span>
+        <h2>Why did the iJay Store need a Notable Alumni page?</h2>
+        <p>The iJay Practicum connects students with real-world web development experience, but there was no way to showcase the success stories of program graduates. Current students couldn't see where alumni ended up, and prospective students had no visibility into the program's career outcomes.</p>
+        
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-icon">🔍</div>
+                <h3>No Alumni Visibility</h3>
+                <p>The existing website had no dedicated space to highlight alumni achievements or career trajectories after completing the practicum.</p>
+            </div>
+            
+            <div class="problem-card">
+                <div class="problem-icon">🔗</div>
+                <h3>Disconnected Community</h3>
+                <p>Current students had no way to discover or connect with professionals who had been through the same program.</p>
+            </div>
+            
+            <div class="problem-card">
+                <div class="problem-icon">📊</div>
+                <h3>Missing Program Proof</h3>
+                <p>The program lacked tangible evidence of its impact — no success stories to share with prospective students or stakeholders.</p>
+            </div>
+            
+            <div class="problem-card">
+                <div class="problem-icon">⚙️</div>
+                <h3>Sustainability Concerns</h3>
+                <p>Any solution needed to be maintainable by future student teams without requiring external databases or complex systems.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Goals Section -->
+    <section>
+        <span class="section-label">Project Goals</span>
+        <h2>What did we set out to achieve?</h2>
+        
+        <div class="goals-list">
+            <div class="goal-item">
+                <span class="goal-number">01</span>
+                <div class="goal-content">
+                    <h4>Create an Interactive Two-Panel Directory</h4>
+                    <p>Build a browsable grid with live preview panel so users can quickly scan alumni and see details without navigating away from the directory.</p>
+                </div>
+            </div>
+            
+            <div class="goal-item">
+                <span class="goal-number">02</span>
+                <div class="goal-content">
+                    <h4>Integrate with Existing Shopify Infrastructure</h4>
+                    <p>Use Shopify's native blog system and custom metafields rather than external databases — ensuring future teams can easily maintain it.</p>
+                </div>
+            </div>
+            
+            <div class="goal-item">
+                <span class="goal-number">03</span>
+                <div class="goal-content">
+                    <h4>Design for Scalability</h4>
+                    <p>Create a system that can grow from a handful of alumni to potentially hundreds without performance or usability issues.</p>
+                </div>
+            </div>
+            
+            <div class="goal-item">
+                <span class="goal-number">04</span>
+                <div class="goal-content">
+                    <h4>Document Everything</h4>
+                    <p>Produce comprehensive documentation so future practicum teams can add alumni, troubleshoot issues, and extend the system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Process Section -->
+    <section class="process-section">
+        <span class="section-label">The Process</span>
+        <h2>How did we get there?</h2>
+        
+        <div class="process-timeline">
+            <div class="process-step">
+                <div class="step-marker">01</div>
+                <div class="step-content">
+                    <h3>Research & Discovery</h3>
+                    <p>Analyzed existing alumni directories from other universities, audited the current iJay Store structure, and identified technical constraints within Shopify's ecosystem. Collaborated with Prof. Jarmon to obtain the official Alumni Roster for accurate data.</p>
+                    <div class="step-tags">
+                        <span class="tag">Competitive Analysis</span>
+                        <span class="tag">Technical Audit</span>
+                        <span class="tag">Stakeholder Interviews</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-marker">02</div>
+                <div class="step-content">
+                    <h3>Ideation & Architecture</h3>
+                    <p>Explored multiple approaches: external databases, JSON files, Shopify pages. Ultimately chose Shopify's blog system with custom metafields for the best balance of functionality and maintainability. Sketched the two-panel layout concept with grid and live preview.</p>
+                    <div class="step-tags">
+                        <span class="tag">System Design</span>
+                        <span class="tag">Wireframing</span>
+                        <span class="tag">Technical Planning</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-marker">03</div>
+                <div class="step-content">
+                    <h3>Design & Prototyping</h3>
+                    <p>Created wireframes for the two-panel directory layout, preview panel interactions, and full profile pages with testimonial blockquotes. Iterated on responsive behavior to ensure the experience works across all devices.</p>
+                    <div class="step-tags">
+                        <span class="tag">UI Design</span>
+                        <span class="tag">Responsive Layout</span>
+                        <span class="tag">Component Design</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-marker">04</div>
+                <div class="step-content">
+                    <h3>Development & Integration</h3>
+                    <p>Built the solution using Shopify Liquid templating, custom CSS, and JavaScript for interactive features. Implemented the live preview panel, search, year filtering, pagination, and testimonial blockquote styling. Resolved theme-specific quirks in the Be Yours theme.</p>
+                    <div class="step-tags">
+                        <span class="tag">Liquid Templating</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">CSS Grid</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-marker">05</div>
+                <div class="step-content">
+                    <h3>Outreach & Content Population</h3>
+                    <p>Conducted comprehensive alumni outreach via LinkedIn and Instagram. Created detailed HTML profiles for each participating alumnus including personal testimonials. Developed a systematic approach for collecting graduation years vs. practicum cohort participation.</p>
+                    <div class="step-tags">
+                        <span class="tag">Content Strategy</span>
+                        <span class="tag">Alumni Relations</span>
+                        <span class="tag">Data Collection</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-marker">06</div>
+                <div class="step-content">
+                    <h3>Documentation & Handoff</h3>
+                    <p>Created step-by-step guides for managing alumni profiles, adding new entries, and troubleshooting common issues. Ensured future practicum teams can maintain and extend the system independently.</p>
+                    <div class="step-tags">
+                        <span class="tag">Technical Documentation</span>
+                        <span class="tag">Knowledge Transfer</span>
+                        <span class="tag">Training Materials</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Solution Section -->
+    <section>
+        <span class="section-label">The Solution</span>
+        <h2>What did we build?</h2>
+        <p>A comprehensive alumni directory system featuring a two-panel browse experience that integrates seamlessly with Shopify's infrastructure while providing a rich, interactive experience for users.</p>
+        
+        <div class="solution-features">
+            <div class="feature-card">
+                <h3>Two-Panel Directory</h3>
+                <p>A side-by-side layout with browsable grid and live preview panel for quick scanning without page navigation.</p>
+                <ul class="feature-list">
+                    <li>3-column alumni card grid</li>
+                    <li>Live preview on card selection</li>
+                    <li>Circular avatars with class year</li>
+                    <li>"View Full Profile" CTA</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Smart Filtering System</h3>
+                <p>Users can quickly find alumni by graduation year or search by name, company, or skills.</p>
+                <ul class="feature-list">
+                    <li>Year-based dropdown filter</li>
+                    <li>Real-time search functionality</li>
+                    <li>Combined filter + search</li>
+                    <li>Pagination for scalability</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Rich Profile Pages</h3>
+                <p>Each alumnus has a dedicated two-column page with sidebar metadata and full story content.</p>
+                <ul class="feature-list">
+                    <li>Cohort + graduation year metadata</li>
+                    <li>Team assignment display</li>
+                    <li>Testimonial blockquotes</li>
+                    <li>Skills & expertise tags</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Sustainable Architecture</h3>
+                <p>Built on Shopify's native systems so future teams can maintain it without specialized knowledge.</p>
+                <ul class="feature-list">
+                    <li>Uses Shopify blog system</li>
+                    <li>Custom metafields for data</li>
+                    <li>No external dependencies</li>
+                    <li>Comprehensive documentation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Results Section -->
+    <section class="results-section">
+        <span class="section-label">The Impact</span>
+        <h2>What did we achieve?</h2>
+        
+        <div class="results-grid">
+            <div class="result-stat">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Alumni Profiles</div>
+            </div>
+            
+            <div class="result-stat">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Mobile Responsive</div>
+            </div>
+            
+            <div class="result-stat">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Browse Modes (Grid + Preview)</div>
+            </div>
+            
+            <div class="result-stat">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Scalable Profiles</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Learnings Section -->
+    <section>
+        <span class="section-label">Key Learnings</span>
+        <h2>What did I take away from this project?</h2>
+        
+        <div class="learnings-grid">
+            <div class="learning-card">
+                <h4>Work Within Platform Constraints</h4>
+                <p>Instead of fighting Shopify's limitations, I learned to leverage its native systems creatively. Using the blog system for alumni profiles was unconventional but resulted in a maintainable solution.</p>
+            </div>
+            
+            <div class="learning-card">
+                <h4>Theme-Specific Nuances Matter</h4>
+                <p>Discovered that Liquid templating can vary between themes — the Be Yours theme uses `article.image` instead of `article.featured_image`. Systematic debugging with HTML comments was essential.</p>
+            </div>
+            
+            <div class="learning-card">
+                <h4>Data Accuracy Requires Clarity</h4>
+                <p>Alumni initially confused "graduation year" with "practicum cohort year." Creating clear documentation and forms prevented this confusion and ensured accurate data collection.</p>
+            </div>
+            
+            <div class="learning-card">
+                <h4>Documentation is a Feature</h4>
+                <p>In academic settings with rotating teams, comprehensive documentation isn't extra work — it's a core deliverable that ensures project continuity beyond your tenure.</p>
+            </div>
+            
+            <div class="learning-card">
+                <h4>Outreach is Part of UX</h4>
+                <p>The best-designed system is useless without content. Alumni outreach via LinkedIn and Instagram was as critical as the technical implementation.</p>
+            </div>
+            
+            <div class="learning-card">
+                <h4>Collaborate Early and Often</h4>
+                <p>Regular check-ins with my supervisor and teammate helped catch issues early and kept the project aligned with stakeholder expectations.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="case-footer">
+        <nav class="footer-nav">
+            <a href="02-ideation.html?embed=1" class="footer-link">View Ideation →</a>
+            <a href="03-wireframes.html?embed=1" class="footer-link">View Wireframes →</a>
+            <a href="04-mockups.html?embed=1" class="footer-link">View Mockups →</a>
+        </nav>
+        <p class="footer-credit">Case Study by Jerome • iJay Practicum • Creighton University • 2024</p>
+    </footer>
+<style>
+/* embedded in the portfolio's project dialog: the dialog supplies the chrome */
+body.embed-mode .nav,
+body.embed-mode .page-header .back-link { display: none !important; }
+body.embed-mode { padding-top: 0 !important; }
+</style>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embed-mode');</script>
+</body>
+</html>

@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideation Process | iJay Alumni Case Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+            line-height: 1.7;
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 5%;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .nav-brand {
+            font-weight: 600;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #0066ff;
+        }
+        
+        /* Header */
+        .page-header {
+            padding: 150px 10% 80px;
+            text-align: center;
+            background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
+        }
+        
+        .page-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #0066ff;
+            margin-bottom: 20px;
+        }
+        
+        .page-header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Section */
+        section {
+            padding: 80px 10%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: #666;
+            max-width: 700px;
+            margin-bottom: 40px;
+        }
+        
+        /* Brainstorm Board */
+        .brainstorm-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+        }
+        
+        .brainstorm-board {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            padding: 30px;
+            background: #f8f8f8;
+            border-radius: 12px;
+            min-height: 300px;
+        }
+        
+        .sticky-note {
+            width: 150px;
+            min-height: 120px;
+            padding: 15px;
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            transform: rotate(var(--rotation, 0deg));
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .sticky-note.yellow { background: #fff9c4; }
+        .sticky-note.pink { background: #f8bbd9; }
+        .sticky-note.blue { background: #bbdefb; }
+        .sticky-note.green { background: #c8e6c9; }
+        .sticky-note.purple { background: #e1bee7; }
+        .sticky-note.orange { background: #ffe0b2; }
+        
+        /* Questions Grid */
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        
+        .question-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .question-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        
+        .question-card p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        /* Sketches */
+        .sketches-section {
+            background: #f0f0f0;
+        }
+        
+        .sketch-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        
+        .sketch-frame {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .sketch-canvas {
+            padding: 30px;
+            min-height: 300px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sketch-info {
+            padding: 20px 25px;
+            background: #fafafa;
+        }
+        
+        .sketch-info h4 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        
+        .sketch-info p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Two Panel Sketch */
+        .two-panel-sketch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+        
+        .panel-sketch {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .panel-sketch-title {
+            width: 60%;
+            height: 10px;
+            background: #ddd;
+            border-radius: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .mini-card {
+            background: #f0f0f0;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .mini-card.selected {
+            border: 2px solid #0066ff;
+        }
+        
+        .mini-avatar {
+            width: 25px;
+            height: 25px;
+            background: #ddd;
+            border-radius: 50%;
+            margin: 0 auto 6px;
+        }
+        
+        .mini-name {
+            width: 80%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 0 auto;
+        }
+        
+        .preview-sketch {
+            text-align: center;
+        }
+        
+        .preview-avatar-big {
+            width: 60px;
+            height: 60px;
+            background: #ddd;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+        }
+        
+        .preview-name-big {
+            width: 80px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 0 auto 8px;
+        }
+        
+        .preview-role {
+            width: 60px;
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 2px;
+            margin: 0 auto 15px;
+        }
+        
+        .preview-bio-sketch {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .bio-line {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-bottom: 6px;
+        }
+        
+        .bio-line:last-child {
+            width: 70%;
+            margin-bottom: 0;
+        }
+        
+        .preview-cta-sketch {
+            width: 100%;
+            height: 30px;
+            background: #ddd;
+            border-radius: 4px;
+        }
+        
+        .sketch-annotation {
+            font-family: 'Caveat', cursive;
+            font-size: 0.95rem;
+            color: #0066ff;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        /* Profile Sketch */
+        .profile-sketch {
+            border: 2px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .profile-sketch-header {
+            background: #f0f0f0;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid #ddd;
+        }
+        
+        .profile-sketch-header-line {
+            width: 120px;
+            height: 14px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 0 auto;
+        }
+        
+        .profile-sketch-body {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 20px;
+            padding: 20px;
+            background: #fff;
+        }
+        
+        .profile-sketch-sidebar {
+            text-align: center;
+        }
+        
+        .profile-sketch-avatar {
+            width: 80px;
+            height: 80px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            margin: 0 auto 10px;
+        }
+        
+        .profile-sketch-meta {
+            width: 100%;
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 2px;
+            margin-bottom: 6px;
+        }
+        
+        .profile-sketch-main {
+            padding-top: 5px;
+        }
+        
+        .text-block-sketch {
+            margin-bottom: 15px;
+        }
+        
+        .text-line-sketch {
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 2px;
+            margin-bottom: 6px;
+        }
+        
+        .text-line-sketch:nth-child(even) {
+            width: 90%;
+        }
+        
+        /* Blockquote Sketch */
+        .blockquote-sketch {
+            border-left: 4px solid #0066ff;
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .blockquote-sketch .text-line-sketch {
+            background: #ddd;
+        }
+        
+        /* User Flow Sketch */
+        .flow-sketch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .flow-step {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .flow-box {
+            background: #fff;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .flow-arrow {
+            font-size: 1.2rem;
+            color: #666;
+        }
+        
+        .flow-branch {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .flow-branch .flow-box {
+            background: #f0f8ff;
+            border-color: #0066ff;
+        }
+        
+        .flow-preview-box {
+            background: #e8f5e9 !important;
+            border-color: #4caf50 !important;
+        }
+        
+        /* Architecture */
+        .architecture-section {
+            background: #fff;
+        }
+        
+        .architecture-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 40px;
+            background: #f8f8f8;
+            border-radius: 12px;
+        }
+        
+        .arch-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .arch-box {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px 30px;
+            text-align: center;
+            min-width: 180px;
+        }
+        
+        .arch-box.highlight {
+            border-color: #0066ff;
+            background: #f0f8ff;
+        }
+        
+        .arch-box h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .arch-box p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .arch-connector {
+            font-size: 1.5rem;
+            color: #0066ff;
+        }
+        
+        .arch-split {
+            display: flex;
+            gap: 60px;
+            position: relative;
+        }
+        
+        .arch-split::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: #0066ff;
+        }
+        
+        /* Decision Matrix */
+        .decision-section {
+            background: #f5f5f5;
+        }
+        
+        .decision-table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .decision-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+        
+        .decision-table th,
+        .decision-table td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .decision-table th {
+            background: #fafafa;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .decision-table td {
+            font-size: 0.95rem;
+            color: #444;
+        }
+        
+        .decision-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .rating {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .rating span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e0e0e0;
+        }
+        
+        .rating span.filled {
+            background: #0066ff;
+        }
+        
+        .chosen-badge {
+            background: #0066ff;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Footer Nav */
+        .page-footer {
+            padding: 60px 10%;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-nav-btn:hover {
+            color: #0066ff;
+        }
+        
+        .footer-nav-btn span {
+            font-size: 0.85rem;
+            color: #999;
+        }
+        
+        @media (max-width: 1024px) {
+            .sketch-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .questions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav {
+                padding: 15px 5%;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .page-header {
+                padding: 120px 6% 60px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            section {
+                padding: 50px 6%;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .section-subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .brainstorm-section {
+                padding: 25px;
+            }
+            
+            .brainstorm-board {
+                padding: 15px;
+                gap: 10px;
+            }
+            
+            .sticky-note {
+                width: 130px;
+                min-height: 100px;
+                padding: 12px;
+                font-size: 1rem;
+            }
+            
+            .questions-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .question-card {
+                padding: 20px;
+            }
+            
+            .question-icon {
+                font-size: 1.5rem;
+            }
+            
+            .two-panel-sketch {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-sketch-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .architecture-diagram {
+                padding: 25px;
+            }
+            
+            .arch-box {
+                padding: 15px 20px;
+                min-width: 140px;
+            }
+            
+            .arch-split {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .arch-split::before {
+                display: none;
+            }
+            
+            .decision-table {
+                font-size: 0.85rem;
+            }
+            
+            .decision-table th,
+            .decision-table td {
+                padding: 12px 10px;
+            }
+            
+            .page-footer {
+                flex-direction: column;
+                gap: 20px;
+                padding: 40px 6%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 100px 5% 50px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            section {
+                padding: 40px 5%;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .brainstorm-section {
+                padding: 15px;
+            }
+            
+            .sticky-note {
+                width: 110px;
+                min-height: 90px;
+                font-size: 0.9rem;
+            }
+            
+            .sketch-canvas {
+                padding: 20px;
+            }
+            
+            .decision-table-wrapper {
+                margin: 0 -5%;
+                padding: 0 5%;
+            }
+            
+            .rating span {
+                width: 8px;
+                height: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="01-case-study-overview.html?embed=1" class="nav-brand">iJay Alumni Case Study</a>
+        <div class="nav-links">
+            <a href="01-case-study-overview.html?embed=1">Overview</a>
+            <a href="02-ideation.html?embed=1" class="active">Ideation</a>
+            <a href="03-wireframes.html?embed=1">Wireframes</a>
+            <a href="04-mockups.html?embed=1">Mockups</a>
+        </div>
+    </nav>
+    
+    <!-- Header -->
+    <header class="page-header">
+        <p class="page-label">Phase 02</p>
+        <h1>Ideation & Exploration</h1>
+        <p>Brainstorming solutions, sketching initial concepts, and evaluating different technical approaches.</p>
+    </header>
+    
+    <!-- Brainstorming Section -->
+    <section>
+        <h2 class="section-title">Initial Brainstorm</h2>
+        <p class="section-subtitle">Before diving into design, I started with open brainstorming to explore all possibilities without constraints.</p>
+        
+        <div class="brainstorm-section">
+            <div class="brainstorm-board">
+                <div class="sticky-note yellow" style="--rotation: -2deg;">How do current students find mentors?</div>
+                <div class="sticky-note pink" style="--rotation: 1deg;">LinkedIn integration? Too complex?</div>
+                <div class="sticky-note blue" style="--rotation: -1deg;">Filter by graduation year ✓</div>
+                <div class="sticky-note green" style="--rotation: 2deg;">Search by skills/company</div>
+                <div class="sticky-note purple" style="--rotation: -3deg;">Grid + Preview panel side by side? 🤔</div>
+                <div class="sticky-note orange" style="--rotation: 1deg;">Keep it maintainable for next team!</div>
+                <div class="sticky-note blue" style="--rotation: -1deg;">Use Shopify native features only</div>
+                <div class="sticky-note pink" style="--rotation: 2deg;">Mobile: stacked cards</div>
+                <div class="sticky-note green" style="--rotation: -2deg;">Photo quality matters</div>
+                <div class="sticky-note yellow" style="--rotation: 1deg;">Alumni testimonials/quotes?</div>
+                <div class="sticky-note purple" style="--rotation: -1deg;">Pagination for scalability</div>
+                <div class="sticky-note orange" style="--rotation: 2deg;">Blog posts = alumni profiles? 🤔</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Key Questions Section -->
+    <section style="background: #fff;">
+        <h2 class="section-title">Key Questions to Answer</h2>
+        <p class="section-subtitle">I organized my brainstorm into key questions that would guide the design and technical decisions.</p>
+        
+        <div class="questions-grid">
+            <div class="question-card">
+                <div class="question-icon">👥</div>
+                <h3>Who are the primary users?</h3>
+                <p>Current iJay students looking for career inspiration and mentorship opportunities. Prospective students evaluating the program. Faculty showcasing program outcomes.</p>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-icon">🎯</div>
+                <h3>What do users need to find?</h3>
+                <p>Alumni in their field of interest, people at companies they want to work for, graduates from their same year, or those with specific skills they're developing.</p>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-icon">⚙️</div>
+                <h3>How will this be maintained?</h3>
+                <p>Future student teams will need to add new alumni without developer knowledge. The system must be self-documenting and use Shopify-native tools.</p>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-icon">📈</div>
+                <h3>How will this scale?</h3>
+                <p>Starting with 10-15 alumni but potentially growing to 100+. The interface must remain usable and performant at scale.</p>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-icon">🔗</div>
+                <h3>What data do we need?</h3>
+                <p>Name, photo, graduation year, practicum cohort, team assignment, current title, company, skills, bio, and personal testimonial quote.</p>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-icon">📱</div>
+                <h3>How will this work on mobile?</h3>
+                <p>Many students browse on phones. The two-panel layout must collapse to a single column list on mobile while maintaining usability.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sketches Section -->
+    <section class="sketches-section">
+        <h2 class="section-title">Initial Sketches</h2>
+        <p class="section-subtitle">Quick sketches to visualize the two-panel layout concept and component ideas.</p>
+        
+        <div class="sketch-container">
+            <!-- Sketch 1: Two Panel Layout -->
+            <div class="sketch-frame">
+                <div class="sketch-canvas">
+                    <div class="two-panel-sketch">
+                        <!-- Left Panel: Grid -->
+                        <div class="panel-sketch">
+                            <div class="panel-sketch-title"></div>
+                            <div class="mini-grid">
+                                <div class="mini-card selected">
+                                    <div class="mini-avatar"></div>
+                                    <div class="mini-name"></div>
+                                </div>
+                                <div class="mini-card">
+                                    <div class="mini-avatar"></div>
+                                    <div class="mini-name"></div>
+                                </div>
+                                <div class="mini-card">
+                                    <div class="mini-avatar"></div>
+                                    <div class="mini-name"></div>
+                                </div>
+                                <div class="mini-card">
+                                    <div class="mini-avatar"></div>
+                                    <div class="mini-name"></div>
+                                </div>
+                                <div class="mini-card">
+                                    <div class="mini-avatar"></div>
+                                    <div class="mini-name"></div>
+                                </div>
+                                <div class="mini-card">
+                                    <div class="mini-avatar"></div>
+                                    <div class="mini-name"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Panel: Preview -->
+                        <div class="panel-sketch preview-sketch">
+                            <div class="panel-sketch-title" style="margin: 0 auto 15px;"></div>
+                            <div class="preview-avatar-big"></div>
+                            <div class="preview-name-big"></div>
+                            <div class="preview-role"></div>
+                            <div class="preview-bio-sketch">
+                                <div class="bio-line"></div>
+                                <div class="bio-line"></div>
+                                <div class="bio-line"></div>
+                            </div>
+                            <div class="preview-cta-sketch"></div>
+                        </div>
+                    </div>
+                    <p class="sketch-annotation">↑ Two-panel layout: browse + preview without leaving the page!</p>
+                </div>
+                <div class="sketch-info">
+                    <h4>Two-Panel Directory Concept</h4>
+                    <p>The key insight: let users browse and preview without navigating away. Click a card → see details in the right panel → click "View Full Profile" only if they want more.</p>
+                </div>
+            </div>
+            
+            <!-- Sketch 2: Profile Page -->
+            <div class="sketch-frame">
+                <div class="sketch-canvas">
+                    <div class="profile-sketch">
+                        <div class="profile-sketch-header">
+                            <div class="profile-sketch-header-line"></div>
+                        </div>
+                        <div class="profile-sketch-body">
+                            <div class="profile-sketch-sidebar">
+                                <div class="profile-sketch-avatar"></div>
+                                <div class="profile-sketch-meta"></div>
+                                <div class="profile-sketch-meta" style="width: 80%;"></div>
+                                <div class="profile-sketch-meta" style="width: 60%;"></div>
+                            </div>
+                            <div class="profile-sketch-main">
+                                <div class="text-block-sketch">
+                                    <div class="text-line-sketch"></div>
+                                    <div class="text-line-sketch"></div>
+                                    <div class="text-line-sketch"></div>
+                                </div>
+                                <div class="blockquote-sketch">
+                                    <div class="text-line-sketch"></div>
+                                    <div class="text-line-sketch"></div>
+                                    <div class="text-line-sketch" style="width: 80%;"></div>
+                                </div>
+                                <div class="text-block-sketch">
+                                    <div class="text-line-sketch"></div>
+                                    <div class="text-line-sketch"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="sketch-annotation">↑ Profile with sidebar + testimonial blockquote</p>
+                </div>
+                <div class="sketch-info">
+                    <h4>Full Profile Page Layout</h4>
+                    <p>Two-column layout with metadata sidebar. The blockquote (blue left border) adds personal voice — alumni can share how the practicum impacted their career.</p>
+                </div>
+            </div>
+            
+            <!-- Sketch 3: User Flow -->
+            <div class="sketch-frame">
+                <div class="sketch-canvas">
+                    <div class="flow-sketch">
+                        <div class="flow-step">
+                            <div class="flow-box">Land on Alumni Page</div>
+                        </div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-box">Browse Grid or Use Filters</div>
+                        </div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-branch">
+                            <div class="flow-box">Filter by Year</div>
+                            <div class="flow-box">Search Name/Skill</div>
+                        </div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-box">Click Card → See Preview</div>
+                        </div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-box flow-preview-box">Preview Panel Updates</div>
+                        </div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-box">"View Full Profile" (Optional)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sketch-info">
+                    <h4>Primary User Flow</h4>
+                    <p>The preview panel (green) is the key differentiator — users can browse multiple alumni quickly without committing to a full page load each time.</p>
+                </div>
+            </div>
+            
+            <!-- Sketch 4: Mobile Consideration -->
+            <div class="sketch-frame">
+                <div class="sketch-canvas" style="display: flex; justify-content: center; gap: 30px; align-items: flex-start;">
+                    <div style="width: 140px;">
+                        <div style="font-family: 'Caveat', cursive; font-size: 0.9rem; color: #666; margin-bottom: 10px; text-align: center;">Desktop: Two Panel</div>
+                        <div style="border: 2px solid #333; border-radius: 4px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div style="background: #f0f0f0; padding: 8px; border-radius: 4px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                                    <div style="height: 15px; background: #ddd; border-radius: 2px;"></div>
+                                    <div style="height: 15px; background: #ddd; border-radius: 2px;"></div>
+                                    <div style="height: 15px; background: #ddd; border-radius: 2px;"></div>
+                                    <div style="height: 15px; background: #ddd; border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                            <div style="background: #e8f5e9; padding: 8px; border-radius: 4px; text-align: center;">
+                                <div style="width: 20px; height: 20px; background: #ddd; border-radius: 50%; margin: 0 auto 5px;"></div>
+                                <div style="height: 6px; background: #ddd; border-radius: 2px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="width: 60px;">
+                        <div style="font-family: 'Caveat', cursive; font-size: 0.9rem; color: #666; margin-bottom: 10px; text-align: center;">Mobile</div>
+                        <div style="border: 2px solid #333; border-radius: 8px; padding: 6px;">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <div style="height: 30px; background: #f0f0f0; border-radius: 2px; display: flex; align-items: center; gap: 6px; padding: 4px;">
+                                    <div style="width: 20px; height: 20px; background: #ddd; border-radius: 50%; flex-shrink: 0;"></div>
+                                    <div style="flex: 1; height: 6px; background: #ddd; border-radius: 2px;"></div>
+                                </div>
+                                <div style="height: 30px; background: #f0f0f0; border-radius: 2px; display: flex; align-items: center; gap: 6px; padding: 4px;">
+                                    <div style="width: 20px; height: 20px; background: #ddd; border-radius: 50%; flex-shrink: 0;"></div>
+                                    <div style="flex: 1; height: 6px; background: #ddd; border-radius: 2px;"></div>
+                                </div>
+                                <div style="height: 30px; background: #f0f0f0; border-radius: 2px; display: flex; align-items: center; gap: 6px; padding: 4px;">
+                                    <div style="width: 20px; height: 20px; background: #ddd; border-radius: 50%; flex-shrink: 0;"></div>
+                                    <div style="flex: 1; height: 6px; background: #ddd; border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sketch-info">
+                    <h4>Responsive Behavior</h4>
+                    <p>On mobile, the two-panel layout collapses to a single-column list. Tap goes directly to full profile — no preview panel on small screens.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Architecture Section -->
+    <section class="architecture-section">
+        <h2 class="section-title">Technical Architecture</h2>
+        <p class="section-subtitle">Mapping out how the system would work within Shopify's ecosystem.</p>
+        
+        <div class="architecture-diagram">
+            <div class="arch-row">
+                <div class="arch-box">
+                    <h4>👤 User</h4>
+                    <p>Visits Alumni Page</p>
+                </div>
+            </div>
+            
+            <div class="arch-connector">↓</div>
+            
+            <div class="arch-row">
+                <div class="arch-box highlight">
+                    <h4>📄 Alumni Template</h4>
+                    <p>Custom Liquid Template</p>
+                </div>
+            </div>
+            
+            <div class="arch-connector">↓</div>
+            
+            <div class="arch-split">
+                <div class="arch-box">
+                    <h4>📝 Blog System</h4>
+                    <p>Alumni as Blog Posts</p>
+                </div>
+                <div class="arch-box">
+                    <h4>🏷️ Metafields</h4>
+                    <p>Grad Year, Title, Skills</p>
+                </div>
+            </div>
+            
+            <div class="arch-connector">↓</div>
+            
+            <div class="arch-row">
+                <div class="arch-box highlight">
+                    <h4>⚡ JavaScript + CSS</h4>
+                    <p>Search, Filter, Preview Panel, Pagination</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Decision Matrix -->
+    <section class="decision-section">
+        <h2 class="section-title">Approach Evaluation</h2>
+        <p class="section-subtitle">Comparing different technical approaches to find the best balance of features and maintainability.</p>
+        
+        <div class="decision-table-wrapper">
+            <table class="decision-table">
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Ease of Use</th>
+                        <th>Maintainability</th>
+                        <th>Scalability</th>
+                        <th>Verdict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>External Database</strong><br><span style="color: #888; font-size: 0.85rem;">Firebase, Airtable, etc.</span></td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                            </div>
+                        </td>
+                        <td><span style="color: #d32f2f;">Too complex for future teams</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Static JSON File</strong><br><span style="color: #888; font-size: 0.85rem;">Hardcoded data file</span></td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td><span style="color: #d32f2f;">Requires code edits to update</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Shopify Pages</strong><br><span style="color: #888; font-size: 0.85rem;">Each alumni as a page</span></td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td><span style="color: #d32f2f;">Limited filtering capabilities</span></td>
+                    </tr>
+                    <tr style="background: #f0f8ff;">
+                        <td><strong>Shopify Blog + Metafields</strong><br><span style="color: #888; font-size: 0.85rem;">Alumni as blog articles</span></td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span class="filled"></span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td><span class="chosen-badge">✓ Chosen</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+    <!-- Footer Navigation -->
+    <footer class="page-footer">
+        <a href="01-case-study-overview.html?embed=1" class="footer-nav-btn">
+            ← <span>Previous:</span> Case Study Overview
+        </a>
+        <a href="03-wireframes.html?embed=1" class="footer-nav-btn">
+            <span>Next:</span> Wireframes →
+        </a>
+    </footer>
+<style>
+/* embedded in the portfolio's project dialog: the dialog supplies the chrome */
+body.embed-mode .nav,
+body.embed-mode .page-header .back-link { display: none !important; }
+body.embed-mode { padding-top: 0 !important; }
+</style>
+<script>if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embed-mode');</script>
+</body>
+</html>
