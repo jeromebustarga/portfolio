@@ -484,6 +484,7 @@
       letter-spacing: 0.1em; text-transform: uppercase; color: var(--success-color);
       border: 1px solid rgba(34,197,94,0.4); border-radius: 100px; padding: 2px 8px;
     }
+    .m-badge.dev { color: var(--warning-color); border-color: rgba(234,179,8,0.45); }
     .m-card-desc { color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin: 10px 0 12px; }
     .m-tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0 0 14px; }
     .m-tags li {
@@ -580,6 +581,7 @@
                 text-transform: uppercase; padding: 3px 9px; border-radius: 100px;
                 border: 1px solid var(--border-color); color: var(--text-dim); font-weight: 400; }
     .rm-badge.live { color: var(--success-color); border-color: rgba(34,197,94,.4); }
+    .rm-badge.dev { color: var(--warning-color); border-color: rgba(234,179,8,.45); }
     .rm-lede { color: var(--text-secondary); font-size: 15px; line-height: 1.75; margin: 16px 0 8px; }
     .readme h2 { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-dim);
                  font-family: 'JetBrains Mono', monospace; font-weight: 500;
@@ -1233,10 +1235,10 @@
                                 </div>
                                 <div class="welcome-recents">
                                     <div class="welcome-h">Recent</div>
-                                    <div class="welcome-recent" onclick="loadProject('uplift')"><i class="fa-solid fa-hand-holding-heart"></i><span class="rc-code">uplift</span> <span class="rc-meta">— Resource Platform</span></div>
-                                    <div class="welcome-recent" onclick="loadProject('mirror')"><i class="fa-solid fa-chart-line"></i><span class="rc-code">mirror</span> <span class="rc-meta">— Algorithm Research</span></div>
-                                    <div class="welcome-recent" onclick="loadProject('decay')"><i class="fa-solid fa-biohazard"></i><span class="rc-code">decay</span> <span class="rc-meta">— Image Corruption</span></div>
-                                    <div class="welcome-recent" onclick="loadProject('koneksyon')"><i class="fa-solid fa-globe-asia"></i><span class="rc-code">koneksyon</span> <span class="rc-meta">— Internet Map</span></div>
+                                    <div class="welcome-recent" onclick="loadProject('kappit')"><i class="fa-solid fa-map-location-dot"></i><span class="rc-code">kappit</span> <span class="rc-meta">— Community Map App</span></div>
+                                    <div class="welcome-recent" onclick="loadProject('floodwatch')"><i class="fa-solid fa-water"></i><span class="rc-code">floodwatch</span> <span class="rc-meta">— Anomaly Detection</span></div>
+                                    <div class="welcome-recent" onclick="loadProject('pandelino')"><i class="fa-solid fa-database"></i><span class="rc-code">pandelino</span> <span class="rc-meta">— Relational Database</span></div>
+                                    <div class="welcome-recent" onclick="loadProject('ijay')"><i class="fa-solid fa-graduation-cap"></i><span class="rc-code">ijay</span> <span class="rc-meta">— Alumni Directory</span></div>
                                 </div>
                             </div>
                             <div class="welcome-tip">
@@ -1397,6 +1399,19 @@
                 casestudy: 'floodwatch.html',
                 preview: 'live',
                 status: 'live'
+            },
+            'kappit': {
+                name: 'kAppit',
+                codename: 'kappit',
+                icon: 'fa-map-location-dot',
+                description: 'A map-first app for Filipinos abroad: kababayan nearby, home-cooked meals with open seats, community events and Filipino-owned businesses, sorted by distance instead of by feed. Location privacy was designed first — every pin renders 200–400 m from its real position with a fixed per-person offset so it cannot be averaged back to an address, exact coordinates never leave the database, a host\'s address is only released after they confirm you, and being on the map at all is opt-in. Launching first in the South Bay of San Diego.',
+                tech: ['Product Design', 'Design System', 'Geospatial', 'Location Privacy', 'HTML/CSS', 'Inline SVG'],
+                url: 'https://jeromebustarga.com/kAppit/',
+                urlLabel: 'Product site',
+                previewSrc: 'kAppit/',
+                linkedin: 'https://www.linkedin.com/company/kappit',
+                preview: 'live',
+                status: 'dev'
             },
             'pandelino': {
                 name: 'Pizza Pandelino OMS',
@@ -1720,11 +1735,11 @@
             if (!project) return '';
 
             if (kind === 'readme') {
-                const badge = project.status === 'live'
-                    ? '<span class="rm-badge live">live</span>'
-                    : '<span class="rm-badge">' + project.status + '</span>';
+                const badge = '<span class="rm-badge ' + project.status + '">' +
+                    (project.status === 'dev' ? 'in development' : project.status) + '</span>';
                 let links = '';
-                if (project.url) links += '<li><a href="' + project.url + '" target="_blank" rel="noopener">Live site</a> — <code>' + project.url.replace(/^https?:\/\//, '') + '</code></li>';
+                if (project.url) links += '<li><a href="' + project.url + '" target="_blank" rel="noopener">' + (project.urlLabel || 'Live site') + '</a> — <code>' + project.url.replace(/^https?:\/\//, '') + '</code></li>';
+                if (project.linkedin) links += '<li><a href="' + project.linkedin + '" target="_blank" rel="noopener">Follow on LinkedIn</a></li>';
                 if (project.github) {
                     const sm = window.sourceMeta(project.github);
                     links += '<li><a href="' + project.github + '" target="_blank" rel="noopener">Source on ' + sm.label + '</a></li>';
@@ -1751,7 +1766,7 @@
                 ? { kind: 'frame', src: project.casestudy + '?embed=1', label: project.casestudy }
                 : project.previewImage
                     ? { kind: 'img', src: project.previewImage, label: (project.url || '').replace(/^https?:\/\//, '') }
-                    : { kind: 'frame', src: project.url, label: (project.url || '').replace(/^https?:\/\//, '') };
+                    : { kind: 'frame', src: project.previewSrc || project.url, label: (project.url || '').replace(/^https?:\/\//, '') };
 
             const openHref = kind === 'case' ? project.casestudy : (project.url || project.github);
             const body = src.kind === 'img'
@@ -1797,7 +1812,7 @@
             Object.keys(projects).forEach(function (key) {
                 const p = projects[key];
                 const list = [{ name: 'README.md', kind: 'readme', icon: 'fa-solid fa-book' }];
-                if (p.previewImage || (p.preview === 'live' && p.status === 'live' && p.url)) {
+                if (p.previewImage || (p.preview === 'live' && p.url)) {
                     // a live site is index.html; a project with only a screenshot is not a
                     // website, so it names its preview after what the file really is
                     const isSite = !p.previewImage;
@@ -1960,6 +1975,23 @@
 
             if (welcomeTab) welcomeTab.onclick = function () { activate('welcome'); };
 
+            /* ---- Deep links: /#kappit opens that project's README (and on mobile
+                   scrolls to its card), so a project can be linked to directly. ---- */
+            function openFromHash() {
+                const key = (location.hash || '').replace(/^#/, '');
+                if (!key || !projects[key]) return;
+                if (window.matchMedia('(max-width: 767px)').matches) {
+                    const card = document.getElementById('m-' + key);
+                    if (card) card.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    return;
+                }
+                window.openFile(key);
+                const folder = explorer.querySelector('[data-folder="' + key + '"]');
+                if (folder) folder.scrollIntoView({ block: 'nearest' });
+            }
+            window.addEventListener('hashchange', openFromHash);
+            setTimeout(openFromHash, 0);   // the mobile cards are built further down
+
             /* ---- Mobile: same data, built as accessible cards ---- */
             (function buildMobile() {
                 const mp = document.getElementById('mProjects');
@@ -1972,16 +2004,18 @@
                     const p = projects[key];
                     const art = document.createElement('article');
                     art.className = 'm-card';
+                    art.id = 'm-' + key;
                     let links = '';
-                    if (p.status === 'live' && p.url) links += '<a class="m-link m-link-primary" href="' + p.url + '" target="_blank" rel="noopener">Live site <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>';
+                    if (p.url) links += '<a class="m-link m-link-primary" href="' + p.url + '" target="_blank" rel="noopener">' + esc(p.urlLabel || 'Live site') + ' <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>';
                     if (p.casestudy) links += '<a class="m-link" href="' + p.casestudy + '">Case study</a>';
+                    if (p.linkedin) links += '<a class="m-link" href="' + p.linkedin + '" target="_blank" rel="noopener">LinkedIn</a>';
                     if (p.github) {
                         const sm = window.sourceMeta ? window.sourceMeta(p.github) : { label: 'source' };
                         links += '<a class="m-link" href="' + p.github + '" target="_blank" rel="noopener">Source on ' + sm.label + '</a>';
                     }
                     art.innerHTML =
                         '<h3 class="m-card-name"><i class="fa-solid ' + p.icon + '" aria-hidden="true"></i> ' + esc(p.name) +
-                        (p.status === 'live' ? ' <span class="m-badge">live</span>' : '') + '</h3>' +
+                        ' <span class="m-badge ' + p.status + '">' + esc(p.status === 'dev' ? 'in development' : p.status) + '</span></h3>' +
                         '<p class="m-card-desc">' + esc(p.description) + '</p>' +
                         '<ul class="m-tags" aria-label="Stack">' + p.tech.map(function (t) {
                             return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
@@ -2368,7 +2402,8 @@
                 h += '</div>';
             }
             const links = [];
-            if (p.url) links.push(['fa-solid fa-arrow-up-right-from-square', 'Live site', p.url]);
+            if (p.url) links.push(['fa-solid fa-arrow-up-right-from-square', p.urlLabel || 'Live site', p.url]);
+            if (p.linkedin) links.push(['fa-brands fa-linkedin', 'Follow on LinkedIn', p.linkedin]);
             if (p.github) {
                 const sm = window.sourceMeta ? window.sourceMeta(p.github) : { label: 'Source', icon: 'fa-solid fa-code' };
                 links.push([sm.icon, 'Source on ' + sm.label, p.github]);
